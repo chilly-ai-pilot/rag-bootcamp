@@ -1,0 +1,2 @@
+# DeepSeek API 使用 OpenAI SDK（兼容 OpenAI API 格式）
+openai>=1.0.0
