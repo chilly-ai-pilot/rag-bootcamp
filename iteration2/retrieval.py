@@ -2,12 +2,13 @@
 检索模块
 
 Iteration 0 检索器：返回随机块，完全忽略查询内容。
-这是有意为之——它是计划中提到的"什么都不做能得多少分"的基线。
-这里的 Recall@K 应该接近 k/N，不会好。
-
 Iteration 1: 实现真实的向量检索（bge-base-zh + ChromaDB）。
-保持相同的函数签名 (query, chunks, k) -> list[chunk]，
-这样在切换时 run_eval.py 无需修改。
+Iteration 2: 支持多种 chunking 策略，每种策略使用独立的 ChromaDB collection。
+
+支持的策略：
+- fixed_200_40: 200字符，40字符重叠
+- semantic: 按句子边界切分
+- small_100_50: 100字符，50字符重叠
 """
 import random
 from typing import List, Dict
@@ -40,7 +41,7 @@ def retrieve_random(query: str, chunks: List[Dict], k: int = 5, seed: int = None
 # --- 全局变量：延迟初始化 ---
 _embedding_model = None
 _chroma_client = None
-_collection = None
+_collections = {}  # 改为字典，存储多个 collection
 
 
 def _get_embedding_model():
@@ -48,45 +49,54 @@ def _get_embedding_model():
     global _embedding_model
     if _embedding_model is None:
         print("Loading bge-base-zh model...")
-        _embedding_model = SentenceTransformer('BAAI/bge-base-zh-v1.5')
+        # 优先使用本地缓存，避免重复下载
+        _embedding_model = SentenceTransformer('BAAI/bge-base-zh-v1.5', local_files_only=False)
     return _embedding_model
 
 
-def _get_chroma_collection(collection_name: str = "rag_chunks"):
-    """获取或创建 ChromaDB collection（单例模式）
+def _get_chroma_collection(strategy: str = "fixed_200_40"):
+    """获取或创建指定策略的 ChromaDB collection（单例模式）
+    
+    每种 chunking 策略使用独立的 collection，避免混淆。
     
     参数:
-        collection_name: 集合名称，默认 "rag_chunks"
+        strategy: chunking 策略名称，用作 collection 名称的一部分
     
     返回:
         ChromaDB collection 对象
     """
-    global _chroma_client, _collection
+    global _chroma_client, _collections
     
     if _chroma_client is None:
         # 初始化 ChromaDB 客户端（使用持久化存储）
         _chroma_client = chromadb.PersistentClient(path="./chroma_db")
     
-    if _collection is None:
+    # 根据策略生成 collection 名称
+    collection_name = f"rag_docs_{strategy}"
+    
+    if collection_name not in _collections:
         # 获取或创建 collection
-        _collection = _chroma_client.get_or_create_collection(
+        _collections[collection_name] = _chroma_client.get_or_create_collection(
             name=collection_name,
             metadata={"hnsw:space": "cosine"}  # 使用余弦相似度
         )
     
-    return _collection
+    return _collections[collection_name]
 
 
-def retrieve_vector(query: str, chunks: List[Dict], k: int = 5) -> List[Dict]:
-    """向量检索策略（Iteration 1 实现）
+def retrieve_vector(query: str, chunks: List[Dict], k: int = 5, strategy: str = "fixed_200_40") -> List[Dict]:
+    """向量检索策略（Iteration 1/2 实现）
     
     使用 bge-base-zh 模型对块进行向量化，存储到 ChromaDB，
     然后根据查询的向量相似度返回 top-k 个最相关的块。
+    
+    Iteration 2 新增：支持指定 chunking 策略，不同策略使用不同的 collection。
     
     参数:
         query: 用户查询
         chunks: 所有可检索的文档块列表
         k: 返回的块数量，默认 5
+        strategy: chunking 策略名称，默认 "fixed_200_40"
     
     返回:
         与查询最相关的 k 个文档块列表
@@ -94,13 +104,13 @@ def retrieve_vector(query: str, chunks: List[Dict], k: int = 5) -> List[Dict]:
     # 加载 embedding 模型
     model = _get_embedding_model()
     
-    # 获取 ChromaDB collection
-    collection = _get_chroma_collection()
+    # 获取对应策略的 ChromaDB collection
+    collection = _get_chroma_collection(strategy)
     
     # 检查是否需要重新索引（collection 为空或 chunk 数量不匹配）
     current_count = collection.count()
     if current_count != len(chunks):
-        print(f"Indexing {len(chunks)} chunks into ChromaDB...")
+        print(f"Indexing {len(chunks)} chunks (strategy: {strategy}) into ChromaDB...")
         
         # 清空 collection（重新索引）
         if current_count > 0:
@@ -132,7 +142,7 @@ def retrieve_vector(query: str, chunks: List[Dict], k: int = 5) -> List[Dict]:
             documents=texts,
             metadatas=metadatas
         )
-        print(f"Indexed {len(chunks)} chunks.")
+        print(f"Indexed {len(chunks)} chunks for strategy '{strategy}'.")
     
     # 对查询进行向量化
     query_embedding = model.encode([query])[0].tolist()

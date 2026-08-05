@@ -1,2 +1,7 @@
 tmp/
 __pycache__
+*.pyc
+chroma_db/
+*.sqlite3
+results_*.json
+.DS_Store

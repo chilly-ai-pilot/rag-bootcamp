@@ -26,6 +26,9 @@ SYSTEM_PROMPT = (
     "回答时请在句末用[文档X:片段N]标注引用的片段来源，X是文档编号，N是该文档内的片段序号。"
 )
 
+# 全局变量：延迟初始化 OpenAI 客户端（单例模式）
+_openai_client = None
+
 
 def _build_context(retrieved_chunks):
     """将检索到的块列表构建为带编号的上下文字符串
@@ -43,6 +46,26 @@ def _build_context(retrieved_chunks):
     return "\n\n".join(lines)
 
 
+def _get_openai_client():
+    """延迟加载 OpenAI 客户端（单例模式）
+    
+    避免每次调用 generate_answer 时都创建新的客户端，
+    防止 httpx 客户端被关闭导致的错误。
+    
+    返回:
+        OpenAI 客户端实例或 None（如果不可用）
+    """
+    global _openai_client
+    
+    if _openai_client is None and _OPENAI_AVAILABLE and os.environ.get("DEEPSEEK_API_KEY"):
+        _openai_client = OpenAI(
+            api_key=os.environ.get("DEEPSEEK_API_KEY"),
+            base_url="https://api.deepseek.com"
+        )
+    
+    return _openai_client
+
+
 def generate_answer(query: str, retrieved_chunks: list, model: str = "deepseek-chat") -> str:
     """根据检索到的上下文片段生成答案
     
@@ -58,14 +81,11 @@ def generate_answer(query: str, retrieved_chunks: list, model: str = "deepseek-c
     if not retrieved_chunks:
         return "未找到充分依据"
 
-    # 如果 OpenAI SDK 可用且环境变量中有 DeepSeek API 密钥
-    if _OPENAI_AVAILABLE and os.environ.get("DEEPSEEK_API_KEY"):
-        # 初始化 DeepSeek 客户端（使用 OpenAI SDK，指定 DeepSeek 的 base_url）
-        client = OpenAI(
-            api_key=os.environ.get("DEEPSEEK_API_KEY"),
-            base_url="https://api.deepseek.com"
-        )
-        
+    # 获取 OpenAI 客户端（单例）
+    client = _get_openai_client()
+    
+    # 如果客户端可用，使用 DeepSeek API
+    if client:
         # 构建包含资料片段的提示词
         context = _build_context(retrieved_chunks)
         prompt = f"资料：\n{context}\n\n问题：{query}"
