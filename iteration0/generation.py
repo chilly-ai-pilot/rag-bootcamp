@@ -23,7 +23,7 @@ SYSTEM_PROMPT = (
     "你是一个只能根据给定资料回答问题的助手。"
     "只使用下面提供的资料片段作答，禁止使用资料之外的知识或猜测。"
     "如果资料片段中没有足够信息回答问题，必须回答\"未找到充分依据\"，不要编造。"
-    "回答时请在句末用[片段N]标注引用的片段编号。"
+    "回答时请在句末用[文档X:片段N]标注引用的片段来源，X是文档编号，N是该文档内的片段序号。"
 )
 
 
@@ -36,7 +36,11 @@ def _build_context(retrieved_chunks):
     返回:
         格式化的上下文字符串，每个片段有编号标记
     """
-    return "\n\n".join(f"[片段{i+1}] {c['text']}" for i, c in enumerate(retrieved_chunks))
+    lines = []
+    for i, c in enumerate(retrieved_chunks):
+        doc_num = c["doc_id"].replace("doc", "")
+        lines.append(f"[文档{doc_num}:片段{i+1}] {c['text']}")
+    return "\n\n".join(lines)
 
 
 def generate_answer(query: str, retrieved_chunks: list, model: str = "deepseek-chat") -> str:
