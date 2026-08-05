@@ -357,3 +357,176 @@ def _reciprocal_rank_fusion(
     ]
     
     return result
+
+
+# --- 实验性功能：混合粒度 Hybrid Search ---
+# 如果效果不佳，可以整体删除此部分
+
+def retrieve_hybrid_multi_granularity(
+    query: str,
+    corpus_dir: str,
+    k: int = 5,
+    strategy_vector: str = "small_100_50",
+    strategy_bm25: str = "fixed_200_40",
+    k_vector: int = 20,
+    k_bm25: int = 20,
+    rrf_k: int = 60,
+    overlap_threshold: float = 0.5
+) -> List[Dict]:
+    """混合粒度 Hybrid Search（实验性）
+    
+    核心思想：
+    - Vector 检索使用短块（small_100_50）→ 语义精确，性能 0.97
+    - BM25 检索使用长块（fixed_200_40）→ 关键词丰富，性能 0.94
+    - 理论上限：可能达到 > 0.97
+    
+    挑战：
+    - 不同粒度的块需要对齐和去重
+    - 重叠块的处理策略
+    - 返回结果的统一
+    
+    参数:
+        query: 用户查询
+        corpus_dir: 语料库目录路径
+        k: 最终返回的块数量
+        strategy_vector: Vector 检索的 chunking 策略（默认 small_100_50）
+        strategy_bm25: BM25 检索的 chunking 策略（默认 fixed_200_40）
+        k_vector: Vector 召回数量
+        k_bm25: BM25 召回数量
+        rrf_k: RRF 常数
+        overlap_threshold: 判断块重叠的阈值（默认 0.5 = 50%）
+    
+    返回:
+        去重后的 top-k 文档块列表
+    
+    示例:
+        results = retrieve_hybrid_multi_granularity(
+            query="SmartCam-200 的声音报警音量怎么调节？",
+            corpus_dir="corpus",
+            k=5
+        )
+    """
+    from chunking import build_corpus_chunks
+    
+    # 1. 构建两套不同粒度的块
+    print(f"Building chunks: vector={strategy_vector}, bm25={strategy_bm25}")
+    chunks_vector = build_corpus_chunks(corpus_dir, strategy=strategy_vector)
+    chunks_bm25 = build_corpus_chunks(corpus_dir, strategy=strategy_bm25)
+    
+    print(f"  Vector chunks: {len(chunks_vector)}")
+    print(f"  BM25 chunks: {len(chunks_bm25)}")
+    
+    # 2. 分别检索
+    print(f"Retrieving with vector (top-{k_vector})...")
+    vector_results = retrieve_vector(query, chunks_vector, k=k_vector, strategy=strategy_vector)
+    
+    print(f"Retrieving with BM25 (top-{k_bm25})...")
+    bm25_results = retrieve_bm25(query, chunks_bm25, k=k_bm25)
+    
+    # 3. 标准化：转换为统一格式 (doc_id, start, end, text, source)
+    def normalize_chunk(chunk, source):
+        return {
+            'doc_id': chunk['doc_id'],
+            'start': chunk['start'],
+            'end': chunk['end'],
+            'text': chunk['text'],
+            'source': source,  # 标记来源
+            'length': chunk['end'] - chunk['start']
+        }
+    
+    vector_normalized = [normalize_chunk(c, 'vector') for c in vector_results]
+    bm25_normalized = [normalize_chunk(c, 'bm25') for c in bm25_results]
+    
+    # 4. 计算 RRF 分数（基于原始排名）
+    rrf_scores = {}
+    
+    # Vector 贡献
+    for rank, chunk in enumerate(vector_normalized, start=1):
+        key = (chunk['doc_id'], chunk['start'], chunk['end'])
+        rrf_scores[key] = rrf_scores.get(key, 0) + 1 / (rrf_k + rank)
+    
+    # BM25 贡献
+    for rank, chunk in enumerate(bm25_normalized, start=1):
+        key = (chunk['doc_id'], chunk['start'], chunk['end'])
+        rrf_scores[key] = rrf_scores.get(key, 0) + 1 / (rrf_k + rank)
+    
+    # 5. 按 RRF 分数排序所有候选块
+    all_candidates = vector_normalized + bm25_normalized
+    
+    # 去重：相同位置的块只保留一个
+    unique_candidates = {}
+    for chunk in all_candidates:
+        key = (chunk['doc_id'], chunk['start'], chunk['end'])
+        if key not in unique_candidates:
+            unique_candidates[key] = chunk
+            unique_candidates[key]['rrf_score'] = rrf_scores.get(key, 0)
+    
+    # 按 RRF 分数排序
+    sorted_candidates = sorted(
+        unique_candidates.values(),
+        key=lambda x: x['rrf_score'],
+        reverse=True
+    )
+    
+    # 6. 去重：处理重叠块（核心逻辑）
+    def calculate_overlap_ratio(chunk1, chunk2):
+        """计算两个块的重叠比例"""
+        if chunk1['doc_id'] != chunk2['doc_id']:
+            return 0.0
+        
+        overlap_start = max(chunk1['start'], chunk2['start'])
+        overlap_end = min(chunk1['end'], chunk2['end'])
+        
+        if overlap_end <= overlap_start:
+            return 0.0
+        
+        overlap_len = overlap_end - overlap_start
+        min_len = min(chunk1['length'], chunk2['length'])
+        
+        return overlap_len / min_len if min_len > 0 else 0.0
+    
+    # 贪心去重：按 RRF 分数从高到低，跳过与已选块重叠的块
+    final_results = []
+    
+    for candidate in sorted_candidates:
+        # 检查是否与已选块重叠
+        is_overlapping = False
+        
+        for selected in final_results:
+            overlap_ratio = calculate_overlap_ratio(candidate, selected)
+            
+            if overlap_ratio > overlap_threshold:
+                is_overlapping = True
+                
+                # 如果候选块更长（包含更多上下文），替换已选块
+                if candidate['length'] > selected['length']:
+                    print(f"  Replace: {selected['source']} [{selected['start']}-{selected['end']}] RRF={selected['rrf_score']:.4f} "
+                          f"with {candidate['source']} [{candidate['start']}-{candidate['end']}] RRF={candidate['rrf_score']:.4f} "
+                          f"(overlap={overlap_ratio:.2f})")
+                    final_results.remove(selected)
+                    final_results.append(candidate)
+                break
+        
+        if not is_overlapping:
+            final_results.append(candidate)
+        
+        # 达到目标数量就停止
+        if len(final_results) >= k:
+            break
+    
+    # 7. 转换回标准格式
+    result = []
+    for chunk in final_results[:k]:
+        result.append({
+            'doc_id': chunk['doc_id'],
+            'start': chunk['start'],
+            'end': chunk['end'],
+            'text': chunk['text'],
+            'chunk_id': f"{chunk['doc_id']}_{chunk['start']}_{chunk['end']}",  # 生成唯一 ID
+        })
+    
+    print(f"\nFinal results: {len(result)} chunks")
+    print(f"  From vector: {sum(1 for c in final_results[:k] if c['source'] == 'vector')}")
+    print(f"  From BM25: {sum(1 for c in final_results[:k] if c['source'] == 'bm25')}")
+    
+    return result

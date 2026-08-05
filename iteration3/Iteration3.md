@@ -653,6 +653,107 @@ python run_eval.py --compare-all --retrieval-mode hybrid
 
 ---
 
+## 实验性探索：多粒度混合检索（Multi-Granularity Hybrid Search）
+
+### 实验动机
+
+基于前面的发现：
+- **short块（small_100_50）+ Vector**: 0.97（语义精确）
+- **long块（fixed_200_40）+ BM25**: 0.94（关键词丰富）
+
+**实验假设：** 如果让 Vector 使用短块，BM25 使用长块，能否突破 0.97 的上限？
+
+### 实验设计
+
+```python
+retrieve_hybrid_multi_granularity(
+    query=query,
+    corpus_dir='corpus',
+    k=5,
+    strategy_vector='small_100_50',  # Vector 用短块（85块）
+    strategy_bm25='fixed_200_40',    # BM25 用长块（28块）
+    k_vector=20,
+    k_bm25=20,
+    rrf_k=60
+)
+```
+
+**核心挑战：** 不同粒度的块需要对齐和去重
+
+### 去重策略
+
+#### 第一次去重：位置相同的块
+```python
+# 判断标准：(doc_id, start, end) 完全相同
+# 目的：合并同一个块的重复对象，RRF 分数累加
+unique_candidates[key] = chunk
+unique_candidates[key]['rrf_score'] = rrf_scores.get(key, 0)
+```
+
+#### 第二次去重：位置重叠的块
+```python
+# 判断标准：内容重叠率 > 50%
+overlap_ratio = overlap_length / min(chunk1_length, chunk2_length)
+
+if overlap_ratio > 0.5:
+    if candidate.length > selected.length:
+        # 保留更长的块（更多上下文）
+        replace(selected, candidate)
+```
+
+**设计思想：**
+- 优先保证 RRF 分数高（相关性）
+- 重叠时优先保留长块（上下文完整性）
+
+### 实验结果
+
+| 指标 | 分数 | 对比历史最优 |
+|------|------|-------------|
+| **overall** | **0.97** | 与最优持平 |
+| chunking_sensitive | 0.90 | 持平 |
+| exact_match | 1.00 | 持平 |
+| semantic_paraphrase | 1.00 | 持平 |
+
+**失败案例：** 1个（ID 7，与历史最优相同）
+
+### 实验结论
+
+**✅ 技术上可行：**
+- 成功实现了不同粒度块的对齐和去重
+- 去重策略运行正常（两次去重分别处理位置相同和位置重叠）
+
+**❌ 性能无提升：**
+- 达到 0.97，与现有最优方案持平（未突破）
+- 唯一失败案例仍是 ID 7（术语不一致问题）
+
+**⚠️  工程复杂度高：**
+- 需要构建两套不同粒度的块索引
+- 需要复杂的重叠检测和去重逻辑
+- 代码量增加约 150 行
+
+**决策：保留代码，不推荐生产使用**
+
+原因：
+1. 性能无增益（0.97 = 0.97）
+2. 工程复杂度显著增加
+3. 存在更简单的方案达到同样效果
+
+### 代码位置
+
+实验代码保留在 `retrieval.py` 中：
+- `retrieve_hybrid_multi_granularity()` - 主函数（约 150 行）
+- `test_multi_granularity.py` - 测试脚本
+- `results_multi_granularity.json` - 测试结果
+
+**使用方式：**
+```bash
+python test_multi_granularity.py
+```
+
+**注意：** 此功能标记为"实验性"，不建议在生产环境使用。
+
+---
+
 ## 最终评价
 
 🎉 **Iteration 3 是一次"超出预期"的成功实验**：
