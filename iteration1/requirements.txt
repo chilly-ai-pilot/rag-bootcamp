@@ -1,0 +1,7 @@
+# DeepSeek API 使用 OpenAI SDK（兼容 OpenAI API 格式）
+openai>=1.0.0
+
+# Iteration 1: 向量检索依赖
+sentence-transformers>=2.2.0  # 用于加载 bge-base-zh 模型
+chromadb>=0.4.0               # 向量数据库
+torch>=2.0.0                  # embedding 模型依赖

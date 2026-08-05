@@ -1,0 +1,245 @@
+{
+  "config": {
+    "corpus_dir": "corpus",
+    "queries": "corpus/queries.json",
+    "chunk_size": 200,
+    "overlap": 40,
+    "k": 5,
+    "strategy": "random",
+    "seed": 42,
+    "show_samples": 3,
+    "out": "results_random.json"
+  },
+  "scores": {
+    "chunking_sensitive": 0.3,
+    "exact_match": 0.36363636363636365,
+    "semantic_paraphrase": 0.45454545454545453,
+    "overall": 0.375
+  },
+  "results": [
+    {
+      "id": 1,
+      "query": "SmartLock-100 如何生成临时密码？",
+      "category": "chunking_sensitive",
+      "hit": 1,
+      "answer": "根据资料，SmartLock-100 可以通过 App 生成一次性或限时临时密码，适用于访客或家政服务。一次性密码使用后自动失效，限时密码在设定时间段内有效。[文档1:片段5]"
+    },
+    {
+      "id": 2,
+      "query": "SmartCam-200 的 NAS 存储怎么设置？",
+      "category": "chunking_sensitive",
+      "hit": 0,
+      "answer": "未找到充分依据"
+    },
+    {
+      "id": 3,
+      "query": "SmartBulb-300 断电后记忆功能怎么关闭？",
+      "category": "chunking_sensitive",
+      "hit": 1,
+      "answer": "未找到充分依据"
+    },
+    {
+      "id": 4,
+      "query": "网关断网后自动化场景还能运行吗？",
+      "category": "chunking_sensitive",
+      "hit": 0,
+      "answer": "未找到充分依据"
+    },
+    {
+      "id": 5,
+      "query": "ST-500 人体传感器应该装在多高？",
+      "category": "chunking_sensitive",
+      "hit": 0,
+      "answer": "未找到充分依据"
+    },
+    {
+      "id": 6,
+      "query": "SmartLock-100 的防猫眼功能如何操作？",
+      "category": "chunking_sensitive",
+      "hit": 1,
+      "answer": "未找到充分依据。资料中未提及“SmartLock-100”这一具体型号的防猫眼功能操作方式。[文档1:片段3]仅提到“室内面板有防猫眼按钮，开门时需按下此按钮并下压把手同时操作”，但未指明是SmartLock-100型号。"
+    },
+    {
+      "id": 7,
+      "query": "SmartPlug-400 的充电保护功能是怎样工作的？",
+      "category": "chunking_sensitive",
+      "hit": 0,
+      "answer": "未找到充分依据"
+    },
+    {
+      "id": 8,
+      "query": "SmartBulb-300 的音乐律动模式怎么开启？",
+      "category": "chunking_sensitive",
+      "hit": 0,
+      "answer": "未找到充分依据"
+    },
+    {
+      "id": 9,
+      "query": "SmartCam-200 的声音报警音量怎么调节？",
+      "category": "chunking_sensitive",
+      "hit": 0,
+      "answer": "未找到充分依据。"
+    },
+    {
+      "id": 10,
+      "query": "GW-200 网关添加子设备失败时怎么办？",
+      "category": "chunking_sensitive",
+      "hit": 0,
+      "answer": "未找到充分依据"
+    },
+    {
+      "id": 11,
+      "query": "故障代码 E02 怎么解决？",
+      "category": "exact_match",
+      "hit": 0,
+      "answer": "未找到充分依据"
+    },
+    {
+      "id": 12,
+      "query": "GW-200 网关的电源参数是多少？",
+      "category": "exact_match",
+      "hit": 0,
+      "answer": "未找到充分依据"
+    },
+    {
+      "id": 13,
+      "query": "SmartPlug-400 最大负载多少？",
+      "category": "exact_match",
+      "hit": 1,
+      "answer": "SmartPlug-400 最大负载为 10A/2500W。[文档6:片段4]"
+    },
+    {
+      "id": 14,
+      "query": "ST-501 的湿度测量精度是多少？",
+      "category": "exact_match",
+      "hit": 1,
+      "answer": "未找到充分依据[文档5:片段5]"
+    },
+    {
+      "id": 15,
+      "query": "SmartBulb-300 色温范围是多少？",
+      "category": "exact_match",
+      "hit": 1,
+      "answer": "根据资料[文档3:片段2]，SmartBulb-300 的色温范围是 2700K–6500K。[文档3:片段2]"
+    },
+    {
+      "id": 16,
+      "query": "SmartLock-100 指纹容量多少枚？",
+      "category": "exact_match",
+      "hit": 1,
+      "answer": "未找到充分依据"
+    },
+    {
+      "id": 17,
+      "query": "SmartCam-200 的红外夜视距离多远？",
+      "category": "exact_match",
+      "hit": 0,
+      "answer": "未找到充分依据"
+    },
+    {
+      "id": 18,
+      "query": "SmartPlug-400 待机功耗多少瓦？",
+      "category": "exact_match",
+      "hit": 0,
+      "answer": "未找到充分依据"
+    },
+    {
+      "id": 19,
+      "query": "传感器 ST-500 探测角度是多少？",
+      "category": "exact_match",
+      "hit": 0,
+      "answer": "未找到充分依据"
+    },
+    {
+      "id": 20,
+      "query": "SmartBulb-300 功率是多少瓦？",
+      "category": "exact_match",
+      "hit": 0,
+      "answer": "未找到充分依据"
+    },
+    {
+      "id": 21,
+      "query": "指纹锁快没电了会有什么提示？",
+      "category": "semantic_paraphrase",
+      "hit": 0,
+      "answer": "未找到充分依据"
+    },
+    {
+      "id": 22,
+      "query": "怎样防止摄像头被偷看？",
+      "category": "semantic_paraphrase",
+      "hit": 0,
+      "answer": "未找到充分依据"
+    },
+    {
+      "id": 23,
+      "query": "插座能不能防止手机过充？",
+      "category": "semantic_paraphrase",
+      "hit": 0,
+      "answer": "未找到充分依据"
+    },
+    {
+      "id": 24,
+      "query": "怎么让灯泡随着音乐节奏变化？",
+      "category": "semantic_paraphrase",
+      "hit": 1,
+      "answer": "要让灯泡随着音乐节奏变化，需要开启“音乐律动模式”，此时灯泡颜色会随手机麦克风采集的环境音乐节奏变化，适合派对氛围，但需要保持App前台运行。[文档3:片段3]"
+    },
+    {
+      "id": 25,
+      "query": "门锁的虚位密码有什么用？",
+      "category": "semantic_paraphrase",
+      "hit": 1,
+      "answer": "未找到充分依据[文档1:片段2]仅提及“支持 20 位虚位密码，可在正确密码”，未说明其具体用途。"
+    },
+    {
+      "id": 26,
+      "query": "摄像头晚上能看多远？",
+      "category": "semantic_paraphrase",
+      "hit": 0,
+      "answer": "未找到充分依据"
+    },
+    {
+      "id": 27,
+      "query": "传感器没电了怎么换？",
+      "category": "semantic_paraphrase",
+      "hit": 0,
+      "answer": "未找到充分依据"
+    },
+    {
+      "id": 28,
+      "query": "灯泡能不能定时开关？",
+      "category": "semantic_paraphrase",
+      "hit": 0,
+      "answer": "未找到充分依据"
+    },
+    {
+      "id": 29,
+      "query": "网关的灯一直在闪是啥意思？",
+      "category": "semantic_paraphrase",
+      "hit": 1,
+      "answer": "根据资料，网关指示灯有多种含义：红灯常亮表示未连接网络；蓝灯快闪表示正在配网；紫灯闪烁表示子设备正在接入；红灯慢闪表示固件升级中，请勿断电[文档4:片段2]。因此，一直闪的具体含义需确认灯光颜色和闪烁方式，资料未提供单一“一直闪”的明确解释。若是指蓝灯快闪，则为正在配网[文档4:片段2]；若为红灯慢闪，则是固件升级中[文档4:片段2]。其他情况未找到充分依据。"
+    },
+    {
+      "id": 30,
+      "query": "门锁的应急钥匙应该放哪里？",
+      "category": "semantic_paraphrase",
+      "hit": 1,
+      "answer": "根据资料，门锁的应急钥匙“请勿存放在家中，建议放亲友处或办公室”。[文档1:片段5]"
+    },
+    {
+      "id": 31,
+      "query": "SW-600 的电池型号是什么？",
+      "category": "exact_match",
+      "hit": 0,
+      "answer": "未找到充分依据"
+    },
+    {
+      "id": 32,
+      "query": "场景面板的按键图标能不能自定义？",
+      "category": "semantic_paraphrase",
+      "hit": 1,
+      "answer": "未找到充分依据"
+    }
+  ]
+}
