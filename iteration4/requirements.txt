@@ -9,3 +9,5 @@ torch>=2.0.0                  # embedding 模型依赖
 # Iteration 3: BM25 关键词检索依赖
 rank-bm25>=0.2.2              # BM25 算法实现
 jieba>=0.42.1                 # 中文分词
+# Iteration 4: Reranker
+FlagEmbedding>=1.2.0          # bge-reranker-base (cross-encoder)

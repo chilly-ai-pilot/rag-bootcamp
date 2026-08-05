@@ -121,3 +121,115 @@ def aggregate_by_category(results: List[Dict]) -> Dict[str, float]:
     scores["overall"] = sum(r["hit"] for r in results) / len(results) if results else 0.0
     
     return scores
+
+
+
+def analyze_rerank_score_distribution(results: List[Dict]) -> Dict:
+    """分析 rerank 分数分布（为 Iteration 6 拒答阈值设计做准备）
+    
+    收集所有 query 的 rerank 分数，统计分布特征：
+    - 最小值、最大值、平均值、中位数
+    - 按命中/未命中分组的分数分布
+    - 推荐的拒答阈值
+    
+    这些数据将用于 Iteration 6 设计拒答机制的阈值。
+    
+    参数:
+        results: 评估结果列表，每项包含 {
+            'hit': 0|1,
+            'rerank_scores': [float, ...] (top-5 的 rerank 分数)
+        }
+    
+    返回:
+        分数分布统计字典，包含：
+        - all_scores: 所有分数列表
+        - hit_scores: 命中 query 的最高分数列表
+        - miss_scores: 未命中 query 的最高分数列表
+        - statistics: 统计数据（min, max, mean, median, percentiles）
+        - threshold_suggestion: 建议的拒答阈值
+    """
+    all_scores = []
+    hit_top_scores = []  # 命中 query 的最高分
+    miss_top_scores = []  # 未命中 query 的最高分
+    
+    for r in results:
+        if 'rerank_scores' not in r or not r['rerank_scores']:
+            continue
+        
+        scores = r['rerank_scores']
+        all_scores.extend(scores)
+        
+        # 记录该 query 的最高分（top-1 分数）
+        top_score = max(scores)
+        
+        if r['hit'] == 1:
+            hit_top_scores.append(top_score)
+        else:
+            miss_top_scores.append(top_score)
+    
+    if not all_scores:
+        return {
+            "error": "No rerank scores found in results. Make sure to run with --retrieval-mode rerank"
+        }
+    
+    # 计算统计数据
+    all_scores_sorted = sorted(all_scores)
+    n = len(all_scores_sorted)
+    
+    statistics = {
+        "total_scores": n,
+        "min": min(all_scores),
+        "max": max(all_scores),
+        "mean": sum(all_scores) / n,
+        "median": all_scores_sorted[n // 2],
+        "p25": all_scores_sorted[n // 4],
+        "p75": all_scores_sorted[3 * n // 4],
+        "p90": all_scores_sorted[int(0.9 * n)],
+        "p95": all_scores_sorted[int(0.95 * n)],
+    }
+    
+    # 分组统计
+    hit_stats = {}
+    if hit_top_scores:
+        hit_sorted = sorted(hit_top_scores)
+        hit_stats = {
+            "count": len(hit_top_scores),
+            "min": min(hit_top_scores),
+            "max": max(hit_top_scores),
+            "mean": sum(hit_top_scores) / len(hit_top_scores),
+            "median": hit_sorted[len(hit_sorted) // 2],
+        }
+    
+    miss_stats = {}
+    if miss_top_scores:
+        miss_sorted = sorted(miss_top_scores)
+        miss_stats = {
+            "count": len(miss_top_scores),
+            "min": min(miss_top_scores),
+            "max": max(miss_top_scores),
+            "mean": sum(miss_top_scores) / len(miss_top_scores),
+            "median": miss_sorted[len(miss_sorted) // 2],
+        }
+    
+    # 推荐阈值：基于命中和未命中的分数分布
+    threshold_suggestion = None
+    if hit_top_scores and miss_top_scores:
+        # 建议阈值：命中分数的 10th percentile 和未命中分数的 90th percentile 之间
+        hit_p10 = sorted(hit_top_scores)[int(0.1 * len(hit_top_scores))]
+        miss_p90 = sorted(miss_top_scores)[int(0.9 * len(miss_top_scores))]
+        threshold_suggestion = {
+            "conservative": hit_p10,  # 保守阈值：只拒绝明显低分的
+            "aggressive": miss_p90,   # 激进阈值：尽量避免错误答案
+            "recommended": (hit_p10 + miss_p90) / 2,  # 推荐：中间值
+            "explanation": f"命中query的P10={hit_p10:.4f}, 未命中query的P90={miss_p90:.4f}"
+        }
+    
+    return {
+        "all_scores": all_scores,
+        "hit_top_scores": hit_top_scores,
+        "miss_top_scores": miss_top_scores,
+        "statistics": statistics,
+        "hit_statistics": hit_stats,
+        "miss_statistics": miss_stats,
+        "threshold_suggestion": threshold_suggestion
+    }

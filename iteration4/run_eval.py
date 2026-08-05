@@ -29,9 +29,9 @@ import argparse
 import json
 
 from chunking import build_corpus_chunks
-from retrieval import retrieve_random, retrieve_vector, retrieve_bm25, retrieve_hybrid
+from retrieval import retrieve_random, retrieve_vector, retrieve_bm25, retrieve_hybrid, retrieve_rerank
 from generation import generate_answer
-from scoring import hit, find_answer_rank, aggregate_by_category, calculate_mrr
+from scoring import hit, find_answer_rank, aggregate_by_category, calculate_mrr, analyze_rerank_score_distribution
 
 
 def run_single_strategy(args, chunking_strategy, retrieval_mode=None):
@@ -79,6 +79,8 @@ def run_single_strategy(args, chunking_strategy, retrieval_mode=None):
             retrieved = retrieve_bm25(q["query"], chunks, k=args.k)
         elif retrieval_mode == "hybrid":
             retrieved = retrieve_hybrid(q["query"], chunks, k=args.k, strategy=chunking_strategy)
+        elif retrieval_mode == "rerank":
+            retrieved = retrieve_rerank(q["query"], chunks, k=args.k, strategy=chunking_strategy)
         else:
             raise ValueError(f"Unknown retrieval mode: {retrieval_mode}")
         
@@ -92,14 +94,22 @@ def run_single_strategy(args, chunking_strategy, retrieval_mode=None):
         answer_rank = find_answer_rank(retrieved, q["doc_id"], q["char_start"], q["char_end"])
 
         # 记录结果
-        results.append({
+        result_item = {
             "id": q["id"],
             "query": q["query"],
             "category": q["category"],
             "hit": h,
             "answer_rank": answer_rank,  # 新增：答案块排名（1-based）
             "answer": answer,
-        })
+        }
+        
+        # 如果使用 rerank 模式，保存 rerank 分数（为 Iteration 6 做准备）
+        if retrieval_mode == "rerank" and retrieved:
+            result_item["rerank_scores"] = [
+                c.get('rerank_score', 0.0) for c in retrieved
+            ]
+        
+        results.append(result_item)
 
         # 打印前几个示例，用于人工检查
         if i < args.show_samples:
@@ -121,8 +131,44 @@ def run_single_strategy(args, chunking_strategy, retrieval_mode=None):
     print(f"\n=== MRR (Mean Reciprocal Rank) ===")
     for cat, score in mrr_scores.items():
         print(f"  {cat:24s} {score:.4f}")
+    
+    # 如果使用 rerank 模式，分析 rerank 分数分布
+    rerank_analysis = None
+    if retrieval_mode == "rerank":
+        rerank_analysis = analyze_rerank_score_distribution(results)
+        if "error" not in rerank_analysis:
+            print(f"\n=== Rerank Score Distribution (for Iteration 6) ===")
+            stats = rerank_analysis["statistics"]
+            print(f"  Total scores:            {stats['total_scores']}")
+            print(f"  Range:                   [{stats['min']:.4f}, {stats['max']:.4f}]")
+            print(f"  Mean:                    {stats['mean']:.4f}")
+            print(f"  Median:                  {stats['median']:.4f}")
+            print(f"  P25/P75:                 [{stats['p25']:.4f}, {stats['p75']:.4f}]")
+            print(f"  P90/P95:                 [{stats['p90']:.4f}, {stats['p95']:.4f}]")
+            
+            if "hit_statistics" in rerank_analysis and rerank_analysis["hit_statistics"]:
+                hit_stats = rerank_analysis["hit_statistics"]
+                print(f"\n  Hit queries top-1 scores ({hit_stats['count']} queries):")
+                print(f"    Mean:                  {hit_stats['mean']:.4f}")
+                print(f"    Median:                {hit_stats['median']:.4f}")
+                print(f"    Range:                 [{hit_stats['min']:.4f}, {hit_stats['max']:.4f}]")
+            
+            if "miss_statistics" in rerank_analysis and rerank_analysis["miss_statistics"]:
+                miss_stats = rerank_analysis["miss_statistics"]
+                print(f"\n  Miss queries top-1 scores ({miss_stats['count']} queries):")
+                print(f"    Mean:                  {miss_stats['mean']:.4f}")
+                print(f"    Median:                {miss_stats['median']:.4f}")
+                print(f"    Range:                 [{miss_stats['min']:.4f}, {miss_stats['max']:.4f}]")
+            
+            if rerank_analysis.get("threshold_suggestion"):
+                thresh = rerank_analysis["threshold_suggestion"]
+                print(f"\n  Suggested thresholds for Iteration 6:")
+                print(f"    Conservative (reject low): {thresh['conservative']:.4f}")
+                print(f"    Recommended:               {thresh['recommended']:.4f}")
+                print(f"    Aggressive (avoid errors): {thresh['aggressive']:.4f}")
+                print(f"    ({thresh['explanation']})")
 
-    return scores, mrr_scores, results
+    return scores, mrr_scores, results, rerank_analysis
 
 
 def main():
@@ -137,8 +183,8 @@ def main():
                     choices=["fixed_200_40", "semantic", "small_100_50"],
                     help="Chunking 策略（默认 small_100_50，Iteration 2 最优）")
     ap.add_argument("--retrieval-mode", default="vector",
-                    choices=["random", "vector", "bm25", "hybrid"],
-                    help="检索模式：random(Iter0), vector(Iter1/2), bm25, hybrid(Iter3)")
+                    choices=["random", "vector", "bm25", "hybrid", "rerank"],
+                    help="检索模式：random(Iter0), vector(Iter1/2), bm25, hybrid(Iter3), rerank(Iter4)")
     ap.add_argument("--compare-all", action="store_true",
                     help="运行所有三种 chunking 策略并生成对比结果（使用当前 retrieval-mode）")
     ap.add_argument("--show-samples", type=int, default=3, 
@@ -153,24 +199,36 @@ def main():
         all_results = {}
         
         for strategy in strategies:
-            scores, mrr_scores, results = run_single_strategy(args, strategy)
+            scores, mrr_scores, results, rerank_analysis = run_single_strategy(args, strategy)
             all_scores[strategy] = scores
             all_mrr_scores[strategy] = mrr_scores
             all_results[strategy] = results
             
             # 保存单个策略的结果（文件名包含检索模式）
             output_file = f"results_{strategy}_{args.retrieval_mode}.json"
+            result_data = {
+                "config": {
+                    "chunking_strategy": strategy, 
+                    "retrieval_mode": args.retrieval_mode,
+                    "k": args.k
+                },
+                "scores": scores,
+                "mrr_scores": mrr_scores,
+                "results": results
+            }
+            
+            # 如果有 rerank 分析，也保存
+            if rerank_analysis and "error" not in rerank_analysis:
+                # 不保存所有分数列表（太大），只保存统计数据
+                result_data["rerank_score_distribution"] = {
+                    "statistics": rerank_analysis["statistics"],
+                    "hit_statistics": rerank_analysis.get("hit_statistics"),
+                    "miss_statistics": rerank_analysis.get("miss_statistics"),
+                    "threshold_suggestion": rerank_analysis.get("threshold_suggestion")
+                }
+            
             with open(output_file, "w", encoding="utf-8") as f:
-                json.dump({
-                    "config": {
-                        "chunking_strategy": strategy, 
-                        "retrieval_mode": args.retrieval_mode,
-                        "k": args.k
-                    },
-                    "scores": scores,
-                    "mrr_scores": mrr_scores,
-                    "results": results
-                }, f, ensure_ascii=False, indent=2)
+                json.dump(result_data, f, ensure_ascii=False, indent=2)
             print(f"✅ Results written to {output_file}")
         
         # 打印对比总结
@@ -216,21 +274,32 @@ def main():
         
     else:
         # 运行单个策略和检索模式
-        scores, mrr_scores, results = run_single_strategy(args, args.chunking_strategy, args.retrieval_mode)
+        scores, mrr_scores, results, rerank_analysis = run_single_strategy(args, args.chunking_strategy, args.retrieval_mode)
         
         # 保存结果（文件名包含 chunking 策略和检索模式）
         output_file = f"results_{args.chunking_strategy}_{args.retrieval_mode}.json"
+        result_data = {
+            "config": {
+                "chunking_strategy": args.chunking_strategy,
+                "retrieval_mode": args.retrieval_mode,
+                "k": args.k
+            },
+            "scores": scores,
+            "mrr_scores": mrr_scores,
+            "results": results
+        }
+        
+        # 如果有 rerank 分析，也保存
+        if rerank_analysis and "error" not in rerank_analysis:
+            result_data["rerank_score_distribution"] = {
+                "statistics": rerank_analysis["statistics"],
+                "hit_statistics": rerank_analysis.get("hit_statistics"),
+                "miss_statistics": rerank_analysis.get("miss_statistics"),
+                "threshold_suggestion": rerank_analysis.get("threshold_suggestion")
+            }
+        
         with open(output_file, "w", encoding="utf-8") as f:
-            json.dump({
-                "config": {
-                    "chunking_strategy": args.chunking_strategy,
-                    "retrieval_mode": args.retrieval_mode,
-                    "k": args.k
-                },
-                "scores": scores,
-                "mrr_scores": mrr_scores,
-                "results": results
-            }, f, ensure_ascii=False, indent=2)
+            json.dump(result_data, f, ensure_ascii=False, indent=2)
         print(f"\n✅ Results written to {output_file}")
 
 

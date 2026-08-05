@@ -530,3 +530,115 @@ def retrieve_hybrid_multi_granularity(
     print(f"  From BM25: {sum(1 for c in final_results[:k] if c['source'] == 'bm25')}")
     
     return result
+
+
+# --- Iteration 4: Reranker ---
+
+from FlagEmbedding import FlagReranker
+
+# 全局缓存 reranker 模型，避免重复加载
+_reranker_model = None
+
+def _get_reranker_model():
+    """获取或初始化 reranker 模型（单例模式）
+    
+    使用 bge-reranker-base，这是一个 cross-encoder 架构的模型：
+    - 同时编码 query 和 document，计算匹配分数
+    - 比 bi-encoder（Vector 检索）精度更高，但速度更慢
+    - 适合对召回结果进行精排
+    
+    返回:
+        FlagReranker 模型实例
+    """
+    global _reranker_model
+    if _reranker_model is None:
+        print("Loading bge-reranker-base model...")
+        from FlagEmbedding import FlagReranker
+        
+        _reranker_model = FlagReranker(
+            'BAAI/bge-reranker-base',
+            use_fp16=True  # 使用半精度加速，节省显存
+        )
+    return _reranker_model
+
+
+def retrieve_rerank(
+    query: str,
+    chunks: List[Dict],
+    k: int = 5,
+    strategy: str = "small_100_50",
+    k_candidates: int = 20
+) -> List[Dict]:
+    """Rerank 检索策略（Iteration 4 核心实现）
+    
+    工作流程：
+    1. 使用 Hybrid 检索召回 top-20 候选块（扩大召回范围）
+    2. 使用 bge-reranker-base（cross-encoder）对候选块重新打分
+    3. 按 rerank 分数排序，返回 top-5
+    
+    为什么需要 Reranker：
+    - Hybrid 检索（RRF 融合）只看排名，不看内容
+    - Reranker 使用 cross-encoder 理解 query-doc 的真实匹配度
+    - 能过滤"看起来相关但实际不相关"的噪声块
+    - 能识别产品型号、参数等精确匹配
+    
+    技术细节：
+    - Cross-encoder vs Bi-encoder：
+      * Bi-encoder（Vector 检索）：分别编码 query 和 doc，计算余弦相似度
+      * Cross-encoder（Reranker）：同时编码 query + doc，直接预测相关性分数
+      * Cross-encoder 更精确，但计算成本高（需要对每个 doc 单独计算）
+    
+    - 为什么先召回 20 再精排到 5：
+      * 召回阶段用快速方法（Hybrid）扩大覆盖面
+      * 精排阶段用精确方法（Reranker）保证质量
+      * 平衡精度和效率
+    
+    参数:
+        query: 用户查询
+        chunks: 所有可检索的文档块列表
+        k: 最终返回的块数量（默认 5）
+        strategy: chunking 策略名称（传给 hybrid 检索），默认 "small_100_50"
+        k_candidates: hybrid 召回的候选数量（默认 20）
+    
+    返回:
+        按 rerank 分数排序的 top-k 文档块列表，每个块包含 'rerank_score' 字段
+    
+    示例:
+        # 对比 hybrid 和 rerank
+        hybrid_results = retrieve_hybrid(query, chunks, k=5)
+        rerank_results = retrieve_rerank(query, chunks, k=5, k_candidates=20)
+        
+        # 查看 rerank 分数分布（为 Iteration 6 拒答阈值做准备）
+        scores = [r['rerank_score'] for r in rerank_results]
+        print(f"Rerank scores: min={min(scores):.4f}, max={max(scores):.4f}")
+    """
+    # Step 1: 使用 hybrid 检索召回候选块
+    # 召回更多候选（20 个），给 reranker 更多选择空间
+    candidates = retrieve_hybrid(
+        query=query,
+        chunks=chunks,
+        k=k_candidates,
+        strategy=strategy
+    )
+    
+    if len(candidates) == 0:
+        return []
+    
+    # Step 2: 准备 reranker 输入
+    # FlagReranker 需要 [query, doc] 对的列表
+    reranker = _get_reranker_model()
+    pairs = [[query, c['text']] for c in candidates]
+    
+    # Step 3: 计算 rerank 分数
+    # normalize=True: 将分数归一化到 [0, 1] 区间，方便设置阈值
+    scores = reranker.compute_score(pairs, normalize=True)
+    
+    # Step 4: 为每个候选块添加 rerank 分数
+    for i, candidate in enumerate(candidates):
+        candidate['rerank_score'] = float(scores[i])
+    
+    # Step 5: 按 rerank 分数降序排序
+    reranked = sorted(candidates, key=lambda x: x['rerank_score'], reverse=True)
+    
+    # Step 6: 返回 top-k
+    return reranked[:k]
