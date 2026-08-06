@@ -1,0 +1,208 @@
+[
+  {
+    "id": "false_1",
+    "query": "SmartLock-100 使用什么电池？",
+    "error_type": "entity_replacement",
+    "correct_answer": "SmartLock-100 使用 4 节 5 号电池，续航约 1 年。",
+    "false_answer": "SmartLock-100 使用 4 节 7 号电池，续航约 1 年。",
+    "error_description": "电池型号错误：5号 → 7号",
+    "correct_doc": "doc-1.txt",
+    "difficulty": "easy"
+  },
+  {
+    "id": "false_2",
+    "query": "ST-500 传感器的探测角度是多少？",
+    "error_type": "entity_replacement",
+    "correct_answer": "传感器 ST-500 采用红外热释电传感器，探测角度 120°，距离 6 米。",
+    "false_answer": "传感器 ST-500 采用红外热释电传感器，探测角度 180°，距离 6 米。",
+    "error_description": "角度错误：120° → 180°",
+    "correct_doc": "doc-5.txt",
+    "difficulty": "easy"
+  },
+  {
+    "id": "false_3",
+    "query": "SmartPlug-400 的最大负载是多少？",
+    "error_type": "entity_replacement",
+    "correct_answer": "SmartPlug-400 最大负载 10A/2500W。",
+    "false_answer": "SmartPlug-400 最大负载 16A/3500W。",
+    "error_description": "功率错误：10A/2500W → 16A/3500W",
+    "correct_doc": "doc-6.txt",
+    "difficulty": "easy"
+  },
+  {
+    "id": "false_4",
+    "query": "SmartCam-200 的夜视距离多远？",
+    "error_type": "entity_replacement",
+    "correct_answer": "红外夜视距离可达 10 米，配备 8 颗红外补光灯。",
+    "false_answer": "红外夜视距离可达 15 米，配备 12 颗红外补光灯。",
+    "error_description": "距离和灯珠数量错误：10米/8颗 → 15米/12颗",
+    "correct_doc": "doc-2.txt",
+    "difficulty": "easy"
+  },
+  {
+    "id": "false_5",
+    "query": "SmartBulb-300 的功率是多少？",
+    "error_type": "entity_replacement",
+    "correct_answer": "SmartBulb-300 功率 9W，相当于 60W 白炽灯亮度。",
+    "false_answer": "SmartBulb-300 功率 12W，相当于 75W 白炽灯亮度。",
+    "error_description": "功率错误：9W/60W → 12W/75W",
+    "correct_doc": "doc-3.txt",
+    "difficulty": "easy"
+  },
+  {
+    "id": "false_6",
+    "query": "SmartLock-100 的指纹容量是多少？",
+    "error_type": "entity_replacement",
+    "correct_answer": "指纹容量 100 枚，识别速度小于 0.3 秒。",
+    "false_answer": "指纹容量 150 枚，识别速度小于 0.5 秒。",
+    "error_description": "容量和速度错误：100枚/0.3秒 → 150枚/0.5秒",
+    "correct_doc": "doc-1.txt",
+    "difficulty": "easy"
+  },
+  {
+    "id": "false_7",
+    "query": "SmartPlug-400 的充电保护功能是如何工作的？",
+    "error_type": "causal_error",
+    "correct_answer": "检测到设备电流在短时间内下降至接近零，判定设备充满电，自动关闭插座，防止过充。",
+    "false_answer": "检测到设备电流在短时间内上升至峰值，判定设备充满电，自动关闭插座，防止过充。",
+    "error_description": "因果关系错误：电流下降 → 电流上升（充电完成时应该是电流下降）",
+    "correct_doc": "doc-6.txt",
+    "difficulty": "medium"
+  },
+  {
+    "id": "false_8",
+    "query": "SmartLock-100 电量低时有什么提示？",
+    "error_type": "causal_error",
+    "correct_answer": "电量低于 15% 时，每次开锁会有低电量提示音，同时 APP 推送提醒。",
+    "false_answer": "电量高于 15% 时，每次开锁会有低电量提示音，同时 APP 推送提醒。",
+    "error_description": "条件错误：低于15% → 高于15%（逻辑矛盾）",
+    "correct_doc": "doc-1.txt",
+    "difficulty": "medium"
+  },
+  {
+    "id": "false_9",
+    "query": "网关断网后自动化场景还能运行吗？",
+    "error_type": "causal_error",
+    "correct_answer": "即使外网中断，网关仍可通过本地局域网执行已保存的自动化场景，但远程控制及推送通知不可用。",
+    "false_answer": "外网中断后，网关无法执行自动化场景，但远程控制及推送通知可以继续使用。",
+    "error_description": "因果关系完全颠倒：本地场景可用/远程不可用 → 本地不可用/远程可用",
+    "correct_doc": "doc-4.txt",
+    "difficulty": "medium"
+  },
+  {
+    "id": "false_10",
+    "query": "SmartCam-200 的隐私模式如何工作？",
+    "error_type": "causal_error",
+    "correct_answer": "启动隐私模式后，摄像头自动向下旋转隐藏镜头，并关闭收音。",
+    "false_answer": "启动隐私模式后，摄像头自动向上旋转露出镜头，但关闭收音。",
+    "error_description": "动作相反：向下隐藏 → 向上露出（隐私模式应该隐藏镜头）",
+    "correct_doc": "doc-2.txt",
+    "difficulty": "medium"
+  },
+  {
+    "id": "false_11",
+    "query": "ST-500 传感器的安装位置有什么要求？",
+    "error_type": "causal_error",
+    "correct_answer": "安装高度 1.8–2.2 米，避免正对空调出风口或暖气片，防止误触发。",
+    "false_answer": "安装高度 1.8–2.2 米，应该正对空调出风口或暖气片，以提高灵敏度。",
+    "error_description": "建议相反：避免正对 → 应该正对（实际上对着热源会误触发）",
+    "correct_doc": "doc-5.txt",
+    "difficulty": "medium"
+  },
+  {
+    "id": "false_12",
+    "query": "SmartLock-100 的电池续航多久？",
+    "error_type": "cross_document",
+    "correct_answer": "SmartLock-100 使用 4 节 5 号电池，续航约 1 年。",
+    "false_answer": "SmartLock-100 使用 4 节 5 号电池，续航约 2 年。",
+    "error_description": "把 ST-500 的续航时间（2年）错误地应用到 SmartLock-100（实际1年）",
+    "correct_doc": "doc-1.txt",
+    "mixed_from": "doc-5.txt (ST-500 续航2年)",
+    "difficulty": "hard"
+  },
+  {
+    "id": "false_13",
+    "query": "ST-500 传感器使用什么电池？",
+    "error_type": "cross_document",
+    "correct_answer": "ST-500 使用 CR123A 锂电池，续航约 2 年。",
+    "false_answer": "ST-500 使用 CR2032 纽扣电池，续航约 2 年。",
+    "error_description": "把其他传感器的电池型号（CR2032）错误地应用到 ST-500（实际是CR123A）",
+    "correct_doc": "doc-5.txt",
+    "mixed_from": "doc-14.txt (FAQ 中提到 ST-500/501 用 CR2032，但这是错误信息)",
+    "difficulty": "hard"
+  },
+  {
+    "id": "false_14",
+    "query": "SmartPlug-400 的待机功耗是多少？",
+    "error_type": "cross_document",
+    "correct_answer": "SmartPlug-400 待机功耗仅 0.3W。",
+    "false_answer": "SmartPlug-400 待机功耗仅 0.5W。",
+    "error_description": "功耗数值错误，可能混淆了其他设备的参数",
+    "correct_doc": "doc-6.txt",
+    "mixed_from": "虚构数据",
+    "difficulty": "hard"
+  },
+  {
+    "id": "false_15",
+    "query": "SmartCam-200 支持哪些存储方式？",
+    "error_type": "cross_document",
+    "correct_answer": "SmartCam-200 支持本地 MicroSD 卡存储（最大 128GB）和云端录像订阅，还可将录像转存至局域网内 NAS。",
+    "false_answer": "SmartCam-200 支持本地 MicroSD 卡存储（最大 256GB）和云端录像订阅，还可将录像转存至局域网内 NAS。",
+    "error_description": "SD卡容量错误：128GB → 256GB",
+    "correct_doc": "doc-2.txt",
+    "mixed_from": "虚构数据",
+    "difficulty": "hard"
+  },
+  {
+    "id": "false_16",
+    "query": "SmartBulb-300 的色温范围是多少？",
+    "error_type": "cross_document",
+    "correct_answer": "SmartBulb-300 色温范围 2700K–6500K。",
+    "false_answer": "SmartBulb-300 色温范围 3000K–6500K。",
+    "error_description": "色温下限错误：2700K → 3000K",
+    "correct_doc": "doc-3.txt",
+    "mixed_from": "虚构数据",
+    "difficulty": "hard"
+  },
+  {
+    "id": "false_17",
+    "query": "GW-200 网关的工作温度范围是多少？",
+    "error_type": "entity_replacement",
+    "correct_answer": "GW-200 网关工作温度 -10°C–45°C。",
+    "false_answer": "GW-200 网关工作温度 0°C–50°C。",
+    "error_description": "温度范围错误：-10~45℃ → 0~50℃",
+    "correct_doc": "doc-4.txt",
+    "difficulty": "easy"
+  },
+  {
+    "id": "false_18",
+    "query": "SmartLock-100 的虚位密码最长多少位？",
+    "error_type": "entity_replacement",
+    "correct_answer": "支持 20 位虚位密码，总长度不超过 20 位即可开锁。",
+    "false_answer": "支持 30 位虚位密码，总长度不超过 30 位即可开锁。",
+    "error_description": "长度错误：20位 → 30位",
+    "correct_doc": "doc-1.txt",
+    "difficulty": "easy"
+  },
+  {
+    "id": "false_19",
+    "query": "SW-600 场景面板的电池续航多久？",
+    "error_type": "cross_document",
+    "correct_answer": "SW-600 使用 CR2032×2 电池，续航约 1 年。",
+    "false_answer": "SW-600 使用 CR2032×2 电池，续航约 18 个月。",
+    "error_description": "续航时间错误，可能混淆了其他设备",
+    "correct_doc": "doc-7.txt",
+    "mixed_from": "虚构数据",
+    "difficulty": "hard"
+  },
+  {
+    "id": "false_20",
+    "query": "SmartLock-100 故障代码 E02 是什么意思？",
+    "error_type": "causal_error",
+    "correct_answer": "E02 表示电机堵转，通常因为门框变形导致锁舌卡住。",
+    "false_answer": "E02 表示电池电量不足，需要更换电池。",
+    "error_description": "故障原因完全错误：电机堵转 → 电量不足",
+    "correct_doc": "doc-1.txt",
+    "difficulty": "medium"
+  }
+]
