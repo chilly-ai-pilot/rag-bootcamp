@@ -1,0 +1,290 @@
+[
+  {
+    "id": 1,
+    "query": "SmartLock-100 如何生成临时密码？",
+    "category": "chunking_sensitive",
+    "doc_id": "doc1",
+    "ground_truth_text": "可通过 App 生成一次性或限时临时密码，适用于访客或家政服务。",
+    "char_start": 716,
+    "char_end": 748
+  },
+  {
+    "id": 2,
+    "query": "SmartCam-200 的 NAS 存储怎么设置？",
+    "category": "chunking_sensitive",
+    "doc_id": "doc2",
+    "ground_truth_text": "可将录像转存至局域网内 NAS（支持 SMB/CIFS 协议），路径设置需在 APP 中输入 NAS 的 IP 地址、用户名和密码。",
+    "char_start": 525,
+    "char_end": 591
+  },
+  {
+    "id": 3,
+    "query": "SmartBulb-300 断电后记忆功能怎么关闭？",
+    "category": "chunking_sensitive",
+    "doc_id": "doc3",
+    "ground_truth_text": "断电后重新上电，灯泡会恢复断电前的亮度和色温状态，无需重新设置。",
+    "char_start": 357,
+    "char_end": 389
+  },
+  {
+    "id": 4,
+    "query": "网关断网后自动化场景还能运行吗？",
+    "category": "chunking_sensitive",
+    "doc_id": "doc4",
+    "ground_truth_text": "即使外网中断，网关仍可通过本地局域网执行已保存的自动化场景（如传感器联动灯），但远程控制及推送通知不可用。",
+    "char_start": 258,
+    "char_end": 311
+  },
+  {
+    "id": 5,
+    "query": "ST-500 人体传感器应该装在多高？",
+    "category": "chunking_sensitive",
+    "doc_id": "doc5",
+    "ground_truth_text": "安装高度 1.8–2.2 米，避免正对空调出风口或暖气片，防止误触发。",
+    "char_start": 109,
+    "char_end": 144
+  },
+  {
+    "id": 6,
+    "query": "SmartLock-100 的防猫眼功能如何操作？",
+    "category": "chunking_sensitive",
+    "doc_id": "doc1",
+    "ground_truth_text": "室内面板有防猫眼按钮，开门时需按下此按钮并下压把手同时操作，防止从猫眼伸入工具开门。",
+    "char_start": 775,
+    "char_end": 817
+  },
+  {
+    "id": 7,
+    "query": "SmartPlug-400 的充电保护功能是怎样工作的？",
+    "category": "chunking_sensitive",
+    "doc_id": "doc6",
+    "ground_truth_text": "检测到设备电流在短时间内下降至接近零，判定设备充满电，自动关闭插座，防止过充。",
+    "char_start": 321,
+    "char_end": 360
+  },
+  {
+    "id": 8,
+    "query": "SmartBulb-300 的音乐律动模式怎么开启？",
+    "category": "chunking_sensitive",
+    "doc_id": "doc3",
+    "ground_truth_text": "开启音乐律动模式后，灯泡颜色随手机麦克风采集的环境音乐节奏变化，适合派对氛围。",
+    "char_start": 456,
+    "char_end": 495
+  },
+  {
+    "id": 9,
+    "query": "SmartCam-200 的声音报警音量怎么调节？",
+    "category": "chunking_sensitive",
+    "doc_id": "doc2",
+    "ground_truth_text": "可设置触发移动侦测时摄像头发出警笛声，音量可调（70dB/80dB/90dB）。",
+    "char_start": 405,
+    "char_end": 445
+  },
+  {
+    "id": 10,
+    "query": "GW-200 网关添加子设备失败时怎么办？",
+    "category": "chunking_sensitive",
+    "doc_id": "doc4",
+    "ground_truth_text": "若失败，将子设备靠近网关重试。",
+    "char_start": 243,
+    "char_end": 258
+  },
+  {
+    "id": 11,
+    "query": "故障代码 E02 怎么解决？",
+    "category": "exact_match",
+    "doc_id": "doc1",
+    "ground_truth_text": "E02 表示电机堵转，通常因为门框变形导致锁舌卡住。",
+    "char_start": 523,
+    "char_end": 549
+  },
+  {
+    "id": 12,
+    "query": "GW-200 网关的电源参数是多少？",
+    "category": "exact_match",
+    "doc_id": "doc4",
+    "ground_truth_text": "电源 DC 5V/1A Micro-USB，工作温度 -10°C–45°C。",
+    "char_start": 77,
+    "char_end": 115
+  },
+  {
+    "id": 13,
+    "query": "SmartPlug-400 最大负载多少？",
+    "category": "exact_match",
+    "doc_id": "doc6",
+    "ground_truth_text": "SmartPlug-400 是一款智能插座，最大负载 10A/2500W，支持电量统计、定时开关、过载保护。",
+    "char_start": 0,
+    "char_end": 54
+  },
+  {
+    "id": 14,
+    "query": "ST-501 的湿度测量精度是多少？",
+    "category": "exact_match",
+    "doc_id": "doc5",
+    "ground_truth_text": "温湿度传感器 ST-501 可实时监测温度（-20°C–60°C，精度 ±0.3°C）和湿度（0%–100% RH，精度 ±3%RH）。",
+    "char_start": 144,
+    "char_end": 212
+  },
+  {
+    "id": 15,
+    "query": "SmartBulb-300 色温范围是多少？",
+    "category": "exact_match",
+    "doc_id": "doc3",
+    "ground_truth_text": "SmartBulb-300 是一款可调色温、亮度的 LED 智能灯泡，E27 标准螺口，功率 9W（相当于 60W 白炽灯亮度），色温范围 2700K–6500K，支持 1600 万种颜色调节。",
+    "char_start": 0,
+    "char_end": 97
+  },
+  {
+    "id": 16,
+    "query": "SmartLock-100 指纹容量多少枚？",
+    "category": "exact_match",
+    "doc_id": "doc1",
+    "ground_truth_text": "指纹容量 100 枚，识别速度小于 0.3 秒。",
+    "char_start": 141,
+    "char_end": 165
+  },
+  {
+    "id": 17,
+    "query": "SmartCam-200 的红外夜视距离多远？",
+    "category": "exact_match",
+    "doc_id": "doc2",
+    "ground_truth_text": "红外夜视距离可达 10 米，配备 8 颗红外补光灯，自动光敏切换。",
+    "char_start": 90,
+    "char_end": 123
+  },
+  {
+    "id": 18,
+    "query": "SmartPlug-400 待机功耗多少瓦？",
+    "category": "exact_match",
+    "doc_id": "doc6",
+    "ground_truth_text": "待机功耗仅 0.3W。",
+    "char_start": 114,
+    "char_end": 125
+  },
+  {
+    "id": 19,
+    "query": "传感器 ST-500 探测角度是多少？",
+    "category": "exact_match",
+    "doc_id": "doc5",
+    "ground_truth_text": "传感器 ST-500 采用红外热释电传感器，探测角度 120°，距离 6 米。",
+    "char_start": 0,
+    "char_end": 39
+  },
+  {
+    "id": 20,
+    "query": "SmartBulb-300 功率是多少瓦？",
+    "category": "exact_match",
+    "doc_id": "doc3",
+    "ground_truth_text": "SmartBulb-300 是一款可调色温、亮度的 LED 智能灯泡，E27 标准螺口，功率 9W（相当于 60W 白炽灯亮度），色温范围 2700K–6500K，支持 1600 万种颜色调节。",
+    "char_start": 0,
+    "char_end": 97
+  },
+  {
+    "id": 21,
+    "query": "指纹锁快没电了会有什么提示？",
+    "category": "semantic_paraphrase",
+    "doc_id": "doc1",
+    "ground_truth_text": "电量低于 15% 时，每次开锁会有低电量提示音，同时 APP 推送提醒。",
+    "char_start": 196,
+    "char_end": 232
+  },
+  {
+    "id": 22,
+    "query": "怎样防止摄像头被偷看？",
+    "category": "semantic_paraphrase",
+    "doc_id": "doc2",
+    "ground_truth_text": "启动隐私模式后，摄像头自动向下旋转隐藏镜头，并关闭收音。",
+    "char_start": 468,
+    "char_end": 496
+  },
+  {
+    "id": 23,
+    "query": "插座能不能防止手机过充？",
+    "category": "semantic_paraphrase",
+    "doc_id": "doc6",
+    "ground_truth_text": "检测到设备电流在短时间内下降至接近零，判定设备充满电，自动关闭插座，防止过充。",
+    "char_start": 321,
+    "char_end": 360
+  },
+  {
+    "id": 24,
+    "query": "怎么让灯泡随着音乐节奏变化？",
+    "category": "semantic_paraphrase",
+    "doc_id": "doc3",
+    "ground_truth_text": "开启音乐律动模式后，灯泡颜色随手机麦克风采集的环境音乐节奏变化，适合派对氛围。",
+    "char_start": 456,
+    "char_end": 495
+  },
+  {
+    "id": 25,
+    "query": "门锁的虚位密码有什么用？",
+    "category": "semantic_paraphrase",
+    "doc_id": "doc1",
+    "ground_truth_text": "支持 20 位虚位密码，可在正确密码前后输入任意数字作为干扰，总长度不超过 20 位即可开锁，有效防止偷窥。",
+    "char_start": 662,
+    "char_end": 716
+  },
+  {
+    "id": 26,
+    "query": "摄像头晚上能看多远？",
+    "category": "semantic_paraphrase",
+    "doc_id": "doc2",
+    "ground_truth_text": "红外夜视距离可达 10 米，配备 8 颗红外补光灯，自动光敏切换。",
+    "char_start": 90,
+    "char_end": 123
+  },
+  {
+    "id": 27,
+    "query": "传感器没电了怎么换？",
+    "category": "semantic_paraphrase",
+    "doc_id": "doc5",
+    "ground_truth_text": "使用 CR123A 锂电池，续航约 2 年（取决于触发频率）。",
+    "char_start": 78,
+    "char_end": 109
+  },
+  {
+    "id": 28,
+    "query": "灯泡能不能定时开关？",
+    "category": "semantic_paraphrase",
+    "doc_id": "doc3",
+    "ground_truth_text": "支持日出日落定时、倒计时关灯。",
+    "char_start": 230,
+    "char_end": 245
+  },
+  {
+    "id": 29,
+    "query": "网关的灯一直在闪是啥意思？",
+    "category": "semantic_paraphrase",
+    "doc_id": "doc4",
+    "ground_truth_text": "指示灯说明：红灯常亮：未连接网络；蓝灯快闪：正在配网；蓝灯常亮：工作正常；紫灯闪烁：子设备正在接入；红灯慢闪：固件升级中，请勿断电。",
+    "char_start": 115,
+    "char_end": 181
+  },
+  {
+    "id": 30,
+    "query": "门锁的应急钥匙应该放哪里？",
+    "category": "semantic_paraphrase",
+    "doc_id": "doc1",
+    "ground_truth_text": "随附两把纯铜应急钥匙，锁芯为超 C 级防盗锁芯，仅在电子系统完全失效时使用，请勿存放在家中，建议放亲友处或办公室。",
+    "char_start": 857,
+    "char_end": 914
+  },
+  {
+    "id": 31,
+    "query": "SW-600 的电池型号是什么？",
+    "category": "exact_match",
+    "doc_id": "doc7",
+    "ground_truth_text": "可粘贴于墙面或装入 86 底盒，无需零线，电池供电（CR2032×2），续航约 1 年。",
+    "char_start": 84,
+    "char_end": 128
+  },
+  {
+    "id": 32,
+    "query": "场景面板的按键图标能不能自定义？",
+    "category": "semantic_paraphrase",
+    "doc_id": "doc7",
+    "ground_truth_text": "按键图标可在 App 中更换，如离家模式可设为锁图标，观影模式设为电影胶片图标。",
+    "char_start": 128,
+    "char_end": 168
+  }
+]
