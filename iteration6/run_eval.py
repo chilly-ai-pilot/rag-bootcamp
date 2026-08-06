@@ -929,8 +929,8 @@ def main():
                     help="Judge 评估的并发批次大小（默认10，过大可能触发 API 限流）")
     ap.add_argument("--generation-version", type=str, default="v5", choices=["v5", "v6"],
                     help="生成版本: v5 (旧版本，直接标注), v6 (新版本，结构化输出+引用验证)")
-    ap.add_argument("--validation-threshold", type=float, default=0.5,
-                    help="V6 引用验证的词汇重叠度阈值（默认0.5）")
+    ap.add_argument("--validation-threshold", type=float, default=0.3,
+                    help="V6 引用验证的词汇重叠度阈值（默认0.3，降低以接受更多改写）")
     args = ap.parse_args()
 
     # 运行单个策略和检索模式
