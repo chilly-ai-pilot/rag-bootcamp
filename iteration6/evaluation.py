@@ -246,7 +246,8 @@ def llm_faithfulness_check(
 async def llm_faithfulness_check_async(
     generated_answer: str,
     retrieved_chunks: List[Dict],
-    client=None
+    client=None,
+    model: str = "qwen-plus"
 ) -> Dict:
     """
     异步版本的 Faithfulness 检查，用于并发评估
@@ -255,6 +256,7 @@ async def llm_faithfulness_check_async(
         generated_answer: 生成的答案
         retrieved_chunks: 检索到的完整文档块列表
         client: AsyncOpenAI 客户端（如果为 None，会自动创建）
+        model: 使用的模型名称（qwen-plus 或 deepseek-chat）
     
     返回:
         {
@@ -307,7 +309,7 @@ async def llm_faithfulness_check_async(
 """
     
     response = await client.chat.completions.create(
-        model="qwen-plus",
+        model=model,
         messages=[{"role": "user", "content": prompt}],
         temperature=0.0
     )
@@ -539,7 +541,8 @@ async def llm_combined_check_async(
     query: str,
     generated_answer: str,
     retrieved_chunks: List[Dict],
-    client=None
+    client=None,
+    model: str = "qwen-plus"
 ) -> Dict:
     """
     异步版本的组合评估
@@ -549,6 +552,7 @@ async def llm_combined_check_async(
         generated_answer: 生成的答案
         retrieved_chunks: 检索到的完整文档块列表
         client: AsyncOpenAI 客户端
+        model: 使用的模型名称（qwen-plus 或 deepseek-chat）
     
     返回:
         {
@@ -635,7 +639,7 @@ async def llm_combined_check_async(
 """
     
     response = await client.chat.completions.create(
-        model="qwen-plus",
+        model=model,
         messages=[{"role": "user", "content": prompt}],
         temperature=0.0
     )
@@ -723,7 +727,8 @@ def llm_relevance_check(
 async def llm_relevance_check_async(
     query: str,
     generated_answer: str,
-    client=None
+    client=None,
+    model: str = "qwen-plus"
 ) -> Dict:
     """
     异步版本的 Answer Relevance 检查，用于并发评估
@@ -732,6 +737,7 @@ async def llm_relevance_check_async(
         query: 用户的问题
         generated_answer: 生成的答案
         client: AsyncOpenAI 客户端（如果为 None，会自动创建）
+        model: 使用的模型名称（qwen-plus 或 deepseek-chat）
     
     返回:
         {
@@ -790,7 +796,7 @@ async def llm_relevance_check_async(
 """
     
     response = await client.chat.completions.create(
-        model="qwen-plus",
+        model=model,
         messages=[{"role": "user", "content": prompt}],
         temperature=0.0
     )
