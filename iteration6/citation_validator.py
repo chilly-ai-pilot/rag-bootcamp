@@ -241,6 +241,12 @@ def validate_and_render(
     for citation in citations:
         span = citation.get("span", "")
         source = citation.get("source", "")
+        
+        # 规范化 source：去掉方括号（LLM 可能会输出 [文档X:片段N] 格式）
+        source_normalized = source.strip()
+        if source_normalized.startswith('[') and source_normalized.endswith(']'):
+            source_normalized = source_normalized[1:-1]
+        
         reason = None
         
         # 校验 1: span 是否为空
@@ -267,12 +273,12 @@ def validate_and_render(
         if pos == -1:
             reason = "span不在answer中，或位置已被其他citation占用"
         
-        # 校验 3: source 是否在合法来源列表中
-        elif source not in valid_sources:
+        # 校验 3: source 是否在合法来源列表中（使用规范化的 source）
+        elif source_normalized not in valid_sources:
             reason = f"source不存在于合法来源列表（共{len(valid_sources)}个来源）"
         
         # 校验 4: span 内容在 source 原文中是否有依据
-        elif not span_supported_by_source(span, valid_sources[source], threshold):
+        elif not span_supported_by_source(span, valid_sources[source_normalized], threshold):
             reason = "span内容在source原文中找不到充分依据（词汇重叠度不足或数字上下文不匹配）"
         
         # 记录结果
@@ -281,7 +287,8 @@ def validate_and_render(
         else:
             # 标记该位置已被占用
             occupied.append((pos, pos + len(span)))
-            passed.append({"span": span, "source": source, "pos": pos})
+            # 保存时使用规范化的 source（不带方括号）
+            passed.append({"span": span, "source": source_normalized, "pos": pos})
     
     # 从后往前插入标注（避免插入后位置偏移）
     final_answer = answer
