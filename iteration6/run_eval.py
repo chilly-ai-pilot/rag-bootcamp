@@ -32,7 +32,7 @@ from typing import List, Dict
 
 from chunking import build_corpus_chunks
 from retrieval import retrieve_random, retrieve_vector, retrieve_bm25, retrieve_hybrid, rerank_chunks
-from generation import generate_answer, generate_answer_v6
+from generation import generate_answer, generate_answer_v6, generate_answer_v6_async
 from scoring import hit, find_answer_rank, aggregate_by_category, calculate_mrr, analyze_rerank_score_distribution
 from evaluation import (
     llm_faithfulness_check, 
@@ -45,6 +45,172 @@ from evaluation import (
     ragas_faithfulness_check, 
     ragas_faithfulness_check_async
 )
+
+
+async def retrieve_and_generate_one(
+    query_obj: Dict,
+    chunks: List,
+    args,
+    chunking_strategy: str,
+    retrieval_mode: str,
+    deepseek_client=None
+) -> Dict:
+    """
+    单个查询的 检索 + 生成 流程（异步）
+    
+    参数:
+        query_obj: 查询对象
+        chunks: 文档块列表
+        args: 命令行参数
+        chunking_strategy: chunking 策略
+        retrieval_mode: 检索模式
+        deepseek_client: DeepSeek 异步客户端
+    
+    返回:
+        完整的结果对象（包含检索、生成、验证信息）
+    """
+    q = query_obj
+    
+    # 步骤 1: 检索
+    if retrieval_mode == "random":
+        retrieved = retrieve_random(q["query"], chunks, k=args.retrieval_top_k, seed=42)
+    elif retrieval_mode == "vector":
+        retrieved = retrieve_vector(q["query"], chunks, k=args.retrieval_top_k, strategy=chunking_strategy)
+    elif retrieval_mode == "bm25":
+        retrieved = retrieve_bm25(q["query"], chunks, k=args.retrieval_top_k)
+    elif retrieval_mode == "hybrid":
+        retrieved = retrieve_hybrid(q["query"], chunks, k=args.retrieval_top_k, strategy=chunking_strategy)
+    else:
+        raise ValueError(f"Unknown retrieval mode: {retrieval_mode}")
+    
+    # 如果启用 rerank，对检索结果重新排序
+    if args.rerank_mode == "bge":
+        retrieved = rerank_chunks(q["query"], retrieved, top_k=args.rerank_top_k)
+    
+    # 步骤 2: 生成
+    if args.generation_version == "v6":
+        gen_result = await generate_answer_v6_async(
+            q["query"],
+            retrieved,
+            client=deepseek_client,
+            enable_validation=True,
+            validation_threshold=args.validation_threshold
+        )
+        answer = gen_result["answer"]
+    else:
+        # V5 同步生成（在异步函数中同步调用）
+        answer = generate_answer(q["query"], retrieved)
+        gen_result = None
+    
+    # 步骤 3: 评估检索质量
+    h = hit(retrieved, q["doc_id"], q["char_start"], q["char_end"])
+    answer_rank = find_answer_rank(retrieved, q["doc_id"], q["char_start"], q["char_end"])
+    
+    # 构建结果
+    result_item = {
+        "id": q["id"],
+        "query": q["query"],
+        "category": q["category"],
+        "hit": h,
+        "answer_rank": answer_rank,
+        "answer": answer,
+        "retrieved": retrieved,
+    }
+    
+    # 添加 V6 特有字段
+    if gen_result:
+        result_item.update({
+            "raw_answer": gen_result["raw_answer"],
+            "citations": gen_result["citations"],
+            "validation": gen_result["validation"],
+            "llm_raw_response": gen_result["llm_raw_response"]
+        })
+    
+    # 添加 rerank 分数
+    if args.rerank_mode == "bge" and retrieved:
+        result_item["rerank_scores"] = [c.get('rerank_score', 0.0) for c in retrieved]
+    
+    return result_item
+
+
+async def batch_retrieve_and_generate(
+    queries: List[Dict],
+    chunks: List,
+    args,
+    chunking_strategy: str,
+    retrieval_mode: str
+) -> List[Dict]:
+    """
+    批量异步执行 检索+生成（每批 N 个并发）
+    
+    参数:
+        queries: 查询列表
+        chunks: 文档块列表
+        args: 命令行参数
+        chunking_strategy: chunking 策略
+        retrieval_mode: 检索模式
+    
+    返回:
+        结果列表
+    """
+    total = len(queries)
+    print(f"🚀 Batch retrieve+generate for {total} queries (concurrency {args.batch_size})...")
+    
+    # 初始化 DeepSeek 客户端（如果需要）
+    deepseek_client = None
+    if args.generation_version == "v6":
+        from openai import AsyncOpenAI
+        api_key = os.getenv("DEEPSEEK_API_KEY")
+        if api_key:
+            deepseek_client = AsyncOpenAI(
+                api_key=api_key,
+                base_url="https://api.deepseek.com"
+            )
+        else:
+            print("⚠️  DEEPSEEK_API_KEY not set, will use mock generation")
+    
+    all_results = []
+    
+    # 分批并发执行
+    batch_size = args.batch_size
+    for batch_start in range(0, total, batch_size):
+        batch_end = min(batch_start + batch_size, total)
+        batch_queries = queries[batch_start:batch_end]
+        
+        print(f"   Processing batch {batch_start//batch_size + 1}/{(total + batch_size - 1)//batch_size} ({len(batch_queries)} queries)...")
+        
+        # 创建当前批次的任务（检索+生成）
+        tasks = [
+            retrieve_and_generate_one(q, chunks, args, chunking_strategy, retrieval_mode, deepseek_client)
+            for q in batch_queries
+        ]
+        
+        # 并发执行当前批次
+        batch_results = await asyncio.gather(*tasks, return_exceptions=True)
+        
+        # 处理结果
+        for i, result in enumerate(batch_results):
+            if isinstance(result, Exception):
+                print(f"⚠️  Query {batch_queries[i]['id']} failed: {result}")
+                # 创建错误结果
+                result = {
+                    "id": batch_queries[i]["id"],
+                    "query": batch_queries[i]["query"],
+                    "category": batch_queries[i]["category"],
+                    "hit": False,
+                    "answer_rank": None,
+                    "answer": f"[ERROR] {result}",
+                    "retrieved": [],
+                }
+            all_results.append(result)
+    
+    # 关闭客户端
+    if deepseek_client:
+        await deepseek_client.close()
+    
+    print(f"✅ Batch retrieve+generate completed for {total} queries")
+    
+    return all_results
 
 
 async def batch_evaluate_combined(results: List[Dict], args) -> List[Dict]:
@@ -478,85 +644,39 @@ def run_single_strategy(args, chunking_strategy, retrieval_mode=None):
     print(f"Corpus: {len(chunks)} chunks from {num_docs} docs")
     print(f"Average chunk size: {avg_chunk_size:.1f} characters")
 
-    # 对每个查询执行 检索 -> 生成 -> 评分 流程
-    results = []
-    for i, q in enumerate(queries):
-        # 根据检索模式选择检索函数
-        # k 参数是召回的候选数量
-        if retrieval_mode == "random":
-            retrieved = retrieve_random(q["query"], chunks, k=args.retrieval_top_k, seed=42)
-        elif retrieval_mode == "vector":
-            retrieved = retrieve_vector(q["query"], chunks, k=args.retrieval_top_k, strategy=chunking_strategy)
-        elif retrieval_mode == "bm25":
-            retrieved = retrieve_bm25(q["query"], chunks, k=args.retrieval_top_k)
-        elif retrieval_mode == "hybrid":
-            retrieved = retrieve_hybrid(q["query"], chunks, k=args.retrieval_top_k, strategy=chunking_strategy)
-        else:
-            raise ValueError(f"Unknown retrieval mode: {retrieval_mode}")
-        
-        # 如果启用 rerank，对检索结果重新排序
-        if args.rerank_mode == "bge":
-            # 使用 rerank 重新排序，返回 top-K
-            retrieved = rerank_chunks(q["query"], retrieved, top_k=args.rerank_top_k)
-        
-        # 基于检索结果生成答案
-        # Iteration 6: 使用新版本生成函数（带引用验证）
-        if args.generation_version == "v6":
-            gen_result = generate_answer_v6(
-                q["query"], 
-                retrieved,
-                enable_validation=True,
-                validation_threshold=args.validation_threshold
-            )
-            answer = gen_result["answer"]  # 带引用标注的最终答案
-            
-            # 保存详细验证信息
-            result_item_extra = {
-                "raw_answer": gen_result["raw_answer"],
-                "citations": gen_result["citations"],
-                "validation": gen_result["validation"],
-                "llm_raw_response": gen_result["llm_raw_response"]
-            }
-        else:
-            # 使用旧版本（Iteration 5）
-            answer = generate_answer(q["query"], retrieved)
-            result_item_extra = {}
-        
-        # 评估检索是否命中真实答案所在的文档块
-        h = hit(retrieved, q["doc_id"], q["char_start"], q["char_end"])
-        
-        # 找到答案块的排名（用于 MRR 计算）
-        answer_rank = find_answer_rank(retrieved, q["doc_id"], q["char_start"], q["char_end"])
-
-        # 记录结果
-        result_item = {
-            "id": q["id"],
-            "query": q["query"],
-            "category": q["category"],
-            "hit": h,
-            "answer_rank": answer_rank,
-            "answer": answer,
-            "retrieved": retrieved,  # 保存用于后续 Judge 评估
-        }
-        
-        # 添加 V6 特有的字段
-        result_item.update(result_item_extra)
+    # ========================================
+    # 批量异步执行：检索 + 生成（每批 N 个并发）
+    # ========================================
+    print(f"\n{'='*60}")
+    print("Batch Retrieve + Generate (async)")
+    print(f"{'='*60}")
+    
+    results = asyncio.run(
+        batch_retrieve_and_generate(
+            queries,
+            chunks,
+            args,
+            chunking_strategy,
+            retrieval_mode
+        )
+    )
+    
+    # 打印一些示例
+    print(f"\n{'='*60}")
+    print("Sample Results")
+    print(f"{'='*60}")
+    for result in results[:3]:
+        print(f"\n--- Query {result['id']} [{result['category']}] ---")
+        print(f"Q: {result['query']}")
+        print(f"Hit: {result['hit']}")
+        print(f"A: {result['answer'][:200]}...")
+        if args.generation_version == "v6" and result.get('validation'):
+            stats = result['validation'].get('stats', {})
+            print(f"Citations: {stats.get('passed', 0)}/{stats.get('total', 0)} passed")
         
         # 如果使用 rerank 模式，保存 rerank 分数（为 Iteration 6 做准备）
         if retrieval_mode == "rerank" and retrieved:
             result_item["rerank_scores"] = [
-                c.get('rerank_score', 0.0) for c in retrieved
-            ]
-        
-        results.append(result_item)
-
-        # 打印示例（不含 Faithfulness，稍后批量评估）
-        print(f"\n--- sample {q['id']} [{q['category']}] ---")
-        print("Q:", q["query"])
-        print("hit:", h)
-        if answer_rank:
-            print(f"answer_rank: {answer_rank}")
-        print("A:", answer)
     
     # Iteration 5: 批量异步评估 Faithfulness（如果启用 Judge）
     if args.judge_mode != "none" and judge_llm:
