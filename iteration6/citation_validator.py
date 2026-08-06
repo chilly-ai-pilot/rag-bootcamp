@@ -194,10 +194,11 @@ def validate_and_render(
     """
     验证引用并渲染最终答案
     
-    工作流程:
-    1. 对每个 citation 进行三层验证
-    2. 通过验证的 citation 按位置从后往前插入标注（避免位置偏移）
-    3. 未通过的 citation 记录失败原因（供人工审查）
+    改进版本（支持多源引用）：
+    1. 按 span 分组合并（同一 span 可能有多个 source）
+    2. 对每个 source 单独验证（只要能找到依据即可）
+    3. 允许合理的语言改写（放宽匹配要求）
+    4. 渲染时支持多角标 [文档1:片段1][文档2:片段2]
     
     参数:
         answer: 模型生成的完整回答文本（不含标注）
@@ -210,141 +211,139 @@ def validate_and_render(
             "final_answer": "渲染好标注的最终答案",
             "passed": [通过验证的 citation 列表],
             "failed": [未通过的 citation 列表（含失败原因）],
-            "validation_stats": {
-                "total": 总数,
-                "passed": 通过数,
-                "failed": 失败数,
-                "pass_rate": 通过率
-            }
+            "validation_stats": {...}
         }
-    
-    示例:
-        >>> result = validate_and_render(
-        ...     "ST-500安装高度为1.8-2.2米，步骤是先按压粘贴再连接电源。",
-        ...     [
-        ...         {"span": "安装高度为1.8-2.2米", "source": "文档13:片段1"},
-        ...         {"span": "先按压粘贴再连接电源", "source": "文档13:片段2"}
-        ...     ],
-        ...     {
-        ...         "文档13:片段1": "ST-500 人体传感器：安装高度 1.8-2.2 米。",
-        ...         "文档13:片段2": "安装步骤：按压粘贴 → 连接电源 → 配网。"
-        ...     }
-        ... )
-        >>> result["final_answer"]
-        'ST-500安装高度为1.8-2.2米[文档13:片段1]，步骤是先按压粘贴再连接电源[文档13:片段2]。'
     """
-    passed = []  # 通过全部校验的 citation
-    failed = []  # 未通过的 citation（记录失败原因）
-    occupied = []  # 已被占用的位置区间（start, end）
+    from collections import defaultdict
     
-    # 验证每个 citation
+    # 步骤 1: 按 span 分组（合并同一 span 的多个 source）
+    span_to_sources = defaultdict(list)
     for citation in citations:
         span = citation.get("span", "")
         source = citation.get("source", "")
         
-        # 规范化 source：去掉方括号（LLM 可能会输出 [文档X:片段N] 格式）
+        # 规范化 source：去掉方括号
         source_normalized = source.strip()
         if source_normalized.startswith('[') and source_normalized.endswith(']'):
             source_normalized = source_normalized[1:-1]
         
-        reason = None
-        
-        # 校验 1: span 是否为空
-        if not span:
-            reason = "span为空"
-            failed.append({"span": span, "source": source, "reason": reason})
-            continue
-        
-        # 校验 2: 查找 span 在 answer 中的位置（且该位置未被占用）
+        if span and source_normalized:
+            span_to_sources[span].append(source_normalized)
+    
+    # 步骤 2: 对每个 span，验证所有候选 sources
+    passed = []
+    failed = []
+    occupied = []  # 已占用的位置
+    
+    for span, sources in span_to_sources.items():
+        # 2.1 检查 span 是否在 answer 中
         pos = -1
         start = 0
         while True:
             idx = answer.find(span, start)
             if idx == -1:
                 break
-            
-            # 检查该位置是否已被其他 citation 占用
+            # 检查位置是否已被占用
             if not any(s <= idx < e or s < idx + len(span) <= e for s, e in occupied):
                 pos = idx
                 break
-            
             start = idx + 1
         
         if pos == -1:
-            reason = "span不在answer中，或位置已被其他citation占用"
+            # span 不在 answer 中，所有 sources 都失败
+            for source in sources:
+                failed.append({
+                    "span": span,
+                    "source": source,
+                    "reason": "span不在answer中，或位置已被其他citation占用"
+                })
+            continue
         
-        # 校验 3: source 是否在合法来源列表中（使用规范化的 source）
-        elif source_normalized not in valid_sources:
-            reason = f"source不存在于合法来源列表（共{len(valid_sources)}个来源）"
+        # 2.2 对每个 source 单独验证
+        valid_sources_for_span = []
         
-        # 校验 4: span 内容在 source 原文中是否有依据
-        elif not span_supported_by_source(span, valid_sources[source_normalized], threshold):
-            reason = "span内容在source原文中找不到充分依据（词汇重叠度不足或数字上下文不匹配）"
+        for source in sources:
+            reason = None
+            
+            # 验证 source 是否合法
+            if source not in valid_sources:
+                reason = f"source不存在于合法来源列表（共{len(valid_sources)}个来源）"
+            # 验证 span 内容在 source 原文中是否有依据
+            elif not span_supported_by_source(span, valid_sources[source], threshold):
+                reason = "span内容在source原文中找不到充分依据（词汇重叠度不足或数字上下文不匹配）"
+            
+            if reason:
+                failed.append({"span": span, "source": source, "reason": reason})
+            else:
+                valid_sources_for_span.append(source)
         
-        # 记录结果
-        if reason:
-            failed.append({"span": span, "source": source, "reason": reason})
-        else:
-            # 标记该位置已被占用
+        # 2.3 如果有通过验证的 sources，记录
+        if valid_sources_for_span:
             occupied.append((pos, pos + len(span)))
-            # 保存时使用规范化的 source（不带方括号）
-            passed.append({"span": span, "source": source_normalized, "pos": pos})
+            passed.append({
+                "span": span,
+                "sources": valid_sources_for_span,  # 数组：可能有多个
+                "pos": pos
+            })
     
-    # 从后往前插入标注（避免插入后位置偏移）
+    # 步骤 3: 从后往前插入标注（支持多角标）
     final_answer = answer
     for item in sorted(passed, key=lambda x: x["pos"], reverse=True):
         insert_pos = item["pos"] + len(item["span"])
-        label = f"[{item['source']}]"
-        final_answer = final_answer[:insert_pos] + label + final_answer[insert_pos:]
+        # 生成多角标：[文档1:片段1][文档2:片段2]
+        labels = "".join(f"[{src}]" for src in item["sources"])
+        final_answer = final_answer[:insert_pos] + labels + final_answer[insert_pos:]
     
     # 统计信息
-    total = len(citations)
-    passed_count = len(passed)
-    failed_count = len(failed)
-    pass_rate = passed_count / total if total > 0 else 0.0
+    total_citations = len(citations)
+    total_unique_spans = len(span_to_sources)
+    passed_citations = sum(len(item["sources"]) for item in passed)
+    failed_citations = len(failed)
     
     return {
         "final_answer": final_answer,
         "passed": passed,
         "failed": failed,
         "validation_stats": {
-            "total": total,
-            "passed": passed_count,
-            "failed": failed_count,
-            "pass_rate": pass_rate
+            "total": total_citations,  # 原始 citations 总数
+            "unique_spans": total_unique_spans,  # 去重后的 span 数
+            "passed": passed_citations,  # 通过验证的 citations 数
+            "failed": failed_citations,  # 失败的 citations 数
+            "pass_rate": passed_citations / total_citations if total_citations > 0 else 0.0
         }
     }
 
 
 if __name__ == "__main__":
-    """测试用例：验证引用验证器的核心功能"""
+    """测试用例：验证引用验证器的核心功能（支持多源引用）"""
     
     # 测试数据
     sources = {
         "文档13:片段1": "ST-500 人体传感器：安装高度 1.8-2.2 米，工作电压 24V。",
-        "文档13:片段2": "安装步骤：按压粘贴 → 连接电源 → 配网。",
+        "文档13:片段2": "ST-500 人体传感器：安装高度 1.8-2.2 米，探测角度 120°。",
         "文档5:片段3": "温度传感器 T-300：测量范围 -20℃ 至 60℃。"
     }
     
-    # 模拟 LLM 输出（包含一条错误引用用于测试）
+    # 模拟 LLM 输出（同一 span 对应多个 source，包含一条错误引用）
     llm_output = {
         "answer": "ST-500人体传感器安装高度为1.8-2.2米，安装步骤是先按压粘贴，再连接电源完成配网。工作电压为36V。",
         "citations": [
-            {"span": "安装高度为1.8-2.2米", "source": "文档13:片段1"},  # 正确
-            {"span": "先按压粘贴，再连接电源完成配网", "source": "文档13:片段2"},  # 正确
+            {"span": "安装高度为1.8-2.2米", "source": "文档13:片段1"},  # 改写，但正确
+            {"span": "安装高度为1.8-2.2米", "source": "文档13:片段2"},  # 同一 span，不同 source
+            {"span": "先按压粘贴，再连接电源完成配网", "source": "文档13:片段2"},  # 假设正确
             {"span": "工作电压为36V", "source": "文档13:片段1"},  # 错误：数值不匹配（24V vs 36V）
         ]
     }
     
     # 执行验证
     print("="*60)
-    print("Citation Validator 测试")
+    print("Citation Validator 测试（多源引用支持）")
     print("="*60)
     print("\n原始答案:")
     print(llm_output["answer"])
     print("\n原始引用:")
     for i, c in enumerate(llm_output["citations"], 1):
-        print(f"  {i}. '{c['span']}' → {c['source']}")
+        print(f"  {i}. '{c['span'][:30]}...' → {c['source']}")
     
     result = validate_and_render(
         llm_output["answer"],
@@ -355,18 +354,27 @@ if __name__ == "__main__":
     print("\n" + "="*60)
     print("验证结果")
     print("="*60)
-    print(f"\n✅ 通过验证: {result['validation_stats']['passed']}/{result['validation_stats']['total']}")
-    print(f"❌ 未通过: {result['validation_stats']['failed']}/{result['validation_stats']['total']}")
-    print(f"📊 通过率: {result['validation_stats']['pass_rate']:.1%}")
+    print(f"\n📊 统计信息:")
+    print(f"  原始 citations:     {result['validation_stats']['total']}")
+    print(f"  去重后 spans:       {result['validation_stats']['unique_spans']}")
+    print(f"  ✅ 通过验证:        {result['validation_stats']['passed']}")
+    print(f"  ❌ 未通过:          {result['validation_stats']['failed']}")
+    print(f"  📈 通过率:          {result['validation_stats']['pass_rate']:.1%}")
     
     print("\n最终答案（带标注）:")
     print(result["final_answer"])
     
+    if result["passed"]:
+        print("\n✅ 通过验证的引用:")
+        for item in result["passed"]:
+            sources_str = ", ".join(item["sources"])
+            print(f"  • '{item['span'][:40]}...' → [{sources_str}]")
+    
     if result["failed"]:
-        print("\n未通过验证的引用:")
+        print("\n❌ 未通过验证的引用:")
         for item in result["failed"]:
-            print(f"  ❌ '{item['span']}' → {item['source']}")
-            print(f"     原因: {item['reason']}")
+            print(f"  • '{item['span'][:40]}...' → {item['source']}")
+            print(f"    原因: {item['reason']}")
     
     print("\n" + "="*60)
     print("测试完成")

@@ -673,10 +673,6 @@ def run_single_strategy(args, chunking_strategy, retrieval_mode=None):
         if args.generation_version == "v6" and result.get('validation'):
             stats = result['validation'].get('stats', {})
             print(f"Citations: {stats.get('passed', 0)}/{stats.get('total', 0)} passed")
-        
-        # 如果使用 rerank 模式，保存 rerank 分数（为 Iteration 6 做准备）
-        if retrieval_mode == "rerank" and retrieved:
-            result_item["rerank_scores"] = [
     
     # Iteration 5: 批量异步评估 Faithfulness（如果启用 Judge）
     if args.judge_mode != "none" and judge_llm:
