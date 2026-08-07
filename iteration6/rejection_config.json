@@ -1,11 +1,17 @@
 {
   "rejection_enabled": true,
   "rejection_layers": {
+    "layer0_retrieval_hit": {
+      "enabled": true,
+      "require_hit": true,
+      "require_rank_threshold": null,
+      "description": "基于ground truth命中检查的拒答（仅用于评估模式，生产环境不适用）- 如果检索未命中正确答案则拒答"
+    },
     "layer1_retrieval": {
       "enabled": true,
-      "max_score_threshold": 0.7,
+      "max_score_threshold": 0.5,
       "top_n": 2,
-      "top_n_avg_threshold": 0.5,
+      "top_n_avg_threshold": 0.2,
       "description": "基于检索分数的质量拒答（支持Vector和Rerank） - 改用max和topN平均"
     },
     "layer2_citation": {
@@ -85,6 +91,7 @@
     }
   },
   "comments": {
+    "layer0_retrieval_hit_logic": "拒答条件（仅评估模式）: hit == 0 OR (require_rank_threshold is not None AND answer_rank > require_rank_threshold)。注意：生产环境无法获取ground truth，此层仅用于评估分析",
     "layer1_retrieval_logic": "拒答条件: max(scores) < max_score_threshold OR mean(scores[:top_n]) < top_n_avg_threshold（支持Vector和Rerank）",
     "layer2_citation_logic": "拒答条件: valid_citations_count / raw_citations_count < coverage_threshold（检测引用幻觉）",
     "layer3_judge_logic": "拒答条件: faithfulness < threshold OR relevance < threshold",

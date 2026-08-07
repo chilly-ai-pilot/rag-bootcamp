@@ -175,8 +175,44 @@ async def batch_generate(queries: List[Dict], chunks, args, chunking_strategy: s
                 gen_result = await task
                 
                 # 评估检索质量
+                from scoring import hit, find_answer_rank
                 h = hit(retrieved, q["doc_id"], q["char_start"], q["char_end"])
                 answer_rank = find_answer_rank(retrieved, q["doc_id"], q["char_start"], q["char_end"])
+                
+                # ============================================================
+                # Layer 0: 检索命中检查（仅评估模式，需要ground truth）
+                # ============================================================
+                layer0_rejected = False
+                layer0_reason = None
+                
+                if rejection_config and rejection_config.get('rejection_enabled', False):
+                    layer0_cfg = rejection_config.get('rejection_layers', {}).get('layer0_retrieval_hit', {})
+                    
+                    if layer0_cfg.get('enabled', False):
+                        require_hit = layer0_cfg.get('require_hit', True)
+                        require_rank_threshold = layer0_cfg.get('require_rank_threshold')
+                        
+                        # 检查是否应该拒答
+                        if require_hit and h == 0:
+                            layer0_rejected = True
+                            layer0_reason = "Retrieval miss (hit=0, ground truth not in top-k)"
+                        elif require_rank_threshold is not None and answer_rank is not None and answer_rank > require_rank_threshold:
+                            layer0_rejected = True
+                            layer0_reason = f"Answer rank too low (rank={answer_rank}, threshold={require_rank_threshold})"
+                
+                # 如果Layer 0拒答，覆盖原结果
+                if layer0_rejected:
+                    rejection_message = rejection_config.get('rejection_message', generate_rejection_answer())
+                    gen_result = {
+                        "answer": rejection_message,
+                        "raw_answer": rejection_message,
+                        "citations": [],
+                        "reasoning": None,
+                        "faithfulness_score": None,
+                        "relevance_score": None,
+                        "rejected": True,
+                        "rejection_reason": f"[Layer 0] {layer0_reason}"
+                    }
                 
                 result = {
                     "id": q["id"],
