@@ -107,13 +107,19 @@ def load_rejection_config(config_path: str = "rejection_config.json", preset: st
 
 async def batch_generate(queries: List[Dict], chunks, args, chunking_strategy: str, rejection_config: Dict = None) -> List[Dict]:
     """
-    批量异步生成答案（带引用标注）
+    批量异步生成答案（带引用标注）- 使用信号量控制并发
+    
+    使用滑动窗口并发控制：
+    - 最多同时执行 batch_size 个请求
+    - 完成一个立即开始下一个
+    - 避免固定分批导致的空闲时间
     
     参数:
         queries: 查询列表
         chunks: 文档块
         args: 命令行参数
         chunking_strategy: chunking 策略名称
+        rejection_config: 拒答配置
     
     返回:
         结果列表，包含 query, answer, citations 等
@@ -131,56 +137,42 @@ async def batch_generate(queries: List[Dict], chunks, args, chunking_strategy: s
     )
     
     results = []
-    batch_size = 10
     total = len(queries)
+    batch_size = args.batch_size
     
-    print(f"🚀 批量生成 {total} 个查询的答案（并发数：{batch_size}）...")
+    # 创建信号量，限制并发数
+    semaphore = asyncio.Semaphore(batch_size)
     
-    for i in range(0, total, batch_size):
-        batch = queries[i:i + batch_size]
-        print(f"   处理 batch {i//batch_size + 1}/{(total + batch_size - 1)//batch_size} ({len(batch)} queries)...")
-        
-        # 并发处理一个 batch
-        batch_data = []
-        for q in batch:
-            # 检索
-            if args.retrieval_mode == "random":
-                retrieved = retrieve_random(q["query"], chunks, k=args.retrieval_top_k, seed=42)
-            elif args.retrieval_mode == "vector":
-                retrieved = retrieve_vector(q["query"], chunks, k=args.retrieval_top_k, strategy=chunking_strategy)
-            elif args.retrieval_mode == "bm25":
-                retrieved = retrieve_bm25(q["query"], chunks, k=args.retrieval_top_k)
-            elif args.retrieval_mode == "hybrid":
-                retrieved = retrieve_hybrid(q["query"], chunks, k=args.retrieval_top_k, strategy=chunking_strategy)
-            else:
-                raise ValueError(f"Unknown retrieval mode: {args.retrieval_mode}")
-            
-            # Rerank（如果启用）
-            if args.rerank_mode == "bge":
-                retrieved = rerank_chunks(q["query"], retrieved, top_k=args.rerank_top_k)
-            
-            # 异步生成
-            task = generate_answer_async(
-                q["query"], 
-                retrieved, 
-                chunking_strategy,
-                client=client, 
-                rejection_config=rejection_config
-            )
-            batch_data.append((q, retrieved, task))
-        
-        # 并发等待所有任务完成（使用asyncio.gather）
-        tasks_only = [item[2] for item in batch_data]
-        gen_results = await asyncio.gather(*tasks_only, return_exceptions=True)
-        
-        # 处理结果
-        for idx, (q, retrieved, _) in enumerate(batch_data):
-            gen_result = gen_results[idx]
-            
+    print(f"🚀 批量生成 {total} 个查询的答案（滑动窗口并发数：{batch_size}）...")
+    
+    async def process_single_query(q, index):
+        """处理单个query（带信号量控制）"""
+        async with semaphore:  # 获取信号量，限制并发
             try:
-                # 检查是否是异常
-                if isinstance(gen_result, Exception):
-                    raise gen_result
+                # 检索
+                if args.retrieval_mode == "random":
+                    retrieved = retrieve_random(q["query"], chunks, k=args.retrieval_top_k, seed=42)
+                elif args.retrieval_mode == "vector":
+                    retrieved = retrieve_vector(q["query"], chunks, k=args.retrieval_top_k, strategy=chunking_strategy)
+                elif args.retrieval_mode == "bm25":
+                    retrieved = retrieve_bm25(q["query"], chunks, k=args.retrieval_top_k)
+                elif args.retrieval_mode == "hybrid":
+                    retrieved = retrieve_hybrid(q["query"], chunks, k=args.retrieval_top_k, strategy=chunking_strategy)
+                else:
+                    raise ValueError(f"Unknown retrieval mode: {args.retrieval_mode}")
+                
+                # Rerank（如果启用）
+                if args.rerank_mode == "bge":
+                    retrieved = rerank_chunks(q["query"], retrieved, top_k=args.rerank_top_k)
+                
+                # 异步生成
+                gen_result = await generate_answer_async(
+                    q["query"], 
+                    retrieved, 
+                    chunking_strategy,
+                    client=client, 
+                    rejection_config=rejection_config
+                )
                 
                 # 评估检索质量
                 from scoring import hit, find_answer_rank
@@ -239,7 +231,6 @@ async def batch_generate(queries: List[Dict], chunks, args, chunking_strategy: s
                     "rejected": gen_result.get("rejected", False),
                     "rejection_reason": gen_result.get("rejection_reason")
                 }
-                results.append(result)
                 
                 # 打印每个query的详细信息
                 print(f"\n   ✅ Q{q['id']} [{q['category']}]: {q['query']}")
@@ -252,9 +243,11 @@ async def batch_generate(queries: List[Dict], chunks, args, chunking_strategy: s
                 if gen_result.get("faithfulness_score") is not None:
                     print(f"      F={gen_result['faithfulness_score']:.2f}, R={gen_result.get('relevance_score', 0):.2f}")
                 
+                return (index, result)
+                
             except Exception as e:
                 print(f"\n   ❌ Q{q['id']} 生成失败: {e}")
-                results.append({
+                return (index, {
                     "id": q["id"],
                     "query": q["query"],
                     "category": q["category"],
@@ -267,8 +260,18 @@ async def batch_generate(queries: List[Dict], chunks, args, chunking_strategy: s
                     "retrieved": []
                 })
     
+    # 创建所有任务（滑动窗口并发）
+    tasks = [process_single_query(q, i) for i, q in enumerate(queries)]
+    
+    # 并发执行所有任务（信号量自动控制并发数）
+    completed_results = await asyncio.gather(*tasks, return_exceptions=True)
+    
+    # 按原始顺序排序结果
+    sorted_results = sorted([r for r in completed_results if not isinstance(r, Exception)], key=lambda x: x[0])
+    results = [r[1] for r in sorted_results]
+    
     await client.close()
-    print(f"✅ 批量生成完成")
+    print(f"\n✅ 批量生成完成")
     
     return results
 

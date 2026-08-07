@@ -10,18 +10,18 @@
     "layer1_retrieval": {
       "enabled": true,
       "max_score_threshold": 0.5,
-      "top_n": 2,
-      "top_n_avg_threshold": 0.2,
+      "top_n": 1,
+      "top_n_avg_threshold": 0.5,
       "description": "基于检索分数的质量拒答（支持Vector和Rerank） - 改用max和topN平均"
     },
     "layer2_citation": {
       "enabled": true,
-      "coverage_threshold": 0.70,
+      "coverage_threshold": 0.3,
       "description": "基于引用覆盖率的幻觉检测 - 验证通过的citations / LLM声称的citations"
     },
     "layer3_judge": {
       "enabled": true,
-      "faithfulness_threshold": 0.5,
+      "faithfulness_threshold": 0.7,
       "relevance_threshold": 0.5,
       "mode": "moderate",
       "description": "中等模式：Faithfulness < 0.85 OR Relevance < 0.80"
