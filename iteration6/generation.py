@@ -653,8 +653,8 @@ async def generate_answer_async(
                         from numpy.linalg import norm
                         similarity = dot(span_embedding, chunk_embedding) / (norm(span_embedding) * norm(chunk_embedding))
                         
-                        # 阈值设为0.60（短span改写的相似度通常在0.5-0.7之间）
-                        if similarity > 0.60:
+                        # 阈值设为0.50（短span改写的相似度通常在0.5-0.7之间）
+                        if similarity > 0.50:
                             is_valid = True
                             validation_method = f"embedding_similarity({similarity:.3f})"
                             print(f"✅ Citation validated by embedding similarity: {similarity:.3f} (source={source})")
