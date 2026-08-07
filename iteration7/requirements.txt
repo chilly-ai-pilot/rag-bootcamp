@@ -25,3 +25,4 @@ tokenizers>=0.15.0,<0.20.0    # transformers 依赖
 # langchain>=0.1.0              # Ragas 依赖的 LangChain
 # langchain-openai>=0.0.5       # OpenAI 兼容的 LangChain 集成
 # langchain-community>=0.0.20   # LangChain community 集成
+
