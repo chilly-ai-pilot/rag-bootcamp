@@ -9,6 +9,7 @@ on:
       - 'iteration7/corpus/doc-*.txt'
       - 'iteration7/corpus/queries.json'
       - 'iteration7/*.py'
+      - 'iteration7/requirements.txt'
       - 'iteration7/rejection_config.json'
   
   # 支持手动触发
