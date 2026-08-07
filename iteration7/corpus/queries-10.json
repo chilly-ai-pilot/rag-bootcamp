@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "query": "SmartLock-100 如何生成临时密码？",
+    "category": "chunking_sensitive",
+    "doc_id": "doc1",
+    "ground_truth_text": "可通过 App 生成一次性或限时临时密码，适用于访客或家政服务。",
+    "char_start": 716,
+    "char_end": 748
+  },
+  {
+    "id": 2,
+    "query": "SmartCam-200 的 NAS 存储怎么设置？",
+    "category": "chunking_sensitive",
+    "doc_id": "doc2",
+    "ground_truth_text": "可将录像转存至局域网内 NAS（支持 SMB/CIFS 协议），路径设置需在 APP 中输入 NAS 的 IP 地址、用户名和密码。",
+    "char_start": 525,
+    "char_end": 591
+  },
+  {
+    "id": 3,
+    "query": "SmartBulb-300 断电后记忆功能怎么关闭？",
+    "category": "chunking_sensitive",
+    "doc_id": "doc3",
+    "ground_truth_text": "断电后重新上电，灯泡会恢复断电前的亮度和色温状态，无需重新设置。",
+    "char_start": 357,
+    "char_end": 389
+  },
+  {
+    "id": 4,
+    "query": "网关断网后自动化场景还能运行吗？",
+    "category": "chunking_sensitive",
+    "doc_id": "doc4",
+    "ground_truth_text": "即使外网中断，网关仍可通过本地局域网执行已保存的自动化场景（如传感器联动灯），但远程控制及推送通知不可用。",
+    "char_start": 258,
+    "char_end": 311
+  },
+  {
+    "id": 5,
+    "query": "ST-500 人体传感器应该装在多高？",
+    "category": "chunking_sensitive",
+    "doc_id": "doc5",
+    "ground_truth_text": "安装高度 1.8–2.2 米，避免正对空调出风口或暖气片，防止误触发。",
+    "char_start": 109,
+    "char_end": 144
+  },
+  {
+    "id": 6,
+    "query": "SmartLock-100 的防猫眼功能如何操作？",
+    "category": "chunking_sensitive",
+    "doc_id": "doc1",
+    "ground_truth_text": "室内面板有防猫眼按钮，开门时需按下此按钮并下压把手同时操作，防止从猫眼伸入工具开门。",
+    "char_start": 775,
+    "char_end": 817
+  },
+  {
+    "id": 7,
+    "query": "SmartPlug-400 的充电保护功能是怎样工作的？",
+    "category": "chunking_sensitive",
+    "doc_id": "doc6",
+    "ground_truth_text": "检测到设备电流在短时间内下降至接近零，判定设备充满电，自动关闭插座，防止过充。",
+    "char_start": 321,
+    "char_end": 360
+  },
+  {
+    "id": 8,
+    "query": "SmartBulb-300 的音乐律动模式怎么开启？",
+    "category": "chunking_sensitive",
+    "doc_id": "doc3",
+    "ground_truth_text": "开启音乐律动模式后，灯泡颜色随手机麦克风采集的环境音乐节奏变化，适合派对氛围。",
+    "char_start": 456,
+    "char_end": 495
+  },
+  {
+    "id": 9,
+    "query": "SmartCam-200 的声音报警音量怎么调节？",
+    "category": "chunking_sensitive",
+    "doc_id": "doc2",
+    "ground_truth_text": "可设置触发移动侦测时摄像头发出警笛声，音量可调（70dB/80dB/90dB）。",
+    "char_start": 405,
+    "char_end": 445
+  },
+  {
+    "id": 10,
+    "query": "GW-200 网关添加子设备失败时怎么办？",
+    "category": "chunking_sensitive",
+    "doc_id": "doc4",
+    "ground_truth_text": "若失败，将子设备靠近网关重试。",
+    "char_start": 243,
+    "char_end": 258
+  }
+]

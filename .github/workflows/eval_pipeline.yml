@@ -1,0 +1,189 @@
+name: RAG Evaluation Pipeline
+
+# 触发条件
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'iteration7/corpus/doc-*.txt'
+      - 'iteration7/corpus/queries.json'
+      - 'iteration7/*.py'
+      - 'iteration7/rejection_config.json'
+  
+  # 支持手动触发
+  workflow_dispatch:
+    inputs:
+      chunking_strategy:
+        description: 'Chunking strategy'
+        required: false
+        default: 'fixed_100_50'
+        type: choice
+        options:
+          - fixed_100_50
+          - fixed_200_40
+          - fixed_300_30
+          - semantic
+      retrieval_mode:
+        description: 'Retrieval mode'
+        required: false
+        default: 'vector'
+        type: choice
+        options:
+          - hybrid
+          - vector
+          - bm25
+          - random
+      rerank_mode:
+        description: 'Rerank mode'
+        required: false
+        default: 'none'
+        type: choice
+        options:
+          - bge
+          - none
+      judge_mode:
+        description: 'Judge mode'
+        required: false
+        default: 'deepseek'
+        type: choice
+        options:
+          - deepseek
+          - none
+      rejection_preset:
+        description: 'Rejection preset'
+        required: false
+        default: 'aggressive'
+        type: choice
+        options:
+          - conservative
+          - moderate
+          - aggressive
+
+# 权限设置：需要写入权限以提交结果
+permissions:
+  contents: write
+
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+    
+    # 限制并发：同时只运行一个评估
+    concurrency:
+      group: evaluation-pipeline
+      cancel-in-progress: false
+    
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 获取完整历史，用于对比
+      
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+      
+      - name: 📦 Install dependencies
+        run: |
+          cd iteration7
+          pip install -r requirements.txt
+      
+      - name: 🔍 Check corpus changes
+        id: corpus_check
+        run: |
+          cd iteration7/corpus
+          echo "📊 Current corpus files:"
+          ls -lh doc-*.txt || echo "No doc files found"
+          DOC_COUNT=$(ls doc-*.txt 2>/dev/null | wc -l)
+          echo "doc_count=$DOC_COUNT" >> $GITHUB_OUTPUT
+          echo "Total documents: $DOC_COUNT"
+      
+      - name: 🚀 Run evaluation
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+        run: |
+          cd iteration7
+          
+          # 从手动输入或使用默认值
+          CHUNKING="${{ github.event.inputs.chunking_strategy || 'fixed_100_50' }}"
+          RETRIEVAL="${{ github.event.inputs.retrieval_mode || 'vector' }}"
+          RERANK="${{ github.event.inputs.rerank_mode || 'none' }}"
+          JUDGE="${{ github.event.inputs.judge_mode || 'deepseek' }}"
+          PRESET="${{ github.event.inputs.rejection_preset || 'aggressive' }}"
+          
+          echo "🔧 Configuration:"
+          echo "  Chunking: $CHUNKING"
+          echo "  Retrieval: $RETRIEVAL"
+          echo "  Rerank: $RERANK"
+          echo "  Judge: $JUDGE"
+          echo "  Rejection Preset: $PRESET"
+          
+          # 运行评估，输出到 ../data 目录
+          python run_eval.py \
+            --chunking-strategy "$CHUNKING" \
+            --retrieval-mode "$RETRIEVAL" \
+            --rerank-mode "$RERANK" \
+            --judge-mode "$JUDGE" \
+            --rejection-preset "$PRESET" \
+            --output-dir ../data \
+            --batch-size 5
+      
+      - name: 📊 Generate HTML report
+        run: |
+          cd iteration7
+          python generate_report.py \
+            --data-dir ../data \
+            --output-dir ../reports
+      
+      - name: 📈 Display summary
+        run: |
+          echo "✅ Evaluation completed!"
+          echo ""
+          echo "📁 Generated files:"
+          ls -lh data/results_*.json | tail -5
+          echo ""
+          echo "📊 Report:"
+          ls -lh reports/index.html
+          echo ""
+          echo "📊 Corpus stats:"
+          echo "  Documents: ${{ steps.corpus_check.outputs.doc_count }}"
+      
+      - name: 💾 Commit and push results
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          # 添加结果文件
+          git add data/ reports/
+          
+          # 检查是否有变更
+          if git diff --staged --quiet; then
+            echo "⚠️  No changes to commit"
+          else
+            # 生成提交信息
+            TIMESTAMP=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
+            DOC_COUNT=${{ steps.corpus_check.outputs.doc_count }}
+            
+            git commit -m "🤖 Auto-eval: $TIMESTAMP" \
+                       -m "Documents: $DOC_COUNT" \
+                       -m "Config: ${{ github.event.inputs.chunking_strategy || 'fixed_100_50' }}+${{ github.event.inputs.retrieval_mode || 'hybrid' }}+${{ github.event.inputs.rerank_mode || 'bge' }}"
+            
+            git push
+            echo "✅ Results committed and pushed"
+          fi
+      
+      - name: 📝 Comment on commit (optional)
+        if: github.event_name == 'push'
+        run: |
+          echo "📊 Evaluation completed for commit ${{ github.sha }}"
+          echo "🌐 View report: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+      
+      # 失败时发送通知（可选，需要配置 Slack webhook 等）
+      - name: 🚨 Notify on failure
+        if: failure()
+        run: |
+          echo "❌ Evaluation failed! Check the logs for details."
+          echo "Commit: ${{ github.sha }}"
+          echo "Triggered by: ${{ github.event_name }}"
