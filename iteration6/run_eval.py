@@ -133,7 +133,8 @@ async def batch_generate(queries: List[Dict], chunks, args, chunking_strategy: s
     
     client = AsyncOpenAI(
         api_key=api_key,
-        base_url="https://api.deepseek.com"
+        base_url="https://api.deepseek.com",
+        timeout=60.0
     )
     
     results = []
@@ -321,7 +322,8 @@ async def batch_evaluate_combined(results: List[Dict], args) -> List[Dict]:
     
     client = AsyncOpenAI(
         api_key=api_key,
-        base_url=base_url
+        base_url=base_url,
+        timeout=60.0
     )
     
     # 分批处理
@@ -503,7 +505,8 @@ async def batch_evaluate_faithfulness(results: List[Dict], args) -> List[Dict]:
         
         client = AsyncOpenAI(
             api_key=api_key,
-            base_url=base_url
+            base_url=base_url,
+            timeout=60.0
         )
         
         # 分批处理（避免并发过大触发限流）
@@ -617,7 +620,8 @@ async def batch_evaluate_relevance(results: List[Dict], args) -> List[Dict]:
     
     client = AsyncOpenAI(
         api_key=api_key,
-        base_url=base_url
+        base_url=base_url,
+        timeout=60.0
     )
     
     # 分批处理
