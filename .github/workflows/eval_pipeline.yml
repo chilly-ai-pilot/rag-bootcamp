@@ -155,8 +155,9 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           
-          # 添加结果文件
-          git add data/ docs/
+          # 强制添加结果文件（忽略 .gitignore）
+          git add -f data/*.json
+          git add docs/
           
           # 检查是否有变更
           if git diff --staged --quiet; then
@@ -168,7 +169,7 @@ jobs:
             
             git commit -m "🤖 Auto-eval: $TIMESTAMP" \
                        -m "Documents: $DOC_COUNT" \
-                       -m "Config: ${{ github.event.inputs.chunking_strategy || 'fixed_100_50' }}+${{ github.event.inputs.retrieval_mode || 'hybrid' }}+${{ github.event.inputs.rerank_mode || 'bge' }}"
+                       -m "Config: ${{ github.event.inputs.chunking_strategy || 'fixed_100_50' }}+${{ github.event.inputs.retrieval_mode || 'vector' }}+${{ github.event.inputs.rerank_mode || 'none' }}"
             
             git push
             echo "✅ Results committed and pushed"
