@@ -953,7 +953,7 @@ def main():
     ap = argparse.ArgumentParser(description="RAG 系统评估脚本（Iteration 3：chunking + 检索模式对比）")
     ap.add_argument("--corpus-dir", default="corpus", help="语料库目录路径")
     ap.add_argument("--query-file", default="corpus/queries.json", help="查询集 JSON 文件路径")
-    ap.add_argument("--retrieval-top-k", type=int, default=10, help="召回的候选数量（送入 Rerank 的数量）")
+    ap.add_argument("--retrieval-top-k", type=int, default=5, help="召回的候选数量（送入 Rerank 的数量）")
     ap.add_argument("--rerank-top-k", type=int, default=5, help="Rerank 后返回的数量（送给 Generator 的数量）")
     ap.add_argument("--chunking-strategy", default="fixed_100_50", 
                     choices=["fixed_200_40", "fixed_300_30", "semantic", "fixed_100_50"],
