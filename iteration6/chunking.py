@@ -1,10 +1,11 @@
 """
 Iteration 2 分块策略模块
 
-支持三种切块策略的对比实验：
+支持多种切块策略的对比实验：
 1. fixed_200_40: 固定长度 200 字符，40 字符重叠（Iteration 1 baseline）
-2. semantic: 按段落边界切分，保持语义完整性
-3. fixed_100_50: 更小粒度 100 字符，50 字符重叠
+2. fixed_300_30: 固定长度 300 字符，30 字符重叠（更大块，减少信息割裂）
+3. semantic: 按段落边界切分，保持语义完整性
+4. fixed_100_50: 更小粒度 100 字符，50 字符重叠
 
 所有策略保持统一的返回格式: [{doc_id, start, end, text, chunk_id}, ...]
 """
@@ -213,14 +214,15 @@ def small_overlap_chunks(text: str, doc_id: str, chunk_size: int = 100, overlap:
 def build_corpus_chunks(corpus_dir: str, strategy: str = 'fixed_200_40') -> List[Dict]:
     """将语料库目录中的所有文档切分成一个扁平的块池
     
-    支持三种切块策略：
+    支持多种切块策略：
     - fixed_200_40: 200字符，40字符重叠（Iteration 1 baseline）
+    - fixed_300_30: 300字符，30字符重叠（更大块，减少信息割裂）
     - semantic: 按段落边界切分
     - fixed_100_50: 100字符，50字符重叠
     
     参数:
         corpus_dir: 语料库目录路径
-        strategy: 切块策略，可选值: 'fixed_200_40', 'semantic', 'fixed_100_50'
+        strategy: 切块策略，可选值: 'fixed_200_40', 'fixed_300_30', 'semantic', 'fixed_100_50'
     
     返回:
         所有文档的块列表，每个块包含 doc_id, start, end, text, chunk_id
@@ -232,6 +234,8 @@ def build_corpus_chunks(corpus_dir: str, strategy: str = 'fixed_200_40') -> List
     # 根据策略选择切块函数
     if strategy == 'fixed_200_40':
         chunk_func = lambda text, doc_id: fixed_length_chunks(text, doc_id, 200, 40)
+    elif strategy == 'fixed_300_30':
+        chunk_func = lambda text, doc_id: fixed_length_chunks(text, doc_id, 300, 30)
     elif strategy == 'semantic':
         chunk_func = semantic_chunks
     elif strategy == 'fixed_100_50':
