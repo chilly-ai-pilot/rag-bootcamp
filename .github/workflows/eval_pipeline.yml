@@ -155,8 +155,8 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           
-          # 强制添加结果文件（忽略 .gitignore）
-          git add -f data/*.json
+          # 添加结果文件和报告（.gitignore 已配置允许 data/ 目录下的结果）
+          git add data/*.json
           git add docs/
           
           # 检查是否有变更
