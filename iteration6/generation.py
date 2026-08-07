@@ -99,7 +99,7 @@ def should_reject_by_rerank_score(
     
     拒答条件（满足任一即拒答）：
     - max(rerank_scores) < max_score_threshold (所有chunk中最高分都很低)
-    - mean(rerank_scores[:top_n]) < top_n_avg_threshold (top-N的平均分很低)
+    - mean(top_n_scores) < top_n_avg_threshold (top-N的平均分很低)
     
     为什么改用max和topN：
     - top1分数不稳定（可能第1个不相关，但第2/3个很相关）
@@ -108,7 +108,7 @@ def should_reject_by_rerank_score(
     - N可调：文档少时用1-2，文档多时用3-5
     
     参数:
-        rerank_scores: rerank分数列表（降序排列）
+        rerank_scores: rerank分数列表（可以是任意顺序）
         max_score_threshold: 最高分阈值，默认0.75
         top_n: topN的N值，默认2
         top_n_avg_threshold: topN平均分阈值，默认0.40
@@ -126,9 +126,11 @@ def should_reject_by_rerank_score(
     if max_score < max_score_threshold:
         return True
     
-    # 检查topN平均分数
+    # 检查topN平均分数（必须先排序！）
     if len(rerank_scores) >= top_n:
-        top_n_avg = sum(rerank_scores[:top_n]) / top_n
+        # 降序排序，取top N
+        sorted_scores = sorted(rerank_scores, reverse=True)
+        top_n_avg = sum(sorted_scores[:top_n]) / top_n
         if top_n_avg < top_n_avg_threshold:
             return True
     
@@ -380,7 +382,9 @@ async def generate_answer_async(
                 ):
                     rejected = True
                     max_score = max(rerank_scores) if rerank_scores else 0
-                    top_n_avg = sum(rerank_scores[:top_n]) / top_n if len(rerank_scores) >= top_n else 0
+                    # 计算top_n_avg时也要排序！
+                    sorted_scores = sorted(rerank_scores, reverse=True)
+                    top_n_avg = sum(sorted_scores[:top_n]) / top_n if len(rerank_scores) >= top_n else 0
                     rejection_reason = f"Low rerank quality (max={max_score:.3f}, top{top_n}_avg={top_n_avg:.3f})"
                     
                     # 直接返回拒答
