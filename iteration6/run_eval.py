@@ -715,9 +715,10 @@ def run_single_strategy(args, chunking_strategy, retrieval_mode=None):
     print(f"  Judge Mode: {args.judge_mode}")
     print(f"{'='*60}")
     
-    # 加载拒答配置（如果启用Judge且未明确禁用拒答）
+    # 加载拒答配置（除非明确禁用）
+    # Layer 0/1/2 不需要Judge，只有Layer 3需要Judge
     rejection_config = None
-    if args.judge_mode != "none" and not args.no_rejection:
+    if not args.no_rejection:
         rejection_config = load_rejection_config(
             config_path=args.rejection_config,
             preset=args.rejection_preset
@@ -728,17 +729,23 @@ def run_single_strategy(args, chunking_strategy, retrieval_mode=None):
         if args.rejection_preset:
             print(f"   Preset mode: {args.rejection_preset}")
         
-        # 添加Judge模型配置
-        if args.judge_mode == "deepseek":
-            rejection_config['judge_model'] = 'deepseek-chat'
-            rejection_config['judge_base_url'] = 'https://api.deepseek.com'
-            rejection_config['judge_api_key'] = os.getenv('DEEPSEEK_API_KEY')
-        else:  # qwen
-            rejection_config['judge_model'] = 'qwen-plus'
-            rejection_config['judge_base_url'] = os.getenv('ALI_BASE_URL')
-            rejection_config['judge_api_key'] = os.getenv('ALI_API_KEY')
+        # 添加Judge模型配置（仅当judge_mode != none时）
+        if args.judge_mode != "none":
+            if args.judge_mode == "deepseek":
+                rejection_config['judge_model'] = 'deepseek-chat'
+                rejection_config['judge_base_url'] = 'https://api.deepseek.com'
+                rejection_config['judge_api_key'] = os.getenv('DEEPSEEK_API_KEY')
+            else:  # qwen
+                rejection_config['judge_model'] = 'qwen-plus'
+                rejection_config['judge_base_url'] = os.getenv('ALI_BASE_URL')
+                rejection_config['judge_api_key'] = os.getenv('ALI_API_KEY')
+        else:
+            # judge_mode=none时，禁用Layer 3（因为它需要Judge）
+            if 'rejection_layers' in rejection_config and 'layer3_judge' in rejection_config['rejection_layers']:
+                rejection_config['rejection_layers']['layer3_judge']['enabled'] = False
+                print(f"   Layer 3 (Judge) disabled (judge_mode=none)")
     else:
-        print(f"⚠️  Rejection mechanism disabled (use --judge-mode with rerank, or add --no-rejection to explicitly disable)")
+        print(f"⚠️  Rejection mechanism disabled (--no-rejection flag)")
     
     # 初始化 Judge LLM（如果需要）- 已移除，Judge现在在generator内部
     judge_llm = None
