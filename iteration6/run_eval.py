@@ -39,7 +39,7 @@ from typing import List, Dict
 
 from chunking import build_corpus_chunks
 from retrieval import retrieve_random, retrieve_vector, retrieve_bm25, retrieve_hybrid, rerank_chunks
-from generation import generate_answer_async
+from generation import generate_answer_async, generate_rejection_answer
 from scoring import hit, find_answer_rank, aggregate_by_category, calculate_mrr, analyze_rerank_score_distribution
 from evaluation import (
     llm_faithfulness_check, 
