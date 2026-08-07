@@ -1,9 +1,13 @@
 # RAG Bootcamp: 从零到生产级 RAG 系统
 
-[![Evaluation Status](https://github.com/YOUR_USERNAME/rag-bootcamp/actions/workflows/eval_pipeline.yml/badge.svg)](https://github.com/YOUR_USERNAME/rag-bootcamp/actions)
-[![GitHub Pages](https://img.shields.io/badge/Report-GitHub%20Pages-blue)](https://YOUR_USERNAME.github.io/rag-bootcamp/)
+[![Evaluation Status](https://github.com/chilly-ai-pilot/rag-bootcamp/actions/workflows/eval_pipeline.yml/badge.svg)](https://github.com/chilly-ai-pilot/rag-bootcamp/actions)
+[![GitHub Pages](https://img.shields.io/badge/Report-GitHub%20Pages-blue)](https://chilly-ai-pilot.github.io/rag-bootcamp/)
 
 一个完整的 RAG (Retrieval-Augmented Generation) 系统构建教程，从基础原型到生产级系统的迭代式开发。
+
+## 📊 在线评估报告
+
+访问 [GitHub Pages 报告](https://chilly-ai-pilot.github.io/rag-bootcamp/) 查看最新的自动化评估结果。
 
 ## 🎯 项目目标
 
