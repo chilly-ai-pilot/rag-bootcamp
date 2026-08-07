@@ -201,7 +201,7 @@ python expand_testset.py --action create-query
 **配置步骤**:
 1. Settings → Pages
 2. Source: "Deploy from a branch"
-3. Branch: `main`, Folder: `/reports`
+3. Branch: `main`, Folder: `/docs`
 4. Save
 
 **访问地址**:

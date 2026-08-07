@@ -150,7 +150,7 @@ start ../docs/index.html
    
    - 进入 Settings → Pages
    - Source: "Deploy from a branch"
-   - Branch: `main`, Folder: `/reports`
+   - Branch: `main`, Folder: `/docs`
    - 点击 Save
    - 等待 1-2 分钟
    - 访问 `https://YOUR_USERNAME.github.io/rag-bootcamp/`

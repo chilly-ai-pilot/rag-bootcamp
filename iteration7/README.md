@@ -78,7 +78,7 @@ python generate_report.py
 
 1. 进入仓库的 Settings → Pages
 2. Source 选择 "Deploy from a branch"
-3. Branch 选择 `main`，目录选择 `/reports`
+3. Branch 选择 `main`，目录选择 `/docs`
 4. 保存后，GitHub Pages 将自动部署
 5. 访问 `https://<username>.github.io/<repo-name>/` 查看报告
 
@@ -221,7 +221,7 @@ ValueError: 请设置环境变量 DEEPSEEK_API_KEY
 
 **解决方案**: 
 1. 检查 Settings → Pages 是否启用
-2. 确认 Branch 设置为 `main`，目录设置为 `/reports`
+2. 确认 Branch 设置为 `main`，目录设置为 `/docs`
 3. 等待几分钟让 GitHub Pages 部署完成
 
 ### 问题 3: 评估时间过长

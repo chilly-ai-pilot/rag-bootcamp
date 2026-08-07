@@ -29,7 +29,7 @@ docs/
 2. Under "Source", select:
    - **Deploy from a branch**
    - Branch: `main`
-   - Folder: `/reports`
+   - Folder: `/docs`
 3. Click **Save**
 4. Wait 1-2 minutes for deployment
 5. Access your report at the GitHub Pages URL shown
