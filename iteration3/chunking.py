@@ -217,7 +217,6 @@ def build_corpus_chunks(corpus_dir: str, strategy: str = 'fixed_200_40') -> List
     - fixed_200_40: 200字符，40字符重叠（Iteration 1 baseline）
     - semantic: 按段落边界切分
     - small_100_50: 100字符，50字符重叠
-    
     参数:
         corpus_dir: 语料库目录路径
         strategy: 切块策略，可选值: 'fixed_200_40', 'semantic', 'small_100_50'

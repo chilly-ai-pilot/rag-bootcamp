@@ -602,7 +602,8 @@ def retrieve_rerank(
     chunks: List[Dict],
     k: int = 5,
     strategy: str = "fixed_100_50",
-    k_candidates: int = 20
+    k_candidates: int = 20,
+    return_all_scores: bool = False
 ) -> List[Dict]:
     """Rerank 检索策略（Iteration 4 核心实现）
     
@@ -634,9 +635,11 @@ def retrieve_rerank(
         k: 最终返回的块数量（默认 5）
         strategy: chunking 策略名称（传给 hybrid 检索），默认 "fixed_100_50"
         k_candidates: hybrid 召回的候选数量（默认 20）
+        return_all_scores: 是否返回所有候选的rerank分数（用于分析），默认False
     
     返回:
         按 rerank 分数排序的 top-k 文档块列表，每个块包含 'rerank_score' 字段
+        如果 return_all_scores=True，还会在第一个chunk中添加 'all_rerank_scores' 字段
     
     示例:
         # 对比 hybrid 和 rerank
@@ -676,4 +679,11 @@ def retrieve_rerank(
     reranked = sorted(candidates, key=lambda x: x['rerank_score'], reverse=True)
     
     # Step 6: 返回 top-k
-    return reranked[:k]
+    result = reranked[:k]
+    
+    # Step 7: 如果需要，保存所有候选的rerank分数（用于阈值分析）
+    if return_all_scores and result:
+        all_scores = [c['rerank_score'] for c in reranked]
+        result[0]['all_rerank_scores'] = all_scores
+    
+    return result

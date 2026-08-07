@@ -8,6 +8,10 @@ Iteration 5 评估运行脚本：集成 LLM-as-Judge 自动化评估
 - 评估 Answer Relevance（相关性）
 - 分析 Faithfulness 与检索质量的相关性
 
+Iteration 6 新增功能:
+- 拒答机制：基于Judge评分和Rerank分数的多层拒答
+- 配置文件支持：通过 rejection_config.json 配置阈值
+
 使用方法:
     # 运行评估（默认使用 Qwen Judge）
     python run_eval.py --chunking-strategy fixed_200_40 --retrieval-mode rerank
@@ -15,11 +19,14 @@ Iteration 5 评估运行脚本：集成 LLM-as-Judge 自动化评估
     # 使用 DeepSeek Judge 评估
     python run_eval.py --chunking-strategy fixed_200_40 --retrieval-mode rerank --judge-mode deepseek
     
-    # 不使用 Judge 评估（快速验证检索）
-    python run_eval.py --chunking-strategy fixed_200_40 --retrieval-mode rerank --judge-mode none
+    # 指定拒答配置文件
+    python run_eval.py --chunking-strategy fixed_200_40 --retrieval-mode rerank --judge-mode deepseek --rejection-config custom_config.json
     
-    # 使用 Ragas Judge 评估
-    python run_eval.py --chunking-strategy fixed_200_40 --retrieval-mode rerank --judge-mode ragas
+    # 使用预设模式（保守/中等/激进）
+    python run_eval.py --chunking-strategy fixed_200_40 --retrieval-mode rerank --judge-mode deepseek --rejection-preset moderate
+    
+    # 关闭拒答机制
+    python run_eval.py --chunking-strategy fixed_200_40 --retrieval-mode rerank --judge-mode deepseek --no-rejection
 
 注意：Judge 评估需要调用 LLM API，会增加运行时间和成本
 """
@@ -32,7 +39,7 @@ from typing import List, Dict
 
 from chunking import build_corpus_chunks
 from retrieval import retrieve_random, retrieve_vector, retrieve_bm25, retrieve_hybrid, rerank_chunks
-from generation import generate_answer_v6_async
+from generation import generate_answer_async
 from scoring import hit, find_answer_rank, aggregate_by_category, calculate_mrr, analyze_rerank_score_distribution
 from evaluation import (
     llm_faithfulness_check, 
@@ -47,9 +54,60 @@ from evaluation import (
 )
 
 
-async def batch_generate_v6(queries: List[Dict], chunks, args, chunking_strategy: str) -> List[Dict]:
+def load_rejection_config(config_path: str = "rejection_config.json", preset: str = None) -> Dict:
+    """加载拒答配置
+    
+    参数:
+        config_path: 配置文件路径
+        preset: 预设模式名称 (conservative, moderate, aggressive)
+    
+    返回:
+        配置字典
     """
-    批量异步生成答案（Iteration 6 - 使用 Reasoner）
+    try:
+        with open(config_path, 'r', encoding='utf-8') as f:
+            config = json.load(f)
+        
+        # 如果指定了预设模式，应用预设
+        if preset and preset in config.get('presets', {}):
+            preset_config = config['presets'][preset]
+            print(f"📋 Using rejection preset: {preset}")
+            print(f"   {preset_config['description']}")
+            
+            # 更新layer配置
+            if 'layer3_judge' in preset_config:
+                config['rejection_layers']['layer3_judge'].update(preset_config['layer3_judge'])
+            if 'layer1_rerank' in preset_config:
+                config['rejection_layers']['layer1_rerank'].update(preset_config['layer1_rerank'])
+        
+        return config
+    except FileNotFoundError:
+        print(f"⚠️  Config file {config_path} not found, using default settings")
+        return {
+            "rejection_enabled": True,
+            "rejection_layers": {
+                "layer1_rerank": {
+                    "enabled": True,
+                    "top1_threshold": 0.50,
+                    "top3_avg_threshold": 0.45
+                },
+                "layer3_judge": {
+                    "enabled": True,
+                    "faithfulness_threshold": 0.80,
+                    "relevance_threshold": 0.75
+                }
+            },
+            "rejection_message": "抱歉，我在提供的资料中未找到足够充分的信息来准确回答您的问题。建议您查阅完整的产品手册或联系客服获取更详细的解答。"
+        }
+    except json.JSONDecodeError as e:
+        print(f"⚠️  Config file {config_path} is invalid JSON: {e}")
+        print("   Using default settings")
+        return load_rejection_config(config_path="", preset=None)  # 返回默认配置
+
+
+async def batch_generate(queries: List[Dict], chunks, args, chunking_strategy: str, rejection_config: Dict = None) -> List[Dict]:
+    """
+    批量异步生成答案（带引用标注）
     
     参数:
         queries: 查询列表
@@ -102,7 +160,13 @@ async def batch_generate_v6(queries: List[Dict], chunks, args, chunking_strategy
                 retrieved = rerank_chunks(q["query"], retrieved, top_k=args.rerank_top_k)
             
             # 异步生成
-            task = generate_answer_v6_async(q["query"], retrieved, client=client)
+            task = generate_answer_async(
+                q["query"], 
+                retrieved, 
+                chunking_strategy,
+                client=client, 
+                rejection_config=rejection_config
+            )
             tasks.append((q, retrieved, task))
         
         # 等待所有任务完成
@@ -124,7 +188,12 @@ async def batch_generate_v6(queries: List[Dict], chunks, args, chunking_strategy
                     "raw_answer": gen_result["raw_answer"],
                     "citations": gen_result["citations"],
                     "reasoning": gen_result.get("reasoning"),
-                    "retrieved": retrieved
+                    "retrieved": retrieved,
+                    "rerank_scores": [c.get('rerank_score') for c in retrieved] if retrieved and 'rerank_score' in retrieved[0] else None,
+                    "faithfulness_score": gen_result.get("faithfulness_score"),
+                    "relevance_score": gen_result.get("relevance_score"),
+                    "rejected": gen_result.get("rejected", False),
+                    "rejection_reason": gen_result.get("rejection_reason")
                 })
             except Exception as e:
                 print(f"❌ Query {q['id']} 生成失败: {e}")
@@ -586,17 +655,33 @@ def run_single_strategy(args, chunking_strategy, retrieval_mode=None):
     print(f"  Judge Mode: {args.judge_mode}")
     print(f"{'='*60}")
     
-    # 初始化 Judge LLM（如果需要）
+    # 加载拒答配置（如果启用Judge且未明确禁用拒答）
+    rejection_config = None
+    if args.judge_mode != "none" and not args.no_rejection:
+        rejection_config = load_rejection_config(
+            config_path=args.rejection_config,
+            preset=args.rejection_preset
+        )
+        
+        print(f"✅ Rejection mechanism enabled")
+        print(f"   Config file: {args.rejection_config}")
+        if args.rejection_preset:
+            print(f"   Preset mode: {args.rejection_preset}")
+        
+        # 添加Judge模型配置
+        if args.judge_mode == "deepseek":
+            rejection_config['judge_model'] = 'deepseek-chat'
+            rejection_config['judge_base_url'] = 'https://api.deepseek.com'
+            rejection_config['judge_api_key'] = os.getenv('DEEPSEEK_API_KEY')
+        else:  # qwen
+            rejection_config['judge_model'] = 'qwen-plus'
+            rejection_config['judge_base_url'] = os.getenv('ALI_BASE_URL')
+            rejection_config['judge_api_key'] = os.getenv('ALI_API_KEY')
+    else:
+        print(f"⚠️  Rejection mechanism disabled (use --judge-mode with rerank, or add --no-rejection to explicitly disable)")
+    
+    # 初始化 Judge LLM（如果需要）- 已移除，Judge现在在generator内部
     judge_llm = None
-    if args.judge_mode != "none":
-        try:
-            print("\n📡 Initializing Judge LLM...")
-            judge_llm = get_judge_llm()
-            print("✅ Judge LLM ready")
-        except Exception as e:
-            print(f"⚠️  Judge LLM initialization failed: {e}")
-            print("   Continuing without Judge evaluation...")
-            args.judge_mode = "none"
     
     # 加载查询集
     with open(args.query_file, "r", encoding="utf-8") as f:
@@ -611,11 +696,11 @@ def run_single_strategy(args, chunking_strategy, retrieval_mode=None):
     print(f"Corpus: {len(chunks)} chunks from {num_docs} docs")
     print(f"Average chunk size: {avg_chunk_size:.1f} characters")
     
-    # 异步批量生成（Iteration 6 - 使用 DeepSeek Reasoner）
+    # 异步批量生成（Iteration 6 - 内置Judge评估和拒答）
     print(f"\n{'='*60}")
-    print("Batch Retrieve + Generate (async)")
+    print("Batch Retrieve + Generate + Judge (async)")
     print(f"{'='*60}")
-    results = asyncio.run(batch_generate_v6(queries, chunks, args, chunking_strategy))
+    results = asyncio.run(batch_generate(queries, chunks, args, chunking_strategy, rejection_config))
     
     # 打印所有结果
     print(f"\n{'='*60}")
@@ -630,48 +715,40 @@ def run_single_strategy(args, chunking_strategy, retrieval_mode=None):
         print(f"A: {r['answer'][:200]}...")
         print(f"Citations: {len(r['citations'])}/{len(r['citations'])} passed")
     
-    # Iteration 5: 批量异步评估 Faithfulness（如果启用 Judge）
-    if args.judge_mode != "none" and judge_llm:
+    # Iteration 6: Judge评估已在generator内部完成，这里只打印统计
+    if args.judge_mode != "none":
         print(f"\n{'='*60}")
-        print("Starting batch Judge evaluation (async)...")
-        print(f"{'='*60}\n")
+        print("Judge Evaluation Summary (from generator)")
+        print(f"{'='*60}")
         
-        try:
-            # 使用组合评估（一次 API 调用返回两个指标，节省 50% 成本）
-            results = asyncio.run(batch_evaluate_combined(results, args))
-            
-            # 打印 Faithfulness 分数示例
-            if args.judge_mode == "ragas":
-                judge_name = "Ragas Judge"
-            elif args.judge_mode == "deepseek":
-                judge_name = "DeepSeek Judge"
-            else:
-                judge_name = "Qwen Judge"
-            print(f"\n{'='*60}")
-            print(f"Faithfulness Scores ({judge_name}):")
-            print(f"{'='*60}")
-            for result in results:
-                score = result.get('faithfulness_score')
-                if score is not None:
-                    print(f"Query {result['id']}: {score:.2f}")
-                    if score < 0.5:
-                        print(f"  ⚠️  Low score warning!")
-            
-            # 打印 Relevance 分数示例
-            print(f"\n{'='*60}")
-            print(f"Answer Relevance Scores:")
-            print(f"{'='*60}")
-            for result in results:
-                score = result.get('relevance_score')
-                if score is not None:
-                    print(f"Query {result['id']}: {score:.2f}")
-                    if score < 0.5:
-                        print(f"  ⚠️  Low relevance warning!")
-                        
-        except Exception as e:
-            print(f"⚠️  Batch Judge evaluation failed: {e}")
-            print("   Continuing without Judge evaluation...")
-            args.judge_mode = "none"
+        # 统计拒答情况
+        rejected_count = sum(1 for r in results if r.get('rejected', False))
+        print(f"  Total rejected: {rejected_count}/{len(results)} ({rejected_count/len(results)*100:.1f}%)")
+        
+        # 打印被拒答的查询
+        if rejected_count > 0:
+            print(f"\n  Rejected queries:")
+            for r in results:
+                if r.get('rejected', False):
+                    print(f"    Q{r['id']}: {r.get('rejection_reason', 'N/A')}")
+        
+        # 打印分数示例
+        judge_name = {"qwen": "Qwen Judge", "deepseek": "DeepSeek Judge", "ragas": "Ragas Judge"}[args.judge_mode]
+        print(f"\n{'='*60}")
+        print(f"Faithfulness Scores ({judge_name}):")
+        print(f"{'='*60}")
+        for result in results[:5]:  # 只打印前5个
+            score = result.get('faithfulness_score')
+            if score is not None:
+                print(f"Query {result['id']}: {score:.2f}")
+        
+        print(f"\n{'='*60}")
+        print(f"Answer Relevance Scores:")
+        print(f"{'='*60}")
+        for result in results[:5]:  # 只打印前5个
+            score = result.get('relevance_score')
+            if score is not None:
+                print(f"Query {result['id']}: {score:.2f}")
 
     # 计算并打印分类别的 Recall@K 和 MRR 指标
     scores = aggregate_by_category(results)
@@ -766,6 +843,8 @@ def run_single_strategy(args, chunking_strategy, retrieval_mode=None):
                 print(f"  Miss queries ({relevance_analysis['miss_count']}):    {relevance_analysis['miss_mean']:.3f}")
                 print(f"  Delta:                   {relevance_analysis['hit_mean'] - relevance_analysis['miss_mean']:.3f}")
     
+    # Iteration 6: 拒答机制已在generator内部完成，这里不需要额外处理
+    
     # 清理 results 中的 retrieved 字段（太大不需要保存）
     for r in results:
         r.pop('retrieved', None)
@@ -833,7 +912,19 @@ def main():
                     help="Judge 评估的并发批次大小（默认10，过大可能触发 API 限流）")
     ap.add_argument("--citation-threshold", type=float, default=0.5,
                     help="Citation 验证的相似度阈值（0-1之间，默认0.5）")
+    
+    # Iteration 6: 拒答机制配置
+    ap.add_argument("--rejection-config", type=str, default="rejection_config.json",
+                    help="拒答配置文件路径（默认 rejection_config.json）")
+    ap.add_argument("--rejection-preset", type=str, default=None, choices=["conservative", "moderate", "aggressive"],
+                    help="拒答预设模式: conservative (保守), moderate (中等), aggressive (激进)")
+    ap.add_argument("--no-rejection", action="store_true",
+                    help="禁用拒答机制")
+    
     args = ap.parse_args()
+    
+    # 设置拒答开关
+    args.rejection_enabled = not args.no_rejection
 
     # 运行单个策略和检索模式
     scores, mrr_scores, results, rerank_analysis, faithfulness_analysis, relevance_analysis = run_single_strategy(args, args.chunking_strategy, args.retrieval_mode)
