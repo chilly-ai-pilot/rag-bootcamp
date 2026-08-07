@@ -89,16 +89,20 @@ def should_reject_by_citation_coverage(
     return coverage < coverage_threshold
 
 
-def should_reject_by_rerank_score(
-    rerank_scores: Optional[List[float]],
+def should_reject_by_retrieval_score(
+    scores: Optional[List[float]],
     max_score_threshold: float = 0.75,
     top_n: int = 2,
     top_n_avg_threshold: float = 0.40
 ) -> bool:
-    """Layer 1: 基于Rerank分数判断是否拒答（检索质量）
+    """Layer 1: 基于检索分数判断是否拒答（检索质量）
+    
+    支持两种模式：
+    - Rerank模式：使用rerank_score（通常0-1之间）
+    - Vector模式：使用vector相似度分数（通常0-1之间）
     
     拒答条件（满足任一即拒答）：
-    - max(rerank_scores) < max_score_threshold (所有chunk中最高分都很低)
+    - max(scores) < max_score_threshold (所有chunk中最高分都很低)
     - mean(top_n_scores) < top_n_avg_threshold (top-N的平均分很低)
     
     为什么改用max和topN：
@@ -108,7 +112,7 @@ def should_reject_by_rerank_score(
     - N可调：文档少时用1-2，文档多时用3-5
     
     参数:
-        rerank_scores: rerank分数列表（可以是任意顺序）
+        scores: 检索分数列表（可以是rerank_score或vector similarity）
         max_score_threshold: 最高分阈值，默认0.75
         top_n: topN的N值，默认2
         top_n_avg_threshold: topN平均分阈值，默认0.40
@@ -117,19 +121,19 @@ def should_reject_by_rerank_score(
         True: 应该拒答
         False: 可以回答
     """
-    if not rerank_scores:
-        # 没有rerank分数（如vector模式），不拒答
+    if not scores:
+        # 没有检索分数，不拒答
         return False
     
     # 检查max分数
-    max_score = max(rerank_scores)
+    max_score = max(scores)
     if max_score < max_score_threshold:
         return True
     
     # 检查topN平均分数（必须先排序！）
-    if len(rerank_scores) >= top_n:
+    if len(scores) >= top_n:
         # 降序排序，取top N
-        sorted_scores = sorted(rerank_scores, reverse=True)
+        sorted_scores = sorted(scores, reverse=True)
         top_n_avg = sum(sorted_scores[:top_n]) / top_n
         if top_n_avg < top_n_avg_threshold:
             return True
@@ -355,37 +359,47 @@ async def generate_answer_async(
         }
     
     # ============================================================
-    # Layer 1: Rerank拒答检查（在生成之前）
+    # Layer 1: 检索质量拒答检查（在生成之前，支持Vector和Rerank两种模式）
     # ============================================================
     rejected = False
     rejection_reason = None
     
     if rejection_config and rejection_config.get('rejection_enabled', False):
-        layer1_cfg = rejection_config.get('rejection_layers', {}).get('layer1_rerank', {})
+        layer1_cfg = rejection_config.get('rejection_layers', {}).get('layer1_retrieval', {})
         
         if layer1_cfg.get('enabled', False):
-            # 提取rerank分数
-            rerank_scores = [c.get('rerank_score') for c in retrieved_chunks if 'rerank_score' in c]
+            # 提取检索分数（优先rerank_score，其次vector相似度）
+            scores = []
+            score_type = None
             
-            # 如果有rerank分数，检查是否应该拒答
-            if rerank_scores:
+            # 优先检查rerank分数
+            if any('rerank_score' in c for c in retrieved_chunks):
+                scores = [c.get('rerank_score') for c in retrieved_chunks if 'rerank_score' in c]
+                score_type = 'rerank'
+            # 其次检查vector相似度分数（可能在metadata中）
+            elif any('similarity' in c for c in retrieved_chunks):
+                scores = [c.get('similarity') for c in retrieved_chunks if 'similarity' in c]
+                score_type = 'vector'
+            
+            # 如果有检索分数，检查是否应该拒答
+            if scores:
                 max_score_threshold = layer1_cfg.get('max_score_threshold', 0.75)
                 top_n = layer1_cfg.get('top_n', 2)
                 top_n_avg_threshold = layer1_cfg.get('top_n_avg_threshold', 0.40)
                 
                 # 检查拒答条件
-                if should_reject_by_rerank_score(
-                    rerank_scores,
+                if should_reject_by_retrieval_score(
+                    scores,
                     max_score_threshold=max_score_threshold,
                     top_n=top_n,
                     top_n_avg_threshold=top_n_avg_threshold
                 ):
                     rejected = True
-                    max_score = max(rerank_scores) if rerank_scores else 0
+                    max_score = max(scores) if scores else 0
                     # 计算top_n_avg时也要排序！
-                    sorted_scores = sorted(rerank_scores, reverse=True)
-                    top_n_avg = sum(sorted_scores[:top_n]) / top_n if len(rerank_scores) >= top_n else 0
-                    rejection_reason = f"Low rerank quality (max={max_score:.3f}, top{top_n}_avg={top_n_avg:.3f})"
+                    sorted_scores = sorted(scores, reverse=True)
+                    top_n_avg = sum(sorted_scores[:top_n]) / top_n if len(scores) >= top_n else 0
+                    rejection_reason = f"Low {score_type} quality (max={max_score:.3f}, top{top_n}_avg={top_n_avg:.3f})"
                     
                     # 直接返回拒答
                     rejection_message = rejection_config.get('rejection_message', generate_rejection_answer())

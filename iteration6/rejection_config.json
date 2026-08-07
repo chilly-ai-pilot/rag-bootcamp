@@ -1,12 +1,12 @@
 {
   "rejection_enabled": true,
   "rejection_layers": {
-    "layer1_rerank": {
+    "layer1_retrieval": {
       "enabled": true,
-      "max_score_threshold": 0.5,
+      "max_score_threshold": 0.7,
       "top_n": 2,
-      "top_n_avg_threshold": 0.2,
-      "description": "基于Rerank分数的检索质量拒答 - 改用max和topN平均"
+      "top_n_avg_threshold": 0.5,
+      "description": "基于检索分数的质量拒答（支持Vector和Rerank） - 改用max和topN平均"
     },
     "layer2_citation": {
       "enabled": true,
@@ -15,8 +15,8 @@
     },
     "layer3_judge": {
       "enabled": true,
-      "faithfulness_threshold": 0.8,
-      "relevance_threshold": 0.7,
+      "faithfulness_threshold": 0.5,
+      "relevance_threshold": 0.5,
       "mode": "moderate",
       "description": "中等模式：Faithfulness < 0.85 OR Relevance < 0.80"
     }
@@ -32,7 +32,7 @@
       "layer2_citation": {
         "coverage_threshold": 0.60
       },
-      "layer1_rerank": {
+      "layer1_retrieval": {
         "max_score_threshold": 0.70,
         "top_n": 2,
         "top_n_avg_threshold": 0.35
@@ -47,7 +47,7 @@
       "layer2_citation": {
         "coverage_threshold": 0.70
       },
-      "layer1_rerank": {
+      "layer1_retrieval": {
         "max_score_threshold": 0.75,
         "top_n": 2,
         "top_n_avg_threshold": 0.40
@@ -62,7 +62,7 @@
       "layer2_citation": {
         "coverage_threshold": 0.80
       },
-      "layer1_rerank": {
+      "layer1_retrieval": {
         "max_score_threshold": 0.80,
         "top_n": 2,
         "top_n_avg_threshold": 0.50
@@ -77,7 +77,7 @@
       "layer2_citation": {
         "coverage_threshold": 0.60
       },
-      "layer1_rerank": {
+      "layer1_retrieval": {
         "max_score_threshold": 0.70,
         "top_n": 1,
         "top_n_avg_threshold": 0.60
@@ -85,7 +85,7 @@
     }
   },
   "comments": {
-    "layer1_rerank_logic": "拒答条件: max(rerank_scores) < max_score_threshold OR mean(rerank_scores[:top_n]) < top_n_avg_threshold",
+    "layer1_retrieval_logic": "拒答条件: max(scores) < max_score_threshold OR mean(scores[:top_n]) < top_n_avg_threshold（支持Vector和Rerank）",
     "layer2_citation_logic": "拒答条件: valid_citations_count / raw_citations_count < coverage_threshold（检测引用幻觉）",
     "layer3_judge_logic": "拒答条件: faithfulness < threshold OR relevance < threshold",
     "top_n": "topN平均值的N，文档少时建议设为1或2，文档多时可设为3-5",

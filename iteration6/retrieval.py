@@ -160,12 +160,18 @@ def retrieve_vector(query: str, chunks: List[Dict], k: int = 5, strategy: str = 
     retrieved_chunks = []
     for i in range(len(results["ids"][0])):
         metadata = results["metadatas"][0][i]
+        # ChromaDB返回的是distance，需要转换为similarity
+        # 对于cosine distance: similarity = 1 - distance
+        distance = results["distances"][0][i] if "distances" in results else 0
+        similarity = 1 - distance  # cosine相似度 = 1 - cosine距离
+        
         retrieved_chunks.append({
             "doc_id": metadata["doc_id"],
             "start": metadata["start"],
             "end": metadata["end"],
             "chunk_id": metadata["chunk_id"],
-            "text": results["documents"][0][i]
+            "text": results["documents"][0][i],
+            "similarity": similarity  # 添加相似度分数（0-1之间）
         })
     
     return retrieved_chunks
