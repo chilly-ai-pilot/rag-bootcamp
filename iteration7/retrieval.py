@@ -559,12 +559,18 @@ def _get_reranker_model():
     global _reranker_model
     if _reranker_model is None:
         print("Loading bge-reranker-base model...")
-        from FlagEmbedding import FlagReranker
-        
-        _reranker_model = FlagReranker(
-            'BAAI/bge-reranker-base',
-            use_fp16=True  # 使用半精度加速，节省显存
-        )
+        try:
+            from FlagEmbedding import FlagReranker
+            
+            _reranker_model = FlagReranker(
+                'BAAI/bge-reranker-base',
+                use_fp16=True  # 使用半精度加速，节省显存
+            )
+        except Exception as e:
+            print(f"[ERROR] Failed to load reranker model: {e}")
+            print("This may be due to transformers version incompatibility.")
+            print("Please ensure transformers>=4.35.0,<5.0.0 is installed.")
+            raise
     return _reranker_model
 
 
