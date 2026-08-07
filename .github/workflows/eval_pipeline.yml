@@ -171,6 +171,15 @@ jobs:
                        -m "Documents: $DOC_COUNT" \
                        -m "Config: ${{ github.event.inputs.chunking_strategy || 'fixed_100_50' }}+${{ github.event.inputs.retrieval_mode || 'vector' }}+${{ github.event.inputs.rerank_mode || 'none' }}"
             
+            # 推送前先拉取最新代码，避免冲突
+            echo "🔄 Pulling latest changes before push..."
+            git pull --rebase origin main || {
+              echo "⚠️  Rebase failed, trying merge strategy..."
+              git rebase --abort
+              git pull --no-rebase origin main
+            }
+            
+            # 推送结果
             git push
             echo "✅ Results committed and pushed"
           fi
