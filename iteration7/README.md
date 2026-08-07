@@ -36,8 +36,8 @@ python run_eval.py \
 ```bash
 cd iteration7
 
-# 从 data/ 读取所有结果，生成报告到 reports/
-python generate_report.py --data-dir ../data --output-dir ../reports
+# 从 data/ 读取所有结果，生成报告到 docs/
+python generate_report.py --data-dir ../data --output-dir ../docs
 
 # 使用默认路径
 python generate_report.py
@@ -45,7 +45,7 @@ python generate_report.py
 
 ### 3. 查看报告
 
-在浏览器中打开 `reports/index.html`，或通过 GitHub Pages 访问。
+在浏览器中打开 `docs/index.html`，或通过 GitHub Pages 访问。
 
 ## ⚙️ GitHub Actions 配置
 
@@ -124,10 +124,10 @@ data/
 - `relevance_analysis`: Relevance 分析
 - `rerank_score_distribution`: Rerank 分数分布
 
-### HTML 报告（`reports/` 目录）
+### HTML 报告（`docs/` 目录）
 
 ```
-reports/
+docs/
 └── index.html  # 主报告页面
 ```
 
@@ -144,7 +144,7 @@ reports/
 - [ ] 在 `corpus/` 下添加 `doc-8.txt`，push 后自动触发 workflow
 - [ ] Workflow 在 5 分钟内完成，无错误
 - [ ] `data/` 目录生成新的结果 JSON 文件（带时间戳）
-- [ ] `reports/index.html` 更新
+- [ ] `docs/index.html` 更新
 - [ ] 通过 GitHub Pages 可访问报告
 - [ ] HTML 报告显示完整指标和趋势图
 - [ ] 修改代码（如改 embedding 模型），能检测到性能变化

@@ -47,12 +47,12 @@ python run_eval.py \
   --judge-mode deepseek
 
 # 生成报告
-python generate_report.py --data-dir ../data --output-dir ../reports
+python generate_report.py --data-dir ../data --output-dir ../docs
 ```
 
 ### 查看报告
 
-打开 `reports/index.html` 或访问 [GitHub Pages](https://YOUR_USERNAME.github.io/rag-bootcamp/)。
+打开 `docs/index.html` 或访问 [GitHub Pages](https://YOUR_USERNAME.github.io/rag-bootcamp/)。
 
 ## 📊 系统架构
 
@@ -169,7 +169,7 @@ rag-bootcamp/
 │   ├── corpus/                 # 文档语料库
 │   └── README.md
 ├── data/                # 评估结果历史
-├── reports/             # HTML 报告（GitHub Pages）
+├── docs/             # HTML 报告（GitHub Pages）
 ├── .github/workflows/   # CI/CD 配置
 └── docs/                # 设计文档
 ```
@@ -270,7 +270,7 @@ python expand_testset.py --action validate
 **解决方案**: 
 1. 确认 GitHub Pages 已启用
 2. 等待 1-2 分钟让部署完成
-3. 检查 `reports/index.html` 是否存在
+3. 检查 `docs/index.html` 是否存在
 
 ## 📚 扩展阅读
 

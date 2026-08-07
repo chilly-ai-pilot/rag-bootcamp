@@ -21,7 +21,7 @@
 | 在 corpus 下添加新文档，push 后自动触发 workflow | ✅ | 通过 GitHub Actions 自动触发 |
 | Workflow 在 5 分钟内完成，无错误 | ✅ | 实际约 3-4 分钟（取决于查询数量） |
 | `data/` 目录生成新的结果 JSON 文件 | ✅ | 带时间戳，包含完整元数据 |
-| `reports/index.html` 更新，通过 GitHub Pages 可访问 | ✅ | 交互式报告，趋势图 |
+| `docs/index.html` 更新，通过 GitHub Pages 可访问 | ✅ | 交互式报告，趋势图 |
 | HTML 报告显示完整指标和趋势图 | ✅ | Chart.js 实现，响应式设计 |
 | 修改代码能检测到性能变化 | ✅ | 自动对比上一次结果 |
 
@@ -54,7 +54,7 @@
 | `iteration7/Iteration7.md` | 设计文档 | ✅ |
 | `iteration7/TESTSET_EXPANSION_GUIDE.md` | 测试集扩充指南 | ✅ |
 | `iteration7/COMPLETION_SUMMARY.md` | 本文档 | ✅ |
-| `reports/README.md` | GitHub Pages 说明 | ✅ |
+| `docs/README.md` | GitHub Pages 说明 | ✅ |
 | 主 `README.md` 更新 | 项目总览 | ✅ |
 
 ### 4. 目录结构
@@ -62,7 +62,7 @@
 | 目录 | 用途 | 状态 |
 |------|------|------|
 | `data/` | 评估结果历史存储 | ✅ |
-| `reports/` | HTML 报告（GitHub Pages） | ✅ |
+| `docs/` | HTML 报告（GitHub Pages） | ✅ |
 | `.github/workflows/` | GitHub Actions 配置 | ✅ |
 
 ---

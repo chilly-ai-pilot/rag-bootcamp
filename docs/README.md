@@ -17,7 +17,7 @@ Reports are automatically generated and updated by GitHub Actions when:
 ## 📁 Directory Structure
 
 ```
-reports/
+docs/
 ├── index.html      # Main evaluation report (auto-generated)
 ├── .nojekyll       # Disable Jekyll processing
 └── README.md       # This file

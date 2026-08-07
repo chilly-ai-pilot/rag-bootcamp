@@ -73,20 +73,20 @@ Batch Retrieve + Generate + Judge (async)
 
 ```bash
 # 生成 HTML 报告
-python generate_report.py --data-dir ../data --output-dir ../reports
+python generate_report.py --data-dir ../data --output-dir ../docs
 ```
 
 ## 🌐 步骤 6: 查看报告
 
 ```bash
 # macOS
-open ../reports/index.html
+open ../docs/index.html
 
 # Linux
-xdg-open ../reports/index.html
+xdg-open ../docs/index.html
 
 # Windows
-start ../reports/index.html
+start ../docs/index.html
 ```
 
 ## 🎓 下一步
@@ -209,7 +209,7 @@ python run_eval.py ... --batch-size 3
 
 A: 检查文件是否存在：
 ```bash
-ls -lh ../reports/index.html
+ls -lh ../docs/index.html
 ```
 
 ## 💡 性能提示

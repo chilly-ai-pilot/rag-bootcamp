@@ -26,7 +26,7 @@ GitHub Actions 触发
     ↓
 运行 generate_report.py
     ↓
-生成 reports/index.html
+生成 docs/index.html
     ↓
 提交回仓库 + 部署到 GitHub Pages
 ```
@@ -38,7 +38,7 @@ GitHub Actions 触发
   - results_20260807_143022.json
   - results_20260808_091534.json
   
-/reports/                       # HTML报告
+/docs/                       # HTML报告
   - index.html                  # 主报告页面
   - assets/                     # CSS/JS资源
   
@@ -77,7 +77,7 @@ GitHub Actions 触发
 - [ ] 在 corpus 下添加新文档，push 后自动触发 workflow
 - [ ] Workflow 在 5 分钟内完成，无错误
 - [ ] `data/` 目录生成新的结果 JSON 文件
-- [ ] `reports/index.html` 更新，通过 GitHub Pages 可访问
+- [ ] `docs/index.html` 更新，通过 GitHub Pages 可访问
 - [ ] HTML 报告显示完整指标和趋势图
 - [ ] 修改代码（如改 embedding 模型），能检测到性能变化
 

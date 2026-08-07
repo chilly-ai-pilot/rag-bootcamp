@@ -135,7 +135,7 @@ jobs:
           cd iteration7
           python generate_report.py \
             --data-dir ../data \
-            --output-dir ../reports
+            --output-dir ../docs
       
       - name: 📈 Display summary
         run: |
@@ -156,7 +156,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
           
           # 添加结果文件
-          git add data/ reports/
+          git add data/ docs/
           
           # 检查是否有变更
           if git diff --staged --quiet; then

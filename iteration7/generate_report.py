@@ -7,8 +7,8 @@ Iteration 7: HTML 报告生成器
 - 支持 GitHub Pages 直接访问
 
 使用方法：
-    # 从 data/ 目录读取结果，输出到 reports/
-    python generate_report.py --data-dir ../data --output-dir ../reports
+    # 从 data/ 目录读取结果，输出到 docs/
+    python generate_report.py --data-dir ../data --output-dir ../docs
     
     # 使用默认路径
     python generate_report.py
