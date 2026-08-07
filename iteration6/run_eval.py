@@ -178,7 +178,7 @@ async def batch_generate(queries: List[Dict], chunks, args, chunking_strategy: s
                 h = hit(retrieved, q["doc_id"], q["char_start"], q["char_end"])
                 answer_rank = find_answer_rank(retrieved, q["doc_id"], q["char_start"], q["char_end"])
                 
-                results.append({
+                result = {
                     "id": q["id"],
                     "query": q["query"],
                     "category": q["category"],
@@ -194,9 +194,22 @@ async def batch_generate(queries: List[Dict], chunks, args, chunking_strategy: s
                     "relevance_score": gen_result.get("relevance_score"),
                     "rejected": gen_result.get("rejected", False),
                     "rejection_reason": gen_result.get("rejection_reason")
-                })
+                }
+                results.append(result)
+                
+                # 打印每个query的详细信息
+                print(f"\n   ✅ Q{q['id']} [{q['category']}]: {q['query']}")
+                print(f"      Hit: {h}, Rank: {answer_rank if answer_rank else 'N/A'}")
+                print(f"      Citations: {len(gen_result['citations'])} validated")
+                if gen_result.get("rejected"):
+                    print(f"      ⚠️  REJECTED: {gen_result.get('rejection_reason')}")
+                else:
+                    print(f"      Answer: {gen_result['answer'][:80]}...")
+                if gen_result.get("faithfulness_score") is not None:
+                    print(f"      F={gen_result['faithfulness_score']:.2f}, R={gen_result.get('relevance_score', 0):.2f}")
+                
             except Exception as e:
-                print(f"❌ Query {q['id']} 生成失败: {e}")
+                print(f"\n   ❌ Q{q['id']} 生成失败: {e}")
                 results.append({
                     "id": q["id"],
                     "query": q["query"],
@@ -702,18 +715,16 @@ def run_single_strategy(args, chunking_strategy, retrieval_mode=None):
     print(f"{'='*60}")
     results = asyncio.run(batch_generate(queries, chunks, args, chunking_strategy, rejection_config))
     
-    # 打印所有结果
+    # 打印汇总统计
     print(f"\n{'='*60}")
-    print(f"All Results ({len(results)} queries)")
+    print(f"Generation Summary: {len(results)} queries completed")
     print(f"{'='*60}")
-    for r in results:
-        print(f"\n--- Query {r['id']} [{r['category']}] ---")
-        print(f"Q: {r['query']}")
-        print(f"Hit: {r['hit']}")
-        if r['answer_rank']:
-            print(f"Answer rank: {r['answer_rank']}")
-        print(f"A: {r['answer'][:200]}...")
-        print(f"Citations: {len(r['citations'])}/{len(r['citations'])} passed")
+    rejected_count = sum(1 for r in results if r.get('rejected', False))
+    hit_count = sum(1 for r in results if r.get('hit'))
+    citations_count = sum(len(r['citations']) for r in results)
+    print(f"  Retrieval Hit: {hit_count}/{len(results)} ({hit_count/len(results)*100:.1f}%)")
+    print(f"  Citations validated: {citations_count}")
+    print(f"  Rejected: {rejected_count}/{len(results)} ({rejected_count/len(results)*100:.1f}%)")
     
     # Iteration 6: Judge评估已在generator内部完成，这里只打印统计
     if args.judge_mode != "none":
