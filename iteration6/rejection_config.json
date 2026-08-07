@@ -9,9 +9,9 @@
     },
     "layer1_retrieval": {
       "enabled": true,
-      "max_score_threshold": 0.5,
+      "max_score_threshold": 0.4,
       "top_n": 1,
-      "top_n_avg_threshold": 0.5,
+      "top_n_avg_threshold": 0.4,
       "description": "基于检索分数的质量拒答（支持Vector和Rerank） - 改用max和topN平均"
     },
     "layer2_citation": {
