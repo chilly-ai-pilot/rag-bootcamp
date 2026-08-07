@@ -145,7 +145,7 @@ jobs:
           ls -lh data/results_*.json | tail -5
           echo ""
           echo "📊 Report:"
-          ls -lh reports/index.html
+          ls -lh docs/index.html
           echo ""
           echo "📊 Corpus stats:"
           echo "  Documents: ${{ steps.corpus_check.outputs.doc_count }}"
