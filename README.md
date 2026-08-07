@@ -191,7 +191,7 @@ Push 代码到 `main` 分支后，Actions 自动运行。
 
 Settings → Pages → Source:
 - Branch: `main`
-- Folder: `/reports`
+- Folder: `/docs`
 
 ### 4. 扩充测试集
 

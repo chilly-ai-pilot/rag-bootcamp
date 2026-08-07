@@ -286,5 +286,32 @@
     "ground_truth_text": "按键图标可在 App 中更换，如离家模式可设为锁图标，观影模式设为电影胶片图标。",
     "char_start": 128,
     "char_end": 168
+  },
+  {
+    "id": 33,
+    "query": "SmartHub-100 最多支持多少个设备？",
+    "category": "exact_match",
+    "doc_id": "16",
+    "ground_truth_text": "SmartHub-100 最多支持 128 个子设备同时在线",
+    "char_start": 963,
+    "char_end": 993
+  },
+  {
+    "id": 34,
+    "query": "SmartHub-100 支持哪些语音助手？",
+    "category": "exact_match",
+    "doc_id": "16",
+    "ground_truth_text": "支持小爱同学、天猫精灵、小度语音助手",
+    "char_start": 377,
+    "char_end": 395
+  },
+  {
+    "id": 35,
+    "query": "智能中控如何恢复出厂设置？",
+    "category": "semantic_paraphrase",
+    "doc_id": "16",
+    "ground_truth_text": "在设备底部找到 Reset 按钮，使用针状物长按 10 秒，指示灯闪烁后松开，设备将恢复出厂设置",
+    "char_start": 1051,
+    "char_end": 1099
   }
 ]
