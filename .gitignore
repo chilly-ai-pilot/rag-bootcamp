@@ -3,6 +3,8 @@ __pycache__
 *.pyc
 chroma_db/
 *.sqlite3
+# Block local test results, but allow CI results in data/ directory
 results_*.json
+!data/results_*.json
 judge_test*.json
 .DS_Store
