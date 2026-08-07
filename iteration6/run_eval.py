@@ -141,7 +141,7 @@ async def batch_generate(queries: List[Dict], chunks, args, chunking_strategy: s
         print(f"   处理 batch {i//batch_size + 1}/{(total + batch_size - 1)//batch_size} ({len(batch)} queries)...")
         
         # 并发处理一个 batch
-        tasks = []
+        batch_data = []
         for q in batch:
             # 检索
             if args.retrieval_mode == "random":
@@ -167,12 +167,20 @@ async def batch_generate(queries: List[Dict], chunks, args, chunking_strategy: s
                 client=client, 
                 rejection_config=rejection_config
             )
-            tasks.append((q, retrieved, task))
+            batch_data.append((q, retrieved, task))
         
-        # 等待所有任务完成
-        for q, retrieved, task in tasks:
+        # 并发等待所有任务完成（使用asyncio.gather）
+        tasks_only = [item[2] for item in batch_data]
+        gen_results = await asyncio.gather(*tasks_only, return_exceptions=True)
+        
+        # 处理结果
+        for idx, (q, retrieved, _) in enumerate(batch_data):
+            gen_result = gen_results[idx]
+            
             try:
-                gen_result = await task
+                # 检查是否是异常
+                if isinstance(gen_result, Exception):
+                    raise gen_result
                 
                 # 评估检索质量
                 from scoring import hit, find_answer_rank
