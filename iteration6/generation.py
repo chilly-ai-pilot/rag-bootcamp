@@ -263,7 +263,8 @@ async def generate_answer_async(query: str, retrieved_chunks: list, model: str =
         
         client = AsyncOpenAI(
             api_key=api_key,
-            base_url="https://api.deepseek.com"
+            base_url="https://api.deepseek.com",
+            timeout=60.0  # 60秒超时
         )
     
     # 构建包含资料片段的提示词
@@ -435,7 +436,8 @@ async def generate_answer_async(
         
         client = AsyncOpenAI(
             api_key=api_key,
-            base_url="https://api.deepseek.com"
+            base_url="https://api.deepseek.com",
+            timeout=60.0  # 60秒超时
         )
     
     # 构建上下文，同时建立 source -> chunk 的映射
@@ -771,7 +773,8 @@ async def generate_answer_async(
                 # 创建Judge客户端（与generator分离）
                 judge_client = AsyncOpenAI(
                     api_key=judge_api_key,
-                    base_url=judge_base_url
+                    base_url=judge_base_url,
+                    timeout=60.0  # 60秒超时
                 )
                 
                 # 调用Judge评估
