@@ -299,7 +299,8 @@ def list_pending_reviews(review_dir: str = "review") -> List[Dict]:
 
 def approve_reviews(
     review_files: List[str],
-    corpus_dir: str = "corpus"
+    corpus_dir: str = "corpus",
+    archive: bool = True
 ) -> Dict:
     """
     批量通过审核，将内容添加到 corpus
@@ -307,17 +308,20 @@ def approve_reviews(
     参数:
         review_files: 要通过的审核文件路径列表
         corpus_dir: corpus 目录
+        archive: 是否归档已批准的 review 文件（移动到 review/approved/）
     
     返回:
         {
             "approved_count": int,
             "failed_count": int,
-            "created_docs": List[str]
+            "created_docs": List[str],
+            "archived_count": int
         }
     """
     approved_count = 0
     failed_count = 0
     created_docs = []
+    archived_count = 0
     
     # 找到现有文档的最大编号
     existing_docs = []
@@ -330,6 +334,13 @@ def approve_reviews(
                 continue
     
     next_doc_num = max(existing_docs) + 1 if existing_docs else 1
+    
+    # 创建归档目录（如果需要）
+    archive_dir = None
+    if archive:
+        review_parent = os.path.dirname(review_files[0]) if review_files else "review"
+        archive_dir = os.path.join(review_parent, "approved")
+        os.makedirs(archive_dir, exist_ok=True)
     
     for filepath in review_files:
         try:
@@ -358,8 +369,20 @@ def approve_reviews(
             review_data['approved_at'] = datetime.now().isoformat()
             review_data['new_doc_id'] = new_doc_id
             
-            with open(filepath, 'w', encoding='utf-8') as f:
-                json.dump(review_data, f, ensure_ascii=False, indent=2)
+            # 归档或更新文件
+            if archive and archive_dir:
+                # 移动到归档目录
+                archive_path = os.path.join(archive_dir, os.path.basename(filepath))
+                with open(archive_path, 'w', encoding='utf-8') as f:
+                    json.dump(review_data, f, ensure_ascii=False, indent=2)
+                
+                # 删除原文件
+                os.remove(filepath)
+                archived_count += 1
+            else:
+                # 仅更新状态
+                with open(filepath, 'w', encoding='utf-8') as f:
+                    json.dump(review_data, f, ensure_ascii=False, indent=2)
             
             approved_count += 1
             
@@ -370,7 +393,8 @@ def approve_reviews(
     return {
         "approved_count": approved_count,
         "failed_count": failed_count,
-        "created_docs": created_docs
+        "created_docs": created_docs,
+        "archived_count": archived_count
     }
 
 

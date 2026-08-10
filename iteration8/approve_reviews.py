@@ -68,7 +68,7 @@ def main():
     print("开始审核...")
     print(f"{'='*60}\n")
     
-    result = approve_reviews(review_files, args.corpus_dir)
+    result = approve_reviews(review_files, args.corpus_dir, archive=True)
     
     print(f"\n{'='*60}")
     print("审核完成!")
@@ -76,11 +76,15 @@ def main():
     print(f"✅ 成功: {result['approved_count']}")
     print(f"❌ 失败: {result['failed_count']}")
     print(f"📝 创建文档: {len(result['created_docs'])}")
+    print(f"📦 归档文件: {result['archived_count']}")
     
     if result['created_docs']:
         print(f"\n新创建的文档:")
         for doc_id in result['created_docs']:
             print(f"  - {doc_id}.txt")
+    
+    if result['archived_count'] > 0:
+        print(f"\n📦 已批准的 review 文件已移动到: {args.review_dir}/approved/")
     
     print(f"\n💡 提示: 需要重新运行评估以查看效果")
     print(f"{'='*60}\n")
