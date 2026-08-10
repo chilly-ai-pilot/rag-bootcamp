@@ -56,25 +56,71 @@ export RAG_RERANK="true"
 
 ## 🚀 使用方式
 
-### 方式 1: 测试 MCP Tools（不启动 Server）
+### 方式 1: MCP Server (stdio) - 用于 Kiro 等客户端
 
 ```bash
 cd rag-mcp
-python tests/test_mcp_tools.py
-```
+./run_server.sh
 
-这会直接调用 `rag_core` 的函数，测试检索和生成功能。
-
-### 方式 2: 启动 MCP Server
-
-```bash
-cd rag-mcp
+# 或直接运行
 python mcp_server/server.py
 ```
 
 Server 启动后，通过 stdio 接收 MCP 协议消息。
 
-### 方式 3: 在 Kiro 中配置
+### 方式 2: HTTP Server - 用于 Web 集成
+
+```bash
+cd rag-mcp
+./run_http_server.sh
+
+# 或直接运行
+python mcp_server/http_server.py
+```
+
+HTTP Server 提供 RESTful API：
+- `GET /` - 健康检查
+- `POST /search` - 搜索知识库
+- `POST /generate` - 生成答案
+- `POST /generate/stream` - 流式生成（SSE）
+
+**示例：使用 curl 测试**
+
+```bash
+# 搜索
+curl -X POST http://localhost:8000/search \
+  -H "Content-Type: application/json" \
+  -d '{"query": "SmartCam-200 的夜视距离", "top_k": 5}'
+
+# 生成答案
+curl -X POST http://localhost:8000/generate \
+  -H "Content-Type: application/json" \
+  -d '{"query": "SmartLock-100 如何生成临时密码？", "top_k": 5}'
+
+# 流式生成
+curl -N -X POST http://localhost:8000/generate/stream \
+  -H "Content-Type: application/json" \
+  -d '{"query": "SmartLock-100 如何生成临时密码？", "top_k": 5}'
+```
+
+**环境变量配置：**
+```bash
+export RAG_HTTP_HOST="0.0.0.0"      # 监听地址
+export RAG_HTTP_PORT="8000"          # 监听端口
+export RAG_CORPUS_DIR="../iteration8/corpus"
+export DEEPSEEK_API_KEY="your-key"
+```
+
+### 方式 3: 快速测试
+
+```bash
+cd rag-mcp
+python quick_test.py
+```
+
+直接调用 `rag_core` 的函数，测试检索和生成功能。
+
+### 方式 4: 在 Kiro 中配置
 
 在 Kiro 的 `mcp.json` 中添加：
 

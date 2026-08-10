@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG MCP HTTP Client</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .query-box {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-search {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-generate {
+            background: #764ba2;
+            color: white;
+        }
+        
+        .btn-stream {
+            background: #48bb78;
+            color: white;
+        }
+        
+        .result-box {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: none;
+        }
+        
+        .result-box.show {
+            display: block;
+        }
+        
+        .status {
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        
+        .status.loading {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .status.success {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .status.error {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        .answer {
+            line-height: 1.8;
+            color: #2c3e50;
+            margin: 15px 0;
+        }
+        
+        .citations {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            border-radius: 4px;
+        }
+        
+        .citations h4 {
+            margin-bottom: 10px;
+            color: #667eea;
+        }
+        
+        .citation-item {
+            margin: 8px 0;
+            font-size: 14px;
+            color: #555;
+        }
+        
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 RAG MCP HTTP Client</h1>
+            <p>测试 RAG System 的 HTTP/SSE API</p>
+        </header>
+        
+        <div class="query-box">
+            <textarea id="queryInput" placeholder="输入您的问题...">SmartCam-200 的夜视距离是多少？</textarea>
+            
+            <div class="buttons">
+                <button class="btn-search" onclick="searchKnowledge()">🔍 搜索</button>
+                <button class="btn-generate" onclick="generateAnswer()">📝 生成</button>
+                <button class="btn-stream" onclick="generateStream()">⚡ 流式生成</button>
+            </div>
+        </div>
+        
+        <div id="resultBox" class="result-box">
+            <div id="status" class="status"></div>
+            <div id="answer" class="answer"></div>
+            <div id="citations" class="citations" style="display:none"></div>
+            <pre id="json" style="display:none"></pre>
+        </div>
+    </div>
+    
+    <script>
+        const API_BASE = 'http://localhost:8000';
+        
+        function showResult() {
+            document.getElementById('resultBox').classList.add('show');
+        }
+        
+        function setStatus(message, type = 'loading') {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type}`;
+        }
+        
+        async function searchKnowledge() {
+            const query = document.getElementById('queryInput').value;
+            if (!query) return;
+            
+            showResult();
+            setStatus('正在搜索...', 'loading');
+            document.getElementById('answer').textContent = '';
+            document.getElementById('citations').style.display = 'none';
+            document.getElementById('json').style.display = 'none';
+            
+            try {
+                const response = await fetch(`${API_BASE}/search`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query, top_k: 5 })
+                });
+                
+                const result = await response.json();
+                
+                if (result.rejected) {
+                    setStatus(`❌ 拒答: ${result.rejection_reason}`, 'error');
+                } else {
+                    setStatus(`✅ 找到 ${result.returned} 个相关片段`, 'success');
+                }
+                
+                document.getElementById('json').textContent = JSON.stringify(result, null, 2);
+                document.getElementById('json').style.display = 'block';
+                
+            } catch (error) {
+                setStatus(`❌ 错误: ${error.message}`, 'error');
+            }
+        }
+        
+        async function generateAnswer() {
+            const query = document.getElementById('queryInput').value;
+            if (!query) return;
+            
+            showResult();
+            setStatus('正在生成答案...', 'loading');
+            document.getElementById('answer').textContent = '';
+            document.getElementById('citations').style.display = 'none';
+            document.getElementById('json').style.display = 'none';
+            
+            try {
+                const response = await fetch(`${API_BASE}/generate`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query, top_k: 5 })
+                });
+                
+                const result = await response.json();
+                
+                if (result.rejected) {
+                    setStatus(`❌ 拒答: ${result.rejection_reason}`, 'error');
+                } else {
+                    setStatus('✅ 生成完成', 'success');
+                    document.getElementById('answer').textContent = result.answer;
+                    
+                    if (result.citations && result.citations.length > 0) {
+                        const citationsDiv = document.getElementById('citations');
+                        citationsDiv.innerHTML = '<h4>📚 引用来源</h4>';
+                        result.citations.forEach((c, i) => {
+                            citationsDiv.innerHTML += `<div class="citation-item">[${i+1}] ${c.source} (${c.chunk_id})</div>`;
+                        });
+                        citationsDiv.style.display = 'block';
+                    }
+                }
+                
+                document.getElementById('json').textContent = JSON.stringify(result, null, 2);
+                document.getElementById('json').style.display = 'block';
+                
+            } catch (error) {
+                setStatus(`❌ 错误: ${error.message}`, 'error');
+            }
+        }
+        
+        async function generateStream() {
+            const query = document.getElementById('queryInput').value;
+            if (!query) return;
+            
+            showResult();
+            setStatus('正在连接...', 'loading');
+            document.getElementById('answer').textContent = '';
+            document.getElementById('citations').style.display = 'none';
+            document.getElementById('json').style.display = 'none';
+            
+            try {
+                const response = await fetch(`${API_BASE}/generate/stream`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query, top_k: 5 })
+                });
+                
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let answer = '';
+                
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    
+                    const chunk = decoder.decode(value);
+                    const lines = chunk.split('\n');
+                    
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            const data = JSON.parse(line.substring(6));
+                            
+                            if (data.type === 'status') {
+                                setStatus(data.message, 'loading');
+                            } else if (data.type === 'token') {
+                                answer += data.content;
+                                document.getElementById('answer').textContent = answer;
+                            } else if (data.type === 'citations') {
+                                const citationsDiv = document.getElementById('citations');
+                                citationsDiv.innerHTML = '<h4>📚 引用来源</h4>';
+                                data.data.forEach((c, i) => {
+                                    citationsDiv.innerHTML += `<div class="citation-item">[${i+1}] ${c.source} (${c.chunk_id})</div>`;
+                                });
+                                citationsDiv.style.display = 'block';
+                            } else if (data.type === 'done') {
+                                setStatus('✅ 生成完成', 'success');
+                                document.getElementById('json').textContent = JSON.stringify(data.result, null, 2);
+                                document.getElementById('json').style.display = 'block';
+                            } else if (data.type === 'error') {
+                                setStatus(`❌ 错误: ${data.message}`, 'error');
+                            } else if (data.type === 'rejection') {
+                                setStatus(`❌ 拒答: ${data.reason}`, 'error');
+                            }
+                        }
+                    }
+                }
+                
+            } catch (error) {
+                setStatus(`❌ 错误: ${error.message}`, 'error');
+            }
+        }
+    </script>
+</body>
+</html>
