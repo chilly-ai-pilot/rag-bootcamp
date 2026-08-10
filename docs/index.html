@@ -486,12 +486,12 @@
         <header>
             <h1>🚀 RAG System Evaluation Report</h1>
             <p>Continuous Evaluation Dashboard - Iteration 8 (Self-Healing)</p>
-            <p style="font-size: 0.95em; margin-top: 10px;">Latest: 2026-08-10 22:19 | Total Runs: 5 | Pending Reviews: 3</p>
+            <p style="font-size: 0.95em; margin-top: 10px;">Latest: 2026-08-10 22:19 | Total Runs: 5 | Pending Reviews: <span id="pending-count">Loading...</span></p>
         </header>
         
         <div class="tabs">
             <button class="tab active" onclick="switchTab('metrics')">📊 Metrics</button>
-            <button class="tab" onclick="switchTab('review')">🔍 Review (5)</button>
+            <button class="tab" onclick="switchTab('review')">🔍 Review (<span id="review-count">0</span>)</button>
         </div>
         
         <div id="metrics-tab" class="tab-content active">
@@ -976,6 +976,46 @@
                 }
             }
         });
+        
+        // Dynamic review count loading from GitHub API
+        async function loadReviewCount() {
+            try {
+                const repo = getGitHubRepo();
+                const response = await fetch(`https://api.github.com/repos/${repo}/contents/iteration8/review`);
+                
+                if (!response.ok) {
+                    throw new Error(`GitHub API returned ${response.status}`);
+                }
+                
+                const files = await response.json();
+                
+                // Filter review files: review_*.json
+                const reviewFiles = files.filter(f => 
+                    f.type === 'file' && 
+                    f.name.startsWith('review_') && 
+                    f.name.endsWith('.json')
+                );
+                
+                const count = reviewFiles.length;
+                
+                // Update both count displays
+                document.getElementById('pending-count').textContent = count;
+                document.getElementById('review-count').textContent = count;
+                
+                console.log(`✓ Loaded ${count} review files from GitHub`);
+            } catch (error) {
+                console.error('Failed to load review count:', error);
+                document.getElementById('pending-count').textContent = '?';
+                document.getElementById('review-count').textContent = '?';
+            }
+        }
+        
+        // Load review count when page loads
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadReviewCount);
+        } else {
+            loadReviewCount();
+        }
     </script>
 </body>
 </html>
