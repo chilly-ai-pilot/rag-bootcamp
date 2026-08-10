@@ -1,0 +1,81 @@
+{
+  "metadata": {
+    "timestamp": "20260810_231325",
+    "evaluation_date": "2026-08-10T23:13:25.539500",
+    "corpus_stats": {
+      "num_documents": 19,
+      "num_queries": 1,
+      "corpus_dir": "corpus"
+    },
+    "model_config": {
+      "chunking_strategy": "fixed_100_50",
+      "retrieval_mode": "hybrid",
+      "rerank_mode": "bge",
+      "rerank_top_k": 10,
+      "retrieval_top_k": 40,
+      "judge_mode": "none",
+      "rejection_enabled": true,
+      "rejection_preset": "aggressive",
+      "query_from": 7,
+      "max_queries": 1,
+      "batch_size": 1
+    }
+  },
+  "config": {
+    "chunking_strategy": "fixed_100_50",
+    "retrieval_mode": "hybrid",
+    "rerank_mode": "bge",
+    "rerank_top_k": 10,
+    "retrieval_top_k": 40
+  },
+  "scores": {
+    "chunking_sensitive": 1.0,
+    "overall": 1.0
+  },
+  "mrr_scores": {
+    "chunking_sensitive": 1.0,
+    "overall": 1.0
+  },
+  "results": [
+    {
+      "id": 7,
+      "query": "SmartPlug-400 的充电保护功能是怎样工作的？",
+      "category": "chunking_sensitive",
+      "hit": 1,
+      "answer_rank": 1,
+      "answer": "检测到设备电流在短时间内下降至接近零，判定设备充满电，自动关闭插座，防止过充[文档19:片段1]。这一机制适用于该型号的通用充电保护场景。",
+      "raw_answer": "检测到设备电流在短时间内下降至接近零，判定设备充满电，自动关闭插座，防止过充。这一机制适用于该型号的通用充电保护场景。",
+      "citations": [
+        {
+          "span": "检测到设备电流在短时间内下降至接近零，判定设备充满电，自动关闭插座，防止过充",
+          "source": "文档19:片段1",
+          "chunk_text": "问：SmartPlug-400 的充电保护功能是怎样工作的？\n答：检测到设备电流在短时间内下降至接近零，判定设备充满电，自动关闭插座，防止过充。",
+          "chunk_full_id": "doc19:chunk1",
+          "validation_method": "exact_match"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": [
+        0.9999626569652175,
+        0.9713534348047614,
+        0.9116399832027947,
+        0.7862936323430918,
+        0.7330804030179765,
+        0.45483179927033374,
+        0.43413290673034,
+        0.06910277503632015,
+        0.06215302244900503,
+        0.05693045316668919
+      ],
+      "faithfulness_score": null,
+      "relevance_score": null,
+      "rejected": false,
+      "rejection_reason": null
+    }
+  ],
+  "self_healing": {
+    "triggered_count": 0,
+    "created_files": [],
+    "deduplicated_count": 0
+  }
+}
