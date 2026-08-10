@@ -1,0 +1,81 @@
+{
+  "metadata": {
+    "timestamp": "20260810_215710",
+    "evaluation_date": "2026-08-10T21:57:10.372096",
+    "corpus_stats": {
+      "num_documents": 16,
+      "num_queries": 1,
+      "corpus_dir": "corpus"
+    },
+    "model_config": {
+      "chunking_strategy": "fixed_100_50",
+      "retrieval_mode": "hybrid",
+      "rerank_mode": "bge",
+      "rerank_top_k": 10,
+      "retrieval_top_k": 40,
+      "judge_mode": "none",
+      "rejection_enabled": true,
+      "rejection_preset": "aggressive",
+      "query_from": 3,
+      "max_queries": 1,
+      "batch_size": 10
+    }
+  },
+  "config": {
+    "chunking_strategy": "fixed_100_50",
+    "retrieval_mode": "hybrid",
+    "rerank_mode": "bge",
+    "rerank_top_k": 10,
+    "retrieval_top_k": 40
+  },
+  "scores": {
+    "chunking_sensitive": 1.0,
+    "overall": 1.0
+  },
+  "mrr_scores": {
+    "chunking_sensitive": 0.25,
+    "overall": 0.25
+  },
+  "results": [
+    {
+      "id": 3,
+      "query": "SmartBulb-300 断电后记忆功能怎么关闭？",
+      "category": "chunking_sensitive",
+      "hit": 1,
+      "answer_rank": 4,
+      "answer": "根据资料，“SmartBulb-300 断电后记忆功能”的关闭方法如下：“此功能可在 APP 中关闭，改为上电默认白光”[文档3:片段8]。",
+      "raw_answer": "根据资料，“SmartBulb-300 断电后记忆功能”的关闭方法如下：“此功能可在 APP 中关闭，改为上电默认白光”。",
+      "citations": [
+        {
+          "span": "此功能可在 APP 中关闭，改为上电默认白光",
+          "source": "文档3:片段8",
+          "chunk_text": "bee 连接。断电后重新上电，灯泡会恢复断电前的亮度和色温状态，无需重新设置。此功能可在 APP 中关闭，改为上电默认白光。可将多个灯泡加入同一群组（如客厅筒灯群组），统一调光调色，最多支持 32 个",
+          "chunk_full_id": "doc3:chunk8",
+          "validation_method": "exact_match"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": [
+        0.9140150783739115,
+        0.7313160604973897,
+        0.7268702698179688,
+        0.6436199253577818,
+        0.6135004134812346,
+        0.5358732332700346,
+        0.519907833644776,
+        0.4575417774830968,
+        0.21032881890752436,
+        0.2089482895874895
+      ],
+      "faithfulness_score": null,
+      "relevance_score": null,
+      "rejected": false,
+      "rejection_reason": null
+    }
+  ],
+  "self_healing": {
+    "triggered_count": 0,
+    "created_files": [],
+    "deduplicated_count": 0
+  }
+}
