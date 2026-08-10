@@ -122,6 +122,12 @@ python approve_reviews.py --all
 python approve_reviews.py --all --corpus-dir corpus
 ```
 
+**工作原理:**
+- 每个通过的审核会创建一个**新的文档文件**
+- 文档命名格式: `doc-N.txt`（N 是下一个可用编号）
+- 文档内容包含问题和答案
+- 审核文件状态更新为 `approved`，并记录新文档 ID
+
 **方法 B: 在 GitHub Pages UI 中**
 1. 勾选要通过的审核项
 2. 点击 "Approve Selected" 按钮

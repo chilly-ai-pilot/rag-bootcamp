@@ -75,11 +75,11 @@ def main():
     print(f"{'='*60}")
     print(f"✅ 成功: {result['approved_count']}")
     print(f"❌ 失败: {result['failed_count']}")
-    print(f"📝 更新文档: {len(result['updated_docs'])}")
+    print(f"📝 创建文档: {len(result['created_docs'])}")
     
-    if result['updated_docs']:
-        print(f"\n已更新的文档:")
-        for doc_id in result['updated_docs']:
+    if result['created_docs']:
+        print(f"\n新创建的文档:")
+        for doc_id in result['created_docs']:
             print(f"  - {doc_id}.txt")
     
     print(f"\n💡 提示: 需要重新运行评估以查看效果")

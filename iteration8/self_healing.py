@@ -312,12 +312,24 @@ def approve_reviews(
         {
             "approved_count": int,
             "failed_count": int,
-            "updated_docs": List[str]
+            "created_docs": List[str]
         }
     """
     approved_count = 0
     failed_count = 0
-    updated_docs = set()
+    created_docs = []
+    
+    # 找到现有文档的最大编号
+    existing_docs = []
+    for fname in os.listdir(corpus_dir):
+        if fname.startswith('doc-') and fname.endswith('.txt'):
+            try:
+                doc_num = int(fname.replace('doc-', '').replace('.txt', ''))
+                existing_docs.append(doc_num)
+            except:
+                continue
+    
+    next_doc_num = max(existing_docs) + 1 if existing_docs else 1
     
     for filepath in review_files:
         try:
@@ -327,20 +339,24 @@ def approve_reviews(
             
             # 提取信息
             ground_truth = review_data['ground_truth']
-            doc_id = review_data['source']['doc_id']
+            query = review_data['query']
             
-            # 添加到对应文档
-            doc_file = os.path.join(corpus_dir, f"{doc_id}.txt")
+            # 创建新文档
+            new_doc_id = f"doc-{next_doc_num}"
+            doc_file = os.path.join(corpus_dir, f"{new_doc_id}.txt")
             
-            if os.path.exists(doc_file):
-                with open(doc_file, 'a', encoding='utf-8') as f:
-                    f.write(f"\n\n{ground_truth}")
-                
-                updated_docs.add(doc_id)
+            # 写入内容（包含问题作为标题）
+            with open(doc_file, 'w', encoding='utf-8') as f:
+                f.write(f"# 问题: {query}\n\n")
+                f.write(ground_truth)
+            
+            created_docs.append(new_doc_id)
+            next_doc_num += 1
             
             # 更新审核状态
             review_data['status'] = 'approved'
             review_data['approved_at'] = datetime.now().isoformat()
+            review_data['new_doc_id'] = new_doc_id
             
             with open(filepath, 'w', encoding='utf-8') as f:
                 json.dump(review_data, f, ensure_ascii=False, indent=2)
@@ -354,7 +370,7 @@ def approve_reviews(
     return {
         "approved_count": approved_count,
         "failed_count": failed_count,
-        "updated_docs": list(updated_docs)
+        "created_docs": created_docs
     }
 
 
