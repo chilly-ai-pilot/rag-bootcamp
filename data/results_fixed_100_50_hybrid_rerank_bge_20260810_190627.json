@@ -1,0 +1,94 @@
+{
+  "metadata": {
+    "timestamp": "20260810_190627",
+    "evaluation_date": "2026-08-10T19:06:27.168947",
+    "corpus_stats": {
+      "num_documents": 27,
+      "num_queries": 1,
+      "corpus_dir": "corpus"
+    },
+    "model_config": {
+      "chunking_strategy": "fixed_100_50",
+      "retrieval_mode": "hybrid",
+      "rerank_mode": "bge",
+      "rerank_top_k": 5,
+      "retrieval_top_k": 40,
+      "judge_mode": "none",
+      "rejection_enabled": true,
+      "rejection_preset": "aggressive"
+    }
+  },
+  "config": {
+    "chunking_strategy": "fixed_100_50",
+    "retrieval_mode": "hybrid",
+    "rerank_mode": "bge",
+    "rerank_top_k": 5,
+    "retrieval_top_k": 40
+  },
+  "scores": {
+    "chunking_sensitive": 1.0,
+    "overall": 1.0
+  },
+  "mrr_scores": {
+    "chunking_sensitive": 1.0,
+    "overall": 1.0
+  },
+  "results": [
+    {
+      "id": 1,
+      "query": "SmartLock-100 如何生成临时密码？",
+      "category": "chunking_sensitive",
+      "hit": 1,
+      "answer_rank": 1,
+      "answer": "可通过 App 生成一次性或限时临时密码[文档19:片段1]。在 APP【门锁管理】→【临时密码】→ 选择\"限时密码\"或\"一次性密码\"[文档14:片段12]。限时密码可设置有效期（如今天 8:00-18:00），一次性密码使用后自动失效[文档14:片段12]。密码生成后发给对方即可[文档14:片段12]。",
+      "raw_answer": "可通过 App 生成一次性或限时临时密码。在 APP【门锁管理】→【临时密码】→ 选择\"限时密码\"或\"一次性密码\"。限时密码可设置有效期（如今天 8:00-18:00），一次性密码使用后自动失效。密码生成后发给对方即可。",
+      "citations": [
+        {
+          "span": "可通过 App 生成一次性或限时临时密码",
+          "source": "文档19:片段1",
+          "chunk_text": "问：SmartLock-100 如何生成临时密码？\n\n答：可通过 App 生成一次性或限时临时密码。",
+          "chunk_full_id": "doc19:chunk1",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "在 APP【门锁管理】→【临时密码】→ 选择\"限时密码\"或\"一次性密码\"",
+          "source": "文档14:片段12",
+          "chunk_text": "在 APP【门锁管理】→【临时密码】→ 选择\"限时密码\"或\"一次性密码\"。限时密码可设置有效期（如今天 8:00-18:00），一次性密码使用后自动失效。密码生成后发给对方即可。\n\n用户 F：\"摄像头",
+          "chunk_full_id": "doc14:chunk12",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "限时密码可设置有效期（如今天 8:00-18:00），一次性密码使用后自动失效",
+          "source": "文档14:片段12",
+          "chunk_text": "在 APP【门锁管理】→【临时密码】→ 选择\"限时密码\"或\"一次性密码\"。限时密码可设置有效期（如今天 8:00-18:00），一次性密码使用后自动失效。密码生成后发给对方即可。\n\n用户 F：\"摄像头",
+          "chunk_full_id": "doc14:chunk12",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "密码生成后发给对方即可",
+          "source": "文档14:片段12",
+          "chunk_text": "在 APP【门锁管理】→【临时密码】→ 选择\"限时密码\"或\"一次性密码\"。限时密码可设置有效期（如今天 8:00-18:00），一次性密码使用后自动失效。密码生成后发给对方即可。\n\n用户 F：\"摄像头",
+          "chunk_full_id": "doc14:chunk12",
+          "validation_method": "exact_match"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": [
+        0.999912723504279,
+        0.9920230613377828,
+        0.9729783403671786,
+        0.9691126015102146,
+        0.9622689123519859
+      ],
+      "faithfulness_score": null,
+      "relevance_score": null,
+      "rejected": false,
+      "rejection_reason": null
+    }
+  ],
+  "self_healing": {
+    "triggered_count": 0,
+    "created_files": [],
+    "deduplicated_count": 0
+  }
+}
