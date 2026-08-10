@@ -51,9 +51,18 @@ def _get_embedding_model():
     """延迟加载 embedding 模型（单例模式）"""
     global _embedding_model
     if _embedding_model is None:
-        print("Loading bge-base-zh model...")
+        import os
+        cache_dir = os.path.expanduser('~/.cache/huggingface')
+        model_path = os.path.join(cache_dir, 'hub', 'models--BAAI--bge-base-zh-v1.5')
+        
+        if os.path.exists(model_path):
+            print("Loading bge-base-zh model from cache...")
+        else:
+            print("Downloading bge-base-zh model (first time)...")
+        
         # 优先使用本地缓存，避免重复下载
         _embedding_model = SentenceTransformer('BAAI/bge-base-zh-v1.5', local_files_only=False)
+        print("✅ Model loaded")
     return _embedding_model
 
 

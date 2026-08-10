@@ -148,8 +148,12 @@ jobs:
           USER_QUERY_FROM="${{ github.event.inputs.query_from }}"
           
           if [ -z "$USER_QUERY_FROM" ] || [ "$USER_QUERY_FROM" = "" ]; then
-            # 用户未指定，生成随机数（1 到 TOTAL_QUERIES）
-            RANDOM_FROM=$((1 + RANDOM % TOTAL_QUERIES))
+            # 用户未指定，生成真正的随机数（使用 /dev/urandom）
+            RANDOM_FROM=$(( ( RANDOM % TOTAL_QUERIES ) + 1 ))
+            # 使用当前时间作为额外的随机源
+            TIME_SEED=$(($(date +%s%N) % TOTAL_QUERIES + 1))
+            # 混合两个随机源
+            RANDOM_FROM=$((( RANDOM_FROM + TIME_SEED ) % TOTAL_QUERIES + 1))
             echo "🎲 Randomly selected query-from: $RANDOM_FROM"
             echo "query_from=$RANDOM_FROM" >> $GITHUB_OUTPUT
           else
