@@ -347,8 +347,8 @@ def approve_reviews(
             
             # 写入内容（包含问题作为标题）
             with open(doc_file, 'w', encoding='utf-8') as f:
-                f.write(f"# 问题: {query}\n\n")
-                f.write(ground_truth)
+                f.write(f"问：{query}\n\n")
+                f.write(f"答：{ground_truth}")
             
             created_docs.append(new_doc_id)
             next_doc_num += 1
