@@ -44,6 +44,44 @@
             opacity: 0.9;
         }
         
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #dee2e6;
+        }
+        
+        .tab {
+            padding: 12px 24px;
+            background: white;
+            border: none;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            color: #6c757d;
+            transition: all 0.3s;
+        }
+        
+        .tab:hover {
+            background: #f8f9fa;
+            color: #495057;
+        }
+        
+        .tab.active {
+            background: #667eea;
+            color: white;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
         .summary-cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -217,6 +255,210 @@
             color: #2c3e50;
         }
         
+        .review-container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .review-header h2 {
+            color: #2c3e50;
+            font-size: 1.5em;
+        }
+        
+        .review-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5568d3;
+        }
+        
+        .btn-primary:disabled {
+            background: #c0c5dd;
+            cursor: not-allowed;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        
+        .review-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .review-item {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        
+        .review-item:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .review-item.selected {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+        
+        .review-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        .review-item-header {
+            display: flex;
+            align-items: start;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .review-item-content {
+            flex: 1;
+        }
+        
+        .review-query {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        
+        .review-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 0.9em;
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+        
+        .review-reason {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+        
+        .reason-retrieval-miss {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .reason-low-rank {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .reason-layer1-rejection {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .reason-low-score-rejection {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .review-answer {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+            margin-top: 10px;
+        }
+        
+        .review-answer-label {
+            font-size: 0.85em;
+            color: #6c757d;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        .review-answer-text {
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+        
+        .editable {
+            min-height: 40px;
+            padding: 8px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            background: white;
+            transition: all 0.3s;
+        }
+        
+        .editable:hover {
+            border-color: #667eea;
+        }
+        
+        .editable:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .edit-hint {
+            font-size: 0.8em;
+            color: #6c757d;
+            margin-top: 5px;
+            font-style: italic;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+        
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+        
+        .empty-state h3 {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+        
         footer {
             text-align: center;
             padding: 30px;
@@ -243,35 +485,42 @@
     <div class="container">
         <header>
             <h1>🚀 RAG System Evaluation Report</h1>
-            <p>Continuous Evaluation Dashboard - Iteration 7</p>
-            <p style="font-size: 0.95em; margin-top: 10px;">Latest: 2026-08-07 18:37 | Total Runs: 2</p>
+            <p>Continuous Evaluation Dashboard - Iteration 8 (Self-Healing)</p>
+            <p style="font-size: 0.95em; margin-top: 10px;">Latest: 2026-08-10 13:27 | Total Runs: 3 | Pending Reviews: 13</p>
         </header>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('metrics')">📊 Metrics</button>
+            <button class="tab" onclick="switchTab('review')">🔍 Review (13)</button>
+        </div>
+        
+        <div id="metrics-tab" class="tab-content active">
 
         <div class="summary-cards">
             <div class="card">
                 <h3>Hit Rate</h3>
-                <div class="value">88.6%</div>
+                <div class="value">77.1%</div>
 <div class="diff negative">-11.4% vs previous</div>
             </div>
             
             <div class="card">
                 <h3>Faithfulness</h3>
-<div class="value">0.958</div><div class="diff negative">-0.042 vs previous</div>
+<div class="value">0.969</div><div class="diff positive">+0.010 vs previous</div>
             </div>
             
             <div class="card">
                 <h3>Relevance</h3>
-<div class="value">0.955</div><div class="diff negative">-0.045 vs previous</div>
+<div class="value">0.920</div><div class="diff negative">-0.035 vs previous</div>
             </div>
             
             <div class="card">
                 <h3>Rejection Rate</h3>
-<div class="value">28.6%</div><div class="diff negative">+28.6% vs previous</div>
+<div class="value">34.3%</div><div class="diff negative">+5.7% vs previous</div>
             </div>
             
             <div class="card">
                 <h3>MRR Score</h3>
-<div class="value">0.561</div><div class="diff positive">+0.418 vs previous</div>
+<div class="value">0.600</div><div class="diff positive">+0.039 vs previous</div>
             </div>
         </div>
 
@@ -292,11 +541,11 @@
                 </div>
                 <div class="metadata-item">
                     <div class="label">Retrieval Mode</div>
-                    <div class="value">vector</div>
+                    <div class="value">hybrid</div>
                 </div>
                 <div class="metadata-item">
                     <div class="label">Rerank Mode</div>
-                    <div class="value">none</div>
+                    <div class="value">bge</div>
                 </div>
                 <div class="metadata-item">
                     <div class="label">Judge Mode</div>
@@ -363,27 +612,478 @@
                         <td>0.561</td>
                     </tr>
 
+                    <tr>
+                        <td>2026-08-10 13:27</td>
+                        <td><code>fixed_100_50+hybrid+bge</code></td>
+                        <td><span class="badge warning">77.1%</span></td>
+                        <td>0.969</td>
+                        <td>0.920</td>
+                        <td>34.3%</td>
+                        <td>0.600</td>
+                    </tr>
+
                 </tbody>
             </table>
         </div>
+        
+        </div>
+        <!-- End Metrics Tab -->
+        
+        <!-- Review Tab -->
+        <div id="review-tab" class="tab-content">
+            <div class="review-container">
+                <div class="review-header">
+                    <h2>🔍 Self-Healing Review</h2>
+                    <div class="review-actions">
+                        <button class="btn btn-secondary" onclick="selectAll()">Select All</button>
+                        <button class="btn btn-secondary" onclick="deselectAll()">Deselect All</button>
+                        <button class="btn btn-primary" id="approveBtn" onclick="approveSelected()" disabled>Approve Selected</button>
+                    </div>
+                </div>
+
+                <div class="review-list">
+
+                    <div class="review-item" data-filename="review_54b4fd6e_20260810_204009.json">
+                        <div class="review-item-header">
+                            <input type="checkbox" class="review-checkbox" onchange="updateApproveButton()">
+                            <div class="review-item-content">
+                                <div class="review-query">
+                                    <div contenteditable="true" class="editable" data-field="query">网关的指示灯含义？</div>
+                                    <div class="edit-hint">Click to edit query</div>
+                                </div>
+                                <div class="review-meta">
+                                    <span>📅 2026-08-10 20:40</span>
+                                    <span>📄 doc4</span>
+                                    <span class="review-reason reason-retrieval-miss">layer1_rejection</span>
+                                </div>
+
+                                <div style="font-size: 0.9em; color: #6c757d; margin-top: 5px;">
+                                    Rejection: [Layer 1] Top-1 rerank score too low
+                                </div>
+
+                                <div class="review-answer">
+                                    <div class="review-answer-label">Ground Truth Answer:</div>
+                                    <div contenteditable="true" class="review-answer-text editable" data-field="ground_truth">红灯常亮：未连接网络；蓝灯常亮：工作正常。</div>
+                                    <div class="edit-hint">Click to edit answer</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="review-item" data-filename="review_d0343d1b_20260810_204009.json">
+                        <div class="review-item-header">
+                            <input type="checkbox" class="review-checkbox" onchange="updateApproveButton()">
+                            <div class="review-item-content">
+                                <div class="review-query">
+                                    <div contenteditable="true" class="editable" data-field="query">SmartCam-200 的夜视距离？</div>
+                                    <div class="edit-hint">Click to edit query</div>
+                                </div>
+                                <div class="review-meta">
+                                    <span>📅 2026-08-10 20:40</span>
+                                    <span>📄 doc2</span>
+                                    <span class="review-reason reason-low-rank">low_rank_5</span>
+                                </div>
+
+                                <div class="review-answer">
+                                    <div class="review-answer-label">Ground Truth Answer:</div>
+                                    <div contenteditable="true" class="review-answer-text editable" data-field="ground_truth">红外夜视距离可达 10 米。</div>
+                                    <div class="edit-hint">Click to edit answer</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="review-item" data-filename="review_34743fa8_20260810_204009.json">
+                        <div class="review-item-header">
+                            <input type="checkbox" class="review-checkbox" onchange="updateApproveButton()">
+                            <div class="review-item-content">
+                                <div class="review-query">
+                                    <div contenteditable="true" class="editable" data-field="query">SmartLock-100 如何生成临时密码？</div>
+                                    <div class="edit-hint">Click to edit query</div>
+                                </div>
+                                <div class="review-meta">
+                                    <span>📅 2026-08-10 20:40</span>
+                                    <span>📄 doc1</span>
+                                    <span class="review-reason reason-retrieval-miss">retrieval_miss</span>
+                                </div>
+
+                                <div class="review-answer">
+                                    <div class="review-answer-label">Ground Truth Answer:</div>
+                                    <div contenteditable="true" class="review-answer-text editable" data-field="ground_truth">可通过 App 生成一次性或限时临时密码。</div>
+                                    <div class="edit-hint">Click to edit answer</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="review-item" data-filename="review_31fd8078_20260810_204009.json">
+                        <div class="review-item-header">
+                            <input type="checkbox" class="review-checkbox" onchange="updateApproveButton()">
+                            <div class="review-item-content">
+                                <div class="review-query">
+                                    <div contenteditable="true" class="editable" data-field="query">重复查询测试</div>
+                                    <div class="edit-hint">Click to edit query</div>
+                                </div>
+                                <div class="review-meta">
+                                    <span>📅 2026-08-10 20:40</span>
+                                    <span>📄 doc1</span>
+                                    <span class="review-reason reason-retrieval-miss">test</span>
+                                </div>
+
+                                <div class="review-answer">
+                                    <div class="review-answer-label">Ground Truth Answer:</div>
+                                    <div contenteditable="true" class="review-answer-text editable" data-field="ground_truth">答案2（较新）</div>
+                                    <div class="edit-hint">Click to edit answer</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="review-item" data-filename="review_c31d3d35_20260810_204009.json">
+                        <div class="review-item-header">
+                            <input type="checkbox" class="review-checkbox" onchange="updateApproveButton()">
+                            <div class="review-item-content">
+                                <div class="review-query">
+                                    <div contenteditable="true" class="editable" data-field="query">测试查询：SmartLock-100 的功能</div>
+                                    <div class="edit-hint">Click to edit query</div>
+                                </div>
+                                <div class="review-meta">
+                                    <span>📅 2026-08-10 20:40</span>
+                                    <span>📄 doc1</span>
+                                    <span class="review-reason reason-retrieval-miss">retrieval_miss</span>
+                                </div>
+
+                                <div class="review-answer">
+                                    <div class="review-answer-label">Ground Truth Answer:</div>
+                                    <div contenteditable="true" class="review-answer-text editable" data-field="ground_truth">SmartLock-100 支持指纹、密码、卡片等多种开锁方式。</div>
+                                    <div class="edit-hint">Click to edit answer</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="review-item" data-filename="review_2d95d43c_20260810_132719.json">
+                        <div class="review-item-header">
+                            <input type="checkbox" class="review-checkbox" onchange="updateApproveButton()">
+                            <div class="review-item-content">
+                                <div class="review-query">
+                                    <div contenteditable="true" class="editable" data-field="query">智能中控如何恢复出厂设置？</div>
+                                    <div class="edit-hint">Click to edit query</div>
+                                </div>
+                                <div class="review-meta">
+                                    <span>📅 2026-08-10 13:27</span>
+                                    <span>📄 16</span>
+                                    <span class="review-reason reason-retrieval-miss">retrieval_miss</span>
+                                </div>
+
+                                <div style="font-size: 0.9em; color: #6c757d; margin-top: 5px;">
+                                    Rejection: [Layer 0] Retrieval miss (hit=0, ground truth not in top-k)
+                                </div>
+
+                                <div class="review-answer">
+                                    <div class="review-answer-label">Ground Truth Answer:</div>
+                                    <div contenteditable="true" class="review-answer-text editable" data-field="ground_truth">在设备底部找到 Reset 按钮，使用针状物长按 10 秒，指示灯闪烁后松开，设备将恢复出厂设置</div>
+                                    <div class="edit-hint">Click to edit answer</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="review-item" data-filename="review_c1448f20_20260810_132719.json">
+                        <div class="review-item-header">
+                            <input type="checkbox" class="review-checkbox" onchange="updateApproveButton()">
+                            <div class="review-item-content">
+                                <div class="review-query">
+                                    <div contenteditable="true" class="editable" data-field="query">SmartHub-100 支持哪些语音助手？</div>
+                                    <div class="edit-hint">Click to edit query</div>
+                                </div>
+                                <div class="review-meta">
+                                    <span>📅 2026-08-10 13:27</span>
+                                    <span>📄 16</span>
+                                    <span class="review-reason reason-retrieval-miss">retrieval_miss</span>
+                                </div>
+
+                                <div style="font-size: 0.9em; color: #6c757d; margin-top: 5px;">
+                                    Rejection: [Layer 0] Retrieval miss (hit=0, ground truth not in top-k)
+                                </div>
+
+                                <div class="review-answer">
+                                    <div class="review-answer-label">Ground Truth Answer:</div>
+                                    <div contenteditable="true" class="review-answer-text editable" data-field="ground_truth">支持小爱同学、天猫精灵、小度语音助手</div>
+                                    <div class="edit-hint">Click to edit answer</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="review-item" data-filename="review_e0466dec_20260810_132719.json">
+                        <div class="review-item-header">
+                            <input type="checkbox" class="review-checkbox" onchange="updateApproveButton()">
+                            <div class="review-item-content">
+                                <div class="review-query">
+                                    <div contenteditable="true" class="editable" data-field="query">SmartHub-100 最多支持多少个设备？</div>
+                                    <div class="edit-hint">Click to edit query</div>
+                                </div>
+                                <div class="review-meta">
+                                    <span>📅 2026-08-10 13:27</span>
+                                    <span>📄 16</span>
+                                    <span class="review-reason reason-retrieval-miss">retrieval_miss</span>
+                                </div>
+
+                                <div style="font-size: 0.9em; color: #6c757d; margin-top: 5px;">
+                                    Rejection: [Layer 0] Retrieval miss (hit=0, ground truth not in top-k)
+                                </div>
+
+                                <div class="review-answer">
+                                    <div class="review-answer-label">Ground Truth Answer:</div>
+                                    <div contenteditable="true" class="review-answer-text editable" data-field="ground_truth">SmartHub-100 最多支持 128 个子设备同时在线</div>
+                                    <div class="edit-hint">Click to edit answer</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="review-item" data-filename="review_267cd82d_20260810_132719.json">
+                        <div class="review-item-header">
+                            <input type="checkbox" class="review-checkbox" onchange="updateApproveButton()">
+                            <div class="review-item-content">
+                                <div class="review-query">
+                                    <div contenteditable="true" class="editable" data-field="query">SW-600 的电池型号是什么？</div>
+                                    <div class="edit-hint">Click to edit query</div>
+                                </div>
+                                <div class="review-meta">
+                                    <span>📅 2026-08-10 13:27</span>
+                                    <span>📄 doc7</span>
+                                    <span class="review-reason reason-retrieval-miss">retrieval_miss</span>
+                                </div>
+
+                                <div style="font-size: 0.9em; color: #6c757d; margin-top: 5px;">
+                                    Rejection: [Layer 0] Retrieval miss (hit=0, ground truth not in top-k)
+                                </div>
+
+                                <div class="review-answer">
+                                    <div class="review-answer-label">Ground Truth Answer:</div>
+                                    <div contenteditable="true" class="review-answer-text editable" data-field="ground_truth">可粘贴于墙面或装入 86 底盒，无需零线，电池供电（CR2032×2），续航约 1 年。</div>
+                                    <div class="edit-hint">Click to edit answer</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="review-item" data-filename="review_dc8728b6_20260810_132719.json">
+                        <div class="review-item-header">
+                            <input type="checkbox" class="review-checkbox" onchange="updateApproveButton()">
+                            <div class="review-item-content">
+                                <div class="review-query">
+                                    <div contenteditable="true" class="editable" data-field="query">传感器没电了怎么换？</div>
+                                    <div class="edit-hint">Click to edit query</div>
+                                </div>
+                                <div class="review-meta">
+                                    <span>📅 2026-08-10 13:27</span>
+                                    <span>📄 doc5</span>
+                                    <span class="review-reason reason-retrieval-miss">retrieval_miss</span>
+                                </div>
+
+                                <div style="font-size: 0.9em; color: #6c757d; margin-top: 5px;">
+                                    Rejection: [Layer 0] Retrieval miss (hit=0, ground truth not in top-k)
+                                </div>
+
+                                <div class="review-answer">
+                                    <div class="review-answer-label">Ground Truth Answer:</div>
+                                    <div contenteditable="true" class="review-answer-text editable" data-field="ground_truth">使用 CR123A 锂电池，续航约 2 年（取决于触发频率）。</div>
+                                    <div class="edit-hint">Click to edit answer</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="review-item" data-filename="review_bf2169f9_20260810_132719.json">
+                        <div class="review-item-header">
+                            <input type="checkbox" class="review-checkbox" onchange="updateApproveButton()">
+                            <div class="review-item-content">
+                                <div class="review-query">
+                                    <div contenteditable="true" class="editable" data-field="query">怎样防止摄像头被偷看？</div>
+                                    <div class="edit-hint">Click to edit query</div>
+                                </div>
+                                <div class="review-meta">
+                                    <span>📅 2026-08-10 13:27</span>
+                                    <span>📄 doc2</span>
+                                    <span class="review-reason reason-retrieval-miss">retrieval_miss</span>
+                                </div>
+
+                                <div style="font-size: 0.9em; color: #6c757d; margin-top: 5px;">
+                                    Rejection: [Layer 0] Retrieval miss (hit=0, ground truth not in top-k)
+                                </div>
+
+                                <div class="review-answer">
+                                    <div class="review-answer-label">Ground Truth Answer:</div>
+                                    <div contenteditable="true" class="review-answer-text editable" data-field="ground_truth">启动隐私模式后，摄像头自动向下旋转隐藏镜头，并关闭收音。</div>
+                                    <div class="edit-hint">Click to edit answer</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="review-item" data-filename="review_ab683502_20260810_132719.json">
+                        <div class="review-item-header">
+                            <input type="checkbox" class="review-checkbox" onchange="updateApproveButton()">
+                            <div class="review-item-content">
+                                <div class="review-query">
+                                    <div contenteditable="true" class="editable" data-field="query">SmartPlug-400 待机功耗多少瓦？</div>
+                                    <div class="edit-hint">Click to edit query</div>
+                                </div>
+                                <div class="review-meta">
+                                    <span>📅 2026-08-10 13:27</span>
+                                    <span>📄 doc6</span>
+                                    <span class="review-reason reason-retrieval-miss">retrieval_miss</span>
+                                </div>
+
+                                <div style="font-size: 0.9em; color: #6c757d; margin-top: 5px;">
+                                    Rejection: [Layer 0] Retrieval miss (hit=0, ground truth not in top-k)
+                                </div>
+
+                                <div class="review-answer">
+                                    <div class="review-answer-label">Ground Truth Answer:</div>
+                                    <div contenteditable="true" class="review-answer-text editable" data-field="ground_truth">待机功耗仅 0.3W。</div>
+                                    <div class="edit-hint">Click to edit answer</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="review-item" data-filename="review_c2224cb6_20260810_132719.json">
+                        <div class="review-item-header">
+                            <input type="checkbox" class="review-checkbox" onchange="updateApproveButton()">
+                            <div class="review-item-content">
+                                <div class="review-query">
+                                    <div contenteditable="true" class="editable" data-field="query">SmartPlug-400 的充电保护功能是怎样工作的？</div>
+                                    <div class="edit-hint">Click to edit query</div>
+                                </div>
+                                <div class="review-meta">
+                                    <span>📅 2026-08-10 13:27</span>
+                                    <span>📄 doc6</span>
+                                    <span class="review-reason reason-retrieval-miss">retrieval_miss</span>
+                                </div>
+
+                                <div style="font-size: 0.9em; color: #6c757d; margin-top: 5px;">
+                                    Rejection: [Layer 0] Retrieval miss (hit=0, ground truth not in top-k)
+                                </div>
+
+                                <div class="review-answer">
+                                    <div class="review-answer-label">Ground Truth Answer:</div>
+                                    <div contenteditable="true" class="review-answer-text editable" data-field="ground_truth">检测到设备电流在短时间内下降至接近零，判定设备充满电，自动关闭插座，防止过充。</div>
+                                    <div class="edit-hint">Click to edit answer</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <!-- End Review Tab -->
 
         <footer>
-            <p>Generated by RAG Bootcamp Iteration 7 - Continuous Evaluation Pipeline</p>
-            <p>Last updated: 2026-08-07 18:37:34</p>
+            <p>Generated by RAG Bootcamp Iteration 8 - Self-Healing RAG System</p>
+            <p>Last updated: 2026-08-10 13:27:20</p>
         </footer>
     </div>
     
     <script>
+        // Tab Switching
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        // Review Selection
+        function selectAll() {
+            document.querySelectorAll('.review-checkbox').forEach(checkbox => {
+                checkbox.checked = true;
+                checkbox.closest('.review-item').classList.add('selected');
+            });
+            updateApproveButton();
+        }
+        
+        function deselectAll() {
+            document.querySelectorAll('.review-checkbox').forEach(checkbox => {
+                checkbox.checked = false;
+                checkbox.closest('.review-item').classList.remove('selected');
+            });
+            updateApproveButton();
+        }
+        
+        function updateApproveButton() {
+            const checkboxes = document.querySelectorAll('.review-checkbox');
+            const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+            const approveBtn = document.getElementById('approveBtn');
+            
+            approveBtn.disabled = checkedCount === 0;
+            approveBtn.textContent = checkedCount > 0 ? `Approve Selected (${checkedCount})` : 'Approve Selected';
+            
+            // Update item styling
+            checkboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    checkbox.closest('.review-item').classList.add('selected');
+                } else {
+                    checkbox.closest('.review-item').classList.remove('selected');
+                }
+            });
+        }
+        
+        function approveSelected() {
+            const selectedCheckboxes = Array.from(document.querySelectorAll('.review-checkbox:checked'));
+            const filenames = selectedCheckboxes.map(cb => cb.closest('.review-item').dataset.filename);
+            
+            if (filenames.length === 0) {
+                alert('Please select at least one review to approve.');
+                return;
+            }
+            
+            if (!confirm(`Are you sure you want to approve ${filenames.length} review(s)?\n\nThis will add the ground truth content to the corpus.`)) {
+                return;
+            }
+            
+            // Collect edited data
+            const reviewData = selectedCheckboxes.map(cb => {
+                const item = cb.closest('.review-item');
+                const filename = item.dataset.filename;
+                const queryEl = item.querySelector('[data-field="query"]');
+                const groundTruthEl = item.querySelector('[data-field="ground_truth"]');
+                
+                return {
+                    filename: filename,
+                    query: queryEl ? queryEl.textContent.trim() : '',
+                    ground_truth: groundTruthEl ? groundTruthEl.textContent.trim() : ''
+                };
+            });
+            
+            // In a real implementation, this would call a backend API
+            // For now, we show instructions
+            console.log('Review data with edits:', reviewData);
+            alert(`To approve these reviews, run:\n\npython approve_reviews.py ${filenames.join(' ')}\n\nOr use the GitHub Actions workflow to batch approve.\n\nNote: Manual edits in the UI are not saved. To edit, modify the review JSON files directly.`);
+        }
+        
         // Metrics Trend Chart
         const metricsCtx = document.getElementById('metricsChart').getContext('2d');
         const metricsChart = new Chart(metricsCtx, {
             type: 'line',
             data: {
-                labels: ["2026-08-07 18:29", "2026-08-07 18:37"],
+                labels: ["2026-08-07 18:29", "2026-08-07 18:37", "2026-08-10 13:27"],
                 datasets: [
                     {
                         label: 'Faithfulness',
-                        data: [1.0, 0.9583333333333334],
+                        data: [1.0, 0.9583333333333334, 0.9685185185185186],
                         borderColor: 'rgb(102, 126, 234)',
                         backgroundColor: 'rgba(102, 126, 234, 0.1)',
                         tension: 0.3,
@@ -391,7 +1091,7 @@
                     },
                     {
                         label: 'Relevance',
-                        data: [1.0, 0.955],
+                        data: [1.0, 0.955, 0.9203703703703704],
                         borderColor: 'rgb(118, 75, 162)',
                         backgroundColor: 'rgba(118, 75, 162, 0.1)',
                         tension: 0.3,
@@ -399,7 +1099,7 @@
                     },
                     {
                         label: 'MRR',
-                        data: [0.14285714285714285, 0.5608163265306122],
+                        data: [0.14285714285714285, 0.5608163265306122, 0.5999999999999999],
                         borderColor: 'rgb(255, 159, 64)',
                         backgroundColor: 'rgba(255, 159, 64, 0.1)',
                         tension: 0.3,
@@ -439,11 +1139,11 @@
         const ratesChart = new Chart(ratesCtx, {
             type: 'line',
             data: {
-                labels: ["2026-08-07 18:29", "2026-08-07 18:37"],
+                labels: ["2026-08-07 18:29", "2026-08-07 18:37", "2026-08-10 13:27"],
                 datasets: [
                     {
                         label: 'Hit Rate',
-                        data: [1.0, 0.8857142857142857],
+                        data: [1.0, 0.8857142857142857, 0.7714285714285715],
                         borderColor: 'rgb(75, 192, 192)',
                         backgroundColor: 'rgba(75, 192, 192, 0.1)',
                         tension: 0.3,
@@ -451,7 +1151,7 @@
                     },
                     {
                         label: 'Rejection Rate',
-                        data: [0.0, 0.2857142857142857],
+                        data: [0.0, 0.2857142857142857, 0.34285714285714286],
                         borderColor: 'rgb(255, 99, 132)',
                         backgroundColor: 'rgba(255, 99, 132, 0.1)',
                         tension: 0.3,
