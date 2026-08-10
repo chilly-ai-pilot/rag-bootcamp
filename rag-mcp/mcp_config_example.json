@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "rag-server": {
+      "command": "python",
+      "args": [
+        "/Users/chilly/go/src/github.com/chilly-ai-pilot/rag-bootcamp/rag-mcp/mcp_server/server.py"
+      ],
+      "env": {
+        "DEEPSEEK_API_KEY": "your-deepseek-api-key",
+        "RAG_CORPUS_DIR": "/Users/chilly/go/src/github.com/chilly-ai-pilot/rag-bootcamp/iteration8/corpus",
+        "RAG_CHUNKING_STRATEGY": "fixed_100_50",
+        "RAG_RETRIEVAL_MODE": "hybrid",
+        "RAG_RERANK": "true"
+      },
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}
