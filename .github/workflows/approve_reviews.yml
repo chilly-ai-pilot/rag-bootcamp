@@ -32,10 +32,8 @@ jobs:
       with:
         python-version: '3.10'
     
-    - name: Install dependencies
-      run: |
-        cd iteration8
-        pip install -r requirements.txt
+    # Note: No heavy dependencies needed - approve_reviews only uses stdlib
+    # (json, os, hashlib, datetime)
     
     - name: Check pending reviews
       id: check_reviews
@@ -47,8 +45,6 @@ jobs:
     
     - name: Approve all reviews
       if: steps.check_reviews.outputs.review_count > 0 && github.event.inputs.approve_all == 'yes'
-      env:
-        DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
       run: |
         cd iteration8
         echo "🔄 Approving all pending reviews..."
@@ -95,7 +91,12 @@ jobs:
         echo "✅ Approval completed!"
         echo "📊 Processed: ${{ steps.check_reviews.outputs.review_count }} reviews"
         echo "💡 New documents have been added to corpus/"
-        echo "🔄 Run eval_pipeline workflow to see the improvements"
+        echo "📁 Review files moved to approved/ directory"
+        echo ""
+        echo "🔄 Next steps:"
+        echo "  1. eval_pipeline will auto-trigger (corpus changed)"
+        echo "  2. New evaluation will show improved metrics"
+        echo "  3. GitHub Pages will update with empty Review tab"
     
     - name: No reviews found
       if: steps.check_reviews.outputs.review_count == 0
