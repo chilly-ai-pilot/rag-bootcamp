@@ -259,7 +259,9 @@
                         const citationsDiv = document.getElementById('citations');
                         citationsDiv.innerHTML = '<h4>📚 引用来源</h4>';
                         result.citations.forEach((c, i) => {
-                            citationsDiv.innerHTML += `<div class="citation-item">[${i+1}] ${c.source} (${c.chunk_id})</div>`;
+                            // citations 格式: {span: "...", source: "文档X:片段N"}
+                            const display = c.source || `引用${i+1}`;
+                            citationsDiv.innerHTML += `<div class="citation-item">[${i+1}] ${display}</div>`;
                         });
                         citationsDiv.style.display = 'block';
                     }
@@ -314,7 +316,9 @@
                                 const citationsDiv = document.getElementById('citations');
                                 citationsDiv.innerHTML = '<h4>📚 引用来源</h4>';
                                 data.data.forEach((c, i) => {
-                                    citationsDiv.innerHTML += `<div class="citation-item">[${i+1}] ${c.source} (${c.chunk_id})</div>`;
+                                    // citations 格式: {span: "...", source: "文档X:片段N"}
+                                    const display = c.source || `引用${i+1}`;
+                                    citationsDiv.innerHTML += `<div class="citation-item">[${i+1}] ${display}</div>`;
                                 });
                                 citationsDiv.style.display = 'block';
                             } else if (data.type === 'done') {
