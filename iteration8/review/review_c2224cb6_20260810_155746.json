@@ -1,0 +1,14 @@
+{
+  "query": "SmartPlug-400 的充电保护功能是怎样工作的？",
+  "ground_truth": "检测到设备电流在短时间内下降至接近零，判定设备充满电，自动关闭插座，防止过充。",
+  "source": {
+    "doc_id": "doc6",
+    "char_start": 321,
+    "char_end": 360
+  },
+  "trigger_reason": "retrieval_miss",
+  "rejection_reason": "[Layer 0] Retrieval miss (hit=0, ground truth not in top-k)",
+  "status": "pending",
+  "created_at": "2026-08-10T15:57:46.802865",
+  "query_hash": "c2224cb6"
+}
