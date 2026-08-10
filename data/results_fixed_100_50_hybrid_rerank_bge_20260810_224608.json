@@ -1,0 +1,95 @@
+{
+  "metadata": {
+    "timestamp": "20260810_224608",
+    "evaluation_date": "2026-08-10T22:46:08.825129",
+    "corpus_stats": {
+      "num_documents": 19,
+      "num_queries": 1,
+      "corpus_dir": "corpus"
+    },
+    "model_config": {
+      "chunking_strategy": "fixed_100_50",
+      "retrieval_mode": "hybrid",
+      "rerank_mode": "bge",
+      "rerank_top_k": 10,
+      "retrieval_top_k": 40,
+      "judge_mode": "none",
+      "rejection_enabled": true,
+      "rejection_preset": "aggressive",
+      "query_from": 27,
+      "max_queries": 1,
+      "batch_size": 1
+    }
+  },
+  "config": {
+    "chunking_strategy": "fixed_100_50",
+    "retrieval_mode": "hybrid",
+    "rerank_mode": "bge",
+    "rerank_top_k": 10,
+    "retrieval_top_k": 40
+  },
+  "scores": {
+    "semantic_paraphrase": 1.0,
+    "overall": 1.0
+  },
+  "mrr_scores": {
+    "semantic_paraphrase": 1.0,
+    "overall": 1.0
+  },
+  "results": [
+    {
+      "id": 27,
+      "query": "传感器没电了怎么换？",
+      "category": "semantic_paraphrase",
+      "hit": 1,
+      "answer_rank": 1,
+      "answer": "问：传感器没电了怎么换？\n答：使用 CR123A 锂电池，续航约 2 年（取决于触发频率）[文档18:片段1]。同时，建议在低电量时提前更换，资料提到\"低电量时 APP 会提前 30 天提醒，别等到彻底没电才换\"[文档14:片段22]。此外，不同型号的传感器电池类型各异，如\"ST-500/ST-501 用 CR2032 纽扣电池，正常使用 12-18 个月。ST-600 是锂电池可充电，续航约 12 个月\"[文档14:片段20]。因此，更换前需确认设备型号并查看具体电池规格。",
+      "raw_answer": "问：传感器没电了怎么换？\n答：使用 CR123A 锂电池，续航约 2 年（取决于触发频率）。同时，建议在低电量时提前更换，资料提到\"低电量时 APP 会提前 30 天提醒，别等到彻底没电才换\"。此外，不同型号的传感器电池类型各异，如\"ST-500/ST-501 用 CR2032 纽扣电池，正常使用 12-18 个月。ST-600 是锂电池可充电，续航约 12 个月\"。因此，更换前需确认设备型号并查看具体电池规格。",
+      "citations": [
+        {
+          "span": "使用 CR123A 锂电池，续航约 2 年（取决于触发频率）",
+          "source": "文档18:片段1",
+          "chunk_text": "问：传感器没电了怎么换？\n答：使用 CR123A 锂电池，续航约 2 年（取决于触发频率）。",
+          "chunk_full_id": "doc18:chunk1",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "低电量时 APP 会提前 30 天提醒，别等到彻底没电才换",
+          "source": "文档14:片段22",
+          "chunk_text": " 30 天提醒，别等到彻底没电才换。\n\n用户 J：\"人体传感器老是误触发，半夜灯一直亮！\"\n可能原因：1）安装位置对着窗帘，风吹动触发 2）对着空调出风口，热气流触发 3）灵敏度设置太高。解决：调整安",
+          "chunk_full_id": "doc14:chunk22",
+          "validation_method": "character_overlap"
+        },
+        {
+          "span": "ST-500/ST-501 用 CR2032 纽扣电池，正常使用 12-18 个月。ST-600 是锂电池可充电，续航约 12 个月",
+          "source": "文档14:片段20",
+          "chunk_text": "\n\n用户 I：\"传感器电池多久换一次？\"\nST-500/ST-501 用 CR2032 纽扣电池，正常使用 12-18 个月。ST-600 是锂电池可充电，续航约 12 个月。低电量时 APP 会提前",
+          "chunk_full_id": "doc14:chunk20",
+          "validation_method": "exact_match"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": [
+        0.9991066437686208,
+        0.9730244123382678,
+        0.8059808723074666,
+        0.7948109580011553,
+        0.7342616017494408,
+        0.6178643412192252,
+        0.5560191383393575,
+        0.5416405196109696,
+        0.533402351974605,
+        0.4003490768955117
+      ],
+      "faithfulness_score": null,
+      "relevance_score": null,
+      "rejected": false,
+      "rejection_reason": null
+    }
+  ],
+  "self_healing": {
+    "triggered_count": 0,
+    "created_files": [],
+    "deduplicated_count": 0
+  }
+}
