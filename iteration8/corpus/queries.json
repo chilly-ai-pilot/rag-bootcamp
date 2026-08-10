@@ -3,10 +3,10 @@
     "id": 1,
     "query": "SmartLock-100 如何生成临时密码？",
     "category": "chunking_sensitive",
-    "doc_id": "doc1",
+    "doc_id": "doc17",
     "ground_truth_text": "可通过 App 生成一次性或限时临时密码，适用于访客或家政服务。",
-    "char_start": 233,
-    "char_end": 267
+    "char_start": 28,
+    "char_end": 60
   },
   {
     "id": 2,
