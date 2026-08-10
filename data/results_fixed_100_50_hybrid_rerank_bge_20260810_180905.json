@@ -1,0 +1,94 @@
+{
+  "metadata": {
+    "timestamp": "20260810_180905",
+    "evaluation_date": "2026-08-10T18:09:05.569646",
+    "corpus_stats": {
+      "num_documents": 27,
+      "num_queries": 1,
+      "corpus_dir": "corpus"
+    },
+    "model_config": {
+      "chunking_strategy": "fixed_100_50",
+      "retrieval_mode": "hybrid",
+      "rerank_mode": "bge",
+      "rerank_top_k": 5,
+      "retrieval_top_k": 40,
+      "judge_mode": "none",
+      "rejection_enabled": true,
+      "rejection_preset": "aggressive"
+    }
+  },
+  "config": {
+    "chunking_strategy": "fixed_100_50",
+    "retrieval_mode": "hybrid",
+    "rerank_mode": "bge",
+    "rerank_top_k": 5,
+    "retrieval_top_k": 40
+  },
+  "scores": {
+    "chunking_sensitive": 1.0,
+    "overall": 1.0
+  },
+  "mrr_scores": {
+    "chunking_sensitive": 1.0,
+    "overall": 1.0
+  },
+  "results": [
+    {
+      "id": 1,
+      "query": "SmartLock-100 如何生成临时密码？",
+      "category": "chunking_sensitive",
+      "hit": 1,
+      "answer_rank": 1,
+      "answer": "SmartLock-100 可通过 App 生成一次性或限时临时密码[文档19:片段1]。具体操作是：在 APP【门锁管理】→【临时密码】→ 选择\"限时密码\"或\"一次性密码\"。限时密码可设置有效期（如今天 8:00-18:00），一次性密码使用后自动失效。密码生成后发给对方即可[文档14:片段12]。另外，支持临时密码生成算法，无需联网即可根据日期时间生成[文档8:片段9]。需注意，一次性密码使用后自动失效，限时密码在设定时间段内有效[文档1:片段15]。",
+      "raw_answer": "SmartLock-100 可通过 App 生成一次性或限时临时密码。具体操作是：在 APP【门锁管理】→【临时密码】→ 选择\"限时密码\"或\"一次性密码\"。限时密码可设置有效期（如今天 8:00-18:00），一次性密码使用后自动失效。密码生成后发给对方即可。另外，支持临时密码生成算法，无需联网即可根据日期时间生成。需注意，一次性密码使用后自动失效，限时密码在设定时间段内有效。",
+      "citations": [
+        {
+          "span": "SmartLock-100 可通过 App 生成一次性或限时临时密码",
+          "source": "文档19:片段1",
+          "chunk_text": "问：SmartLock-100 如何生成临时密码？\n\n答：可通过 App 生成一次性或限时临时密码。",
+          "chunk_full_id": "doc19:chunk1",
+          "validation_method": "character_overlap"
+        },
+        {
+          "span": "具体操作是：在 APP【门锁管理】→【临时密码】→ 选择\"限时密码\"或\"一次性密码\"。限时密码可设置有效期（如今天 8:00-18:00），一次性密码使用后自动失效。密码生成后发给对方即可",
+          "source": "文档14:片段12",
+          "chunk_text": "在 APP【门锁管理】→【临时密码】→ 选择\"限时密码\"或\"一次性密码\"。限时密码可设置有效期（如今天 8:00-18:00），一次性密码使用后自动失效。密码生成后发给对方即可。\n\n用户 F：\"摄像头",
+          "chunk_full_id": "doc14:chunk12",
+          "validation_method": "character_overlap"
+        },
+        {
+          "span": "支持临时密码生成算法，无需联网即可根据日期时间生成",
+          "source": "文档8:片段9",
+          "chunk_text": " 304 不锈钢，防腐防锈，室外门也可安装。面板采用 IK08 防破坏玻璃，即使被硬物敲击也不易碎裂。防撬报警声提升至 110 分贝，可选连接声光报警器。支持临时密码生成算法，无需联网即可根据日期时间",
+          "chunk_full_id": "doc8:chunk9",
+          "validation_method": "character_overlap"
+        },
+        {
+          "span": "一次性密码使用后自动失效，限时密码在设定时间段内有效",
+          "source": "文档1:片段15",
+          "chunk_text": "20 位即可开锁，有效防止偷窥。可通过 App 生成一次性或限时临时密码，适用于访客或家政服务。一次性密码使用后自动失效，限时密码在设定时间段内有效。室内面板有防猫眼按钮，开门时需按下此按钮并下压把手",
+          "chunk_full_id": "doc1:chunk15",
+          "validation_method": "exact_match"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": [
+        0.999912723504279,
+        0.992023099071283,
+        0.9729782651465217,
+        0.9691125658268404,
+        0.9622689556338185
+      ],
+      "faithfulness_score": 1.0,
+      "relevance_score": 1.0,
+      "rejected": false,
+      "rejection_reason": null
+    }
+  ],
+  "self_healing": {
+    "triggered_count": 0,
+    "created_files": [],
+    "deduplicated_count": 0
+  }
+}
