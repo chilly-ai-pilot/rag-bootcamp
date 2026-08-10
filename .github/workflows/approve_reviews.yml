@@ -50,6 +50,14 @@ jobs:
         echo "🔄 Approving all pending reviews..."
         echo "y" | python approve_reviews.py --all --review-dir review --corpus-dir corpus
     
+    - name: Update queries.json doc_id mapping
+      if: steps.check_reviews.outputs.review_count > 0 && github.event.inputs.approve_all == 'yes'
+      run: |
+        cd iteration8
+        echo "🔄 Updating queries.json with new Q&A document mappings..."
+        python update_queries_docid.py --query-file corpus/queries.json --corpus-dir corpus
+        echo "✅ queries.json updated"
+    
     - name: Regenerate HTML report
       if: steps.check_reviews.outputs.review_count > 0 && github.event.inputs.approve_all == 'yes'
       run: |

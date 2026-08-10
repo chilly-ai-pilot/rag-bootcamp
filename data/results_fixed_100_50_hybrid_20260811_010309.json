@@ -1,0 +1,112 @@
+{
+  "metadata": {
+    "timestamp": "20260811_010309",
+    "evaluation_date": "2026-08-11T01:03:09.559349",
+    "corpus_stats": {
+      "num_documents": 27,
+      "num_queries": 2,
+      "corpus_dir": "corpus"
+    },
+    "model_config": {
+      "chunking_strategy": "fixed_100_50",
+      "retrieval_mode": "hybrid",
+      "rerank_mode": "none",
+      "rerank_top_k": null,
+      "retrieval_top_k": 40,
+      "judge_mode": "none",
+      "rejection_enabled": true,
+      "rejection_preset": "custom"
+    }
+  },
+  "config": {
+    "chunking_strategy": "fixed_100_50",
+    "retrieval_mode": "hybrid",
+    "rerank_mode": "none",
+    "rerank_top_k": null,
+    "retrieval_top_k": 40
+  },
+  "scores": {
+    "chunking_sensitive": 1.0,
+    "overall": 1.0
+  },
+  "mrr_scores": {
+    "chunking_sensitive": 0.625,
+    "overall": 0.625
+  },
+  "results": [
+    {
+      "id": 1,
+      "query": "SmartLock-100 如何生成临时密码？",
+      "category": "chunking_sensitive",
+      "hit": 1,
+      "answer_rank": 4,
+      "answer": "可通过 App 生成一次性或限时临时密码[文档19:片段1]。具体操作是：在 APP【门锁管理】→【临时密码】→ 选择\"限时密码\"或\"一次性密码\"。限时密码可设置有效期（如今天 8:00-18:00），一次性密码使用后自动失效。密码生成后发给对方即可[文档14:片段12]。该功能适用于访客或家政服务[文档1:片段14]。",
+      "raw_answer": "可通过 App 生成一次性或限时临时密码。具体操作是：在 APP【门锁管理】→【临时密码】→ 选择\"限时密码\"或\"一次性密码\"。限时密码可设置有效期（如今天 8:00-18:00），一次性密码使用后自动失效。密码生成后发给对方即可。该功能适用于访客或家政服务。",
+      "citations": [
+        {
+          "span": "可通过 App 生成一次性或限时临时密码",
+          "source": "文档19:片段1",
+          "chunk_text": "问：SmartLock-100 如何生成临时密码？\n\n答：可通过 App 生成一次性或限时临时密码。",
+          "chunk_full_id": "doc19:chunk1",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "具体操作是：在 APP【门锁管理】→【临时密码】→ 选择\"限时密码\"或\"一次性密码\"。限时密码可设置有效期（如今天 8:00-18:00），一次性密码使用后自动失效。密码生成后发给对方即可",
+          "source": "文档14:片段12",
+          "chunk_text": "在 APP【门锁管理】→【临时密码】→ 选择\"限时密码\"或\"一次性密码\"。限时密码可设置有效期（如今天 8:00-18:00），一次性密码使用后自动失效。密码生成后发给对方即可。\n\n用户 F：\"摄像头",
+          "chunk_full_id": "doc14:chunk12",
+          "validation_method": "character_overlap"
+        },
+        {
+          "span": "该功能适用于访客或家政服务",
+          "source": "文档1:片段14",
+          "chunk_text": "不可逆，请提前备份数据。支持 20 位虚位密码，可在正确密码前后输入任意数字作为干扰，总长度不超过 20 位即可开锁，有效防止偷窥。可通过 App 生成一次性或限时临时密码，适用于访客或家政服务。一次",
+          "chunk_full_id": "doc1:chunk14",
+          "validation_method": "character_overlap"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": null,
+      "faithfulness_score": 1.0,
+      "relevance_score": 1.0,
+      "rejected": false,
+      "rejection_reason": null
+    },
+    {
+      "id": 2,
+      "query": "SmartCam-200 的 NAS 存储怎么设置？",
+      "category": "chunking_sensitive",
+      "hit": 1,
+      "answer_rank": 1,
+      "answer": "SmartCam-200 的 NAS 存储设置方法是：\"可将录像转存至局域网内 NAS（支持 SMB/CIFS 协议），路径设置需在 APP 中输入 NAS 的 IP 地址、用户名和密码。建议分配专用共享文件夹\"[文档2:片段11]。此外，还提到\"支持 SMB/CIFS 协议\"[文档13:片段15]，并且需要\"升级至最新固件\"[文档2:片段12]后再进行设置。简单来说，在 APP 中进入存储设置，选择 NAS 选项，填写 NAS 的 IP 地址、用户名和密码，并指定一个专用共享文件夹即可完成配置。",
+      "raw_answer": "SmartCam-200 的 NAS 存储设置方法是：\"可将录像转存至局域网内 NAS（支持 SMB/CIFS 协议），路径设置需在 APP 中输入 NAS 的 IP 地址、用户名和密码。建议分配专用共享文件夹\"。此外，还提到\"支持 SMB/CIFS 协议\"，并且需要\"升级至最新固件\"后再进行设置。简单来说，在 APP 中进入存储设置，选择 NAS 选项，填写 NAS 的 IP 地址、用户名和密码，并指定一个专用共享文件夹即可完成配置。",
+      "citations": [
+        {
+          "span": "可将录像转存至局域网内 NAS（支持 SMB/CIFS 协议），路径设置需在 APP 中输入 NAS 的 IP 地址、用户名和密码。建议分配专用共享文件夹",
+          "source": "文档2:片段11",
+          "chunk_text": "同步显示“设备休眠”状态。适合家庭主人在家时使用。可将录像转存至局域网内 NAS（支持 SMB/CIFS 协议），路径设置需在 APP 中输入 NAS 的 IP 地址、用户名和密码。建议分配专用共享文",
+          "chunk_full_id": "doc2:chunk11",
+          "validation_method": "character_overlap"
+        },
+        {
+          "span": "升级至最新固件",
+          "source": "文档2:片段12",
+          "chunk_text": "FS 协议），路径设置需在 APP 中输入 NAS 的 IP 地址、用户名和密码。建议分配专用共享文件夹。开启人形检测后，移动侦测只对人物有效，可过滤宠物移动，减少误报。需升级至最新固件。内置扬声器和",
+          "chunk_full_id": "doc2:chunk12",
+          "validation_method": "exact_match"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": null,
+      "faithfulness_score": 0.85,
+      "relevance_score": 0.95,
+      "rejected": false,
+      "rejection_reason": null
+    }
+  ],
+  "self_healing": {
+    "triggered_count": 0,
+    "created_files": [],
+    "deduplicated_count": 0
+  }
+}

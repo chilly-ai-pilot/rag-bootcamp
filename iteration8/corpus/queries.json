@@ -3,10 +3,10 @@
     "id": 1,
     "query": "SmartLock-100 如何生成临时密码？",
     "category": "chunking_sensitive",
-    "doc_id": "doc1",
-    "ground_truth_text": "可通过 App 生成一次性或限时临时密码，适用于访客或家政服务。",
-    "char_start": 716,
-    "char_end": 748
+    "doc_id": "doc19",
+    "ground_truth_text": "可通过 App 生成一次性或限时临时密码。",
+    "char_start": 29,
+    "char_end": 50
   },
   {
     "id": 2,
@@ -57,10 +57,10 @@
     "id": 7,
     "query": "SmartPlug-400 的充电保护功能是怎样工作的？",
     "category": "chunking_sensitive",
-    "doc_id": "doc6",
+    "doc_id": "doc26",
     "ground_truth_text": "检测到设备电流在短时间内下降至接近零，判定设备充满电，自动关闭插座，防止过充。",
-    "char_start": 321,
-    "char_end": 360
+    "char_start": 34,
+    "char_end": 73
   },
   {
     "id": 8,
@@ -156,10 +156,10 @@
     "id": 18,
     "query": "SmartPlug-400 待机功耗多少瓦？",
     "category": "exact_match",
-    "doc_id": "doc6",
+    "doc_id": "doc25",
     "ground_truth_text": "待机功耗仅 0.3W。",
-    "char_start": 114,
-    "char_end": 125
+    "char_start": 28,
+    "char_end": 39
   },
   {
     "id": 19,
@@ -192,10 +192,10 @@
     "id": 22,
     "query": "怎样防止摄像头被偷看？",
     "category": "semantic_paraphrase",
-    "doc_id": "doc2",
+    "doc_id": "doc24",
     "ground_truth_text": "启动隐私模式后，摄像头自动向下旋转隐藏镜头，并关闭收音。",
-    "char_start": 468,
-    "char_end": 496
+    "char_start": 17,
+    "char_end": 45
   },
   {
     "id": 23,
@@ -237,10 +237,10 @@
     "id": 27,
     "query": "传感器没电了怎么换？",
     "category": "semantic_paraphrase",
-    "doc_id": "doc5",
+    "doc_id": "doc23",
     "ground_truth_text": "使用 CR123A 锂电池，续航约 2 年（取决于触发频率）。",
-    "char_start": 78,
-    "char_end": 109
+    "char_start": 16,
+    "char_end": 47
   },
   {
     "id": 28,
@@ -273,10 +273,10 @@
     "id": 31,
     "query": "SW-600 的电池型号是什么？",
     "category": "exact_match",
-    "doc_id": "doc7",
+    "doc_id": "doc27",
     "ground_truth_text": "可粘贴于墙面或装入 86 底盒，无需零线，电池供电（CR2032×2），续航约 1 年。",
-    "char_start": 84,
-    "char_end": 128
+    "char_start": 22,
+    "char_end": 66
   },
   {
     "id": 32,
@@ -291,27 +291,27 @@
     "id": 33,
     "query": "SmartHub-100 最多支持多少个设备？",
     "category": "exact_match",
-    "doc_id": "16",
+    "doc_id": "doc22",
     "ground_truth_text": "SmartHub-100 最多支持 128 个子设备同时在线",
-    "char_start": 963,
-    "char_end": 993
+    "char_start": 29,
+    "char_end": 59
   },
   {
     "id": 34,
     "query": "SmartHub-100 支持哪些语音助手？",
     "category": "exact_match",
-    "doc_id": "16",
+    "doc_id": "doc21",
     "ground_truth_text": "支持小爱同学、天猫精灵、小度语音助手",
-    "char_start": 377,
-    "char_end": 395
+    "char_start": 28,
+    "char_end": 46
   },
   {
     "id": 35,
     "query": "智能中控如何恢复出厂设置？",
     "category": "semantic_paraphrase",
-    "doc_id": "16",
+    "doc_id": "doc20",
     "ground_truth_text": "在设备底部找到 Reset 按钮，使用针状物长按 10 秒，指示灯闪烁后松开，设备将恢复出厂设置",
-    "char_start": 1051,
-    "char_end": 1099
+    "char_start": 19,
+    "char_end": 67
   }
 ]
