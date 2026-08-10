@@ -110,14 +110,41 @@ def retrieve_vector(query: str, chunks: List[Dict], k: int = 5, strategy: str = 
     # 获取对应策略的 ChromaDB collection
     collection = _get_chroma_collection(strategy)
     
-    # 检查是否需要重新索引（collection 为空或 chunk 数量不匹配）
+    # 检查是否需要重新索引
+    # 策略：比对 collection 中的 doc_ids 集合与当前 chunks 的 doc_ids 集合
     current_count = collection.count()
-    if current_count != len(chunks):
-        print(f"Indexing {len(chunks)} chunks (strategy: {strategy}) into ChromaDB...")
+    needs_reindex = False
+    
+    if current_count == 0:
+        # Collection 为空，必须索引
+        needs_reindex = True
+        print(f"Collection '{collection.name}' is empty, indexing required.")
+    elif current_count != len(chunks):
+        # 数量不匹配，需要重新索引
+        needs_reindex = True
+        print(f"Chunk count mismatch: DB has {current_count}, current corpus has {len(chunks)}")
+    else:
+        # 数量相同，进一步检查 doc_ids 是否一致
+        db_results = collection.get(include=['metadatas'])
+        db_doc_ids = set([m['doc_id'] for m in db_results['metadatas']])
+        current_doc_ids = set([c['doc_id'] for c in chunks])
+        
+        if db_doc_ids != current_doc_ids:
+            needs_reindex = True
+            missing_in_db = current_doc_ids - db_doc_ids
+            extra_in_db = db_doc_ids - current_doc_ids
+            print(f"Doc IDs mismatch detected:")
+            if missing_in_db:
+                print(f"  Missing in DB: {sorted(missing_in_db, key=lambda x: int(x.replace('doc', '')))}")
+            if extra_in_db:
+                print(f"  Extra in DB: {sorted(extra_in_db, key=lambda x: int(x.replace('doc', '')))}")
+    
+    if needs_reindex:
+        print(f"Re-indexing {len(chunks)} chunks (strategy: {strategy}) into ChromaDB...")
         
         # 清空 collection（重新索引）
         if current_count > 0:
-            # 获取所有 ID 并删除（新版 ChromaDB 不支持空 where）
+            # 获取所有 ID 并删除
             all_ids = collection.get()['ids']
             if all_ids:
                 collection.delete(ids=all_ids)
@@ -145,7 +172,9 @@ def retrieve_vector(query: str, chunks: List[Dict], k: int = 5, strategy: str = 
             documents=texts,
             metadatas=metadatas
         )
-        print(f"Indexed {len(chunks)} chunks for strategy '{strategy}'.")
+        print(f"✅ Indexed {len(chunks)} chunks from {len(set(c['doc_id'] for c in chunks))} documents.")
+    else:
+        print(f"✅ Index is up-to-date: {current_count} chunks from {len(set(c['doc_id'] for c in chunks))} documents.")
     
     # 对查询进行向量化
     query_embedding = model.encode([query])[0].tolist()

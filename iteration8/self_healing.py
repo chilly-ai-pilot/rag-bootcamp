@@ -315,11 +315,13 @@ def approve_reviews(
             "approved_count": int,
             "failed_count": int,
             "created_docs": List[str],
-            "archived_count": int
+            "archived_count": int,
+            "skipped_count": int
         }
     """
     approved_count = 0
     failed_count = 0
+    skipped_count = 0
     created_docs = []
     archived_count = 0
     
@@ -334,6 +336,21 @@ def approve_reviews(
                 continue
     
     next_doc_num = max(existing_docs) + 1 if existing_docs else 1
+    
+    # 构建现有文档内容的哈希集合（从 doc-17 开始去重）
+    existing_content_hashes = set()
+    for fname in os.listdir(corpus_dir):
+        if fname.startswith('doc-') and fname.endswith('.txt'):
+            try:
+                doc_num = int(fname.replace('doc-', '').replace('.txt', ''))
+                if doc_num >= 17:  # 只检查 doc-17 及之后的文档
+                    doc_path = os.path.join(corpus_dir, fname)
+                    with open(doc_path, 'r', encoding='utf-8') as f:
+                        content = f.read().strip()
+                    content_hash = hashlib.md5(content.encode('utf-8')).hexdigest()
+                    existing_content_hashes.add(content_hash)
+            except:
+                continue
     
     # 创建归档目录（如果需要）
     archive_dir = None
@@ -352,14 +369,38 @@ def approve_reviews(
             ground_truth = review_data['ground_truth']
             query = review_data['query']
             
+            # 构建新文档内容
+            new_content = f"问：{query}\n\n答：{ground_truth}"
+            new_content_hash = hashlib.md5(new_content.strip().encode('utf-8')).hexdigest()
+            
+            # 检查是否重复
+            if new_content_hash in existing_content_hashes:
+                print(f"  ⚠️  跳过重复文档: {os.path.basename(filepath)}")
+                print(f"     Query: {query}")
+                skipped_count += 1
+                
+                # 归档或删除重复的review文件
+                if archive and archive_dir:
+                    archive_path = os.path.join(archive_dir, os.path.basename(filepath))
+                    review_data['status'] = 'skipped_duplicate'
+                    review_data['skipped_at'] = datetime.now().isoformat()
+                    with open(archive_path, 'w', encoding='utf-8') as f:
+                        json.dump(review_data, f, ensure_ascii=False, indent=2)
+                    os.remove(filepath)
+                    archived_count += 1
+                
+                continue
+            
             # 创建新文档
             new_doc_id = f"doc-{next_doc_num}"
             doc_file = os.path.join(corpus_dir, f"{new_doc_id}.txt")
             
             # 写入内容（包含问题作为标题）
             with open(doc_file, 'w', encoding='utf-8') as f:
-                f.write(f"问：{query}\n\n")
-                f.write(f"答：{ground_truth}")
+                f.write(new_content)
+            
+            # 添加到已有哈希集合
+            existing_content_hashes.add(new_content_hash)
             
             created_docs.append(new_doc_id)
             next_doc_num += 1
@@ -394,7 +435,8 @@ def approve_reviews(
         "approved_count": approved_count,
         "failed_count": failed_count,
         "created_docs": created_docs,
-        "archived_count": archived_count
+        "archived_count": archived_count,
+        "skipped_count": skipped_count
     }
 
 

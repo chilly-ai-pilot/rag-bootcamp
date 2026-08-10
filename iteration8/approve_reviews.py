@@ -74,6 +74,7 @@ def main():
     print("审核完成!")
     print(f"{'='*60}")
     print(f"✅ 成功: {result['approved_count']}")
+    print(f"⚠️  跳过重复: {result['skipped_count']}")
     print(f"❌ 失败: {result['failed_count']}")
     print(f"📝 创建文档: {len(result['created_docs'])}")
     print(f"📦 归档文件: {result['archived_count']}")

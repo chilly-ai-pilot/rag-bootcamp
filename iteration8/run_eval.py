@@ -493,8 +493,23 @@ def run_single_strategy(args, chunking_strategy, retrieval_mode=None):
     # 统计块信息
     num_docs = len(set(c['doc_id'] for c in chunks))
     avg_chunk_size = sum(len(c['text']) for c in chunks) / len(chunks)
+    doc_ids_sorted = sorted(set(c['doc_id'] for c in chunks), key=lambda x: int(x.replace('doc', '')))
     print(f"Corpus: {len(chunks)} chunks from {num_docs} docs")
     print(f"Average chunk size: {avg_chunk_size:.1f} characters")
+    print(f"Doc range: {doc_ids_sorted[0]} to {doc_ids_sorted[-1]}")
+    
+    # 如果使用向量检索，提前初始化向量数据库以显示索引状态
+    if args.retrieval_mode in ['vector', 'hybrid']:
+        print(f"\n{'='*60}")
+        print(f"Vector Database Check (strategy: {chunking_strategy})")
+        print(f"{'='*60}")
+        from retrieval import retrieve_vector
+        # 执行一次空查询来触发索引检查（不实际检索）
+        try:
+            _ = retrieve_vector("初始化检查", chunks, k=1, strategy=chunking_strategy)
+        except Exception as e:
+            print(f"⚠️  Vector DB initialization warning: {e}")
+        print(f"{'='*60}")
     
     # 异步批量生成（Iteration 6 - 内置Judge评估和拒答）
     print(f"\n{'='*60}")
