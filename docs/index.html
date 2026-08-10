@@ -486,12 +486,12 @@
         <header>
             <h1>🚀 RAG System Evaluation Report</h1>
             <p>Continuous Evaluation Dashboard - Iteration 8 (Self-Healing)</p>
-            <p style="font-size: 0.95em; margin-top: 10px;">Latest: 2026-08-10 14:48 | Total Runs: 6 | Pending Reviews: 10</p>
+            <p style="font-size: 0.95em; margin-top: 10px;">Latest: 2026-08-10 15:01 | Total Runs: 7 | Pending Reviews: 0</p>
         </header>
         
         <div class="tabs">
             <button class="tab active" onclick="switchTab('metrics')">📊 Metrics</button>
-            <button class="tab" onclick="switchTab('review')">🔍 Review (10)</button>
+            <button class="tab" onclick="switchTab('review')">🔍 Review (0)</button>
         </div>
         
         <div id="metrics-tab" class="tab-content active">
@@ -500,27 +500,27 @@
             <div class="card">
                 <h3>Hit Rate</h3>
                 <div class="value">100.0%</div>
-<div class="diff positive">+15.6% vs previous</div>
+<div class="diff positive">+0.0% vs previous</div>
             </div>
             
             <div class="card">
                 <h3>Faithfulness</h3>
-<div class="value">1.000</div><div class="diff positive">+0.033 vs previous</div>
+<div class="value">1.000</div><div class="diff positive">+0.000 vs previous</div>
             </div>
             
             <div class="card">
                 <h3>Relevance</h3>
-<div class="value">1.000</div><div class="diff positive">+0.035 vs previous</div>
+<div class="value">1.000</div><div class="diff positive">+0.000 vs previous</div>
             </div>
             
             <div class="card">
                 <h3>Rejection Rate</h3>
-<div class="value">0.0%</div><div class="diff positive">-15.6% vs previous</div>
+<div class="value">0.0%</div><div class="diff negative">+0.0% vs previous</div>
             </div>
             
             <div class="card">
                 <h3>MRR Score</h3>
-<div class="value">0.333</div><div class="diff negative">-0.323 vs previous</div>
+<div class="value">0.250</div><div class="diff negative">-0.083 vs previous</div>
             </div>
         </div>
 
@@ -529,7 +529,7 @@
             <div class="metadata-grid">
                 <div class="metadata-item">
                     <div class="label">Documents</div>
-                    <div class="value">16</div>
+                    <div class="value">26</div>
                 </div>
                 <div class="metadata-item">
                     <div class="label">Queries</div>
@@ -652,6 +652,16 @@
                         <td>0.333</td>
                     </tr>
 
+                    <tr>
+                        <td>2026-08-10 15:01</td>
+                        <td><code>fixed_100_50+hybrid+bge</code></td>
+                        <td><span class="badge success">100.0%</span></td>
+                        <td>1.000</td>
+                        <td>1.000</td>
+                        <td>0.0%</td>
+                        <td>0.250</td>
+                    </tr>
+
                 </tbody>
             </table>
         </div>
@@ -681,250 +691,12 @@
                     </p>
                 </div>
 
-                <div class="review-list">
-
-                    <div class="review-item" data-filename="review_54b4fd6e_20260810_204009.json">
-                        <div class="review-item-content">
-                            <div class="review-query">
-                                <strong>Question:</strong>
-                                <div contenteditable="true" class="editable" data-field="query" style="margin-top: 5px;">网关的指示灯含义？</div>
-                                <div class="edit-hint">Click to edit query</div>
-                            </div>
-                            <div class="review-meta">
-                                <span>📅 2026-08-10 20:40</span>
-                                <span>📄 doc4</span>
-                                <span class="review-reason reason-retrieval-miss">layer1_rejection</span>
-                            </div>
-
-                                <div style="font-size: 0.9em; color: #6c757d; margin-top: 5px;">
-                                    Rejection: [Layer 1] Top-1 rerank score too low
-                                </div>
-
-                                <div class="review-answer">
-                                    <div class="review-answer-label">Ground Truth Answer:</div>
-                                    <div contenteditable="true" class="review-answer-text editable" data-field="ground_truth">红灯常亮：未连接网络；蓝灯常亮：工作正常。</div>
-                                    <div class="edit-hint">Click to edit answer</div>
-                                </div>
-                        </div>
-                    </div>
-
-                    <div class="review-item" data-filename="review_d0343d1b_20260810_204009.json">
-                        <div class="review-item-content">
-                            <div class="review-query">
-                                <strong>Question:</strong>
-                                <div contenteditable="true" class="editable" data-field="query" style="margin-top: 5px;">SmartCam-200 的夜视距离？</div>
-                                <div class="edit-hint">Click to edit query</div>
-                            </div>
-                            <div class="review-meta">
-                                <span>📅 2026-08-10 20:40</span>
-                                <span>📄 doc2</span>
-                                <span class="review-reason reason-low-rank">low_rank_5</span>
-                            </div>
-
-                                <div class="review-answer">
-                                    <div class="review-answer-label">Ground Truth Answer:</div>
-                                    <div contenteditable="true" class="review-answer-text editable" data-field="ground_truth">红外夜视距离可达 10 米。</div>
-                                    <div class="edit-hint">Click to edit answer</div>
-                                </div>
-                        </div>
-                    </div>
-
-                    <div class="review-item" data-filename="review_34743fa8_20260810_204009.json">
-                        <div class="review-item-content">
-                            <div class="review-query">
-                                <strong>Question:</strong>
-                                <div contenteditable="true" class="editable" data-field="query" style="margin-top: 5px;">SmartLock-100 如何生成临时密码？</div>
-                                <div class="edit-hint">Click to edit query</div>
-                            </div>
-                            <div class="review-meta">
-                                <span>📅 2026-08-10 20:40</span>
-                                <span>📄 doc1</span>
-                                <span class="review-reason reason-retrieval-miss">retrieval_miss</span>
-                            </div>
-
-                                <div class="review-answer">
-                                    <div class="review-answer-label">Ground Truth Answer:</div>
-                                    <div contenteditable="true" class="review-answer-text editable" data-field="ground_truth">可通过 App 生成一次性或限时临时密码。</div>
-                                    <div class="edit-hint">Click to edit answer</div>
-                                </div>
-                        </div>
-                    </div>
-
-                    <div class="review-item" data-filename="review_2d95d43c_20260810_132719.json">
-                        <div class="review-item-content">
-                            <div class="review-query">
-                                <strong>Question:</strong>
-                                <div contenteditable="true" class="editable" data-field="query" style="margin-top: 5px;">智能中控如何恢复出厂设置？</div>
-                                <div class="edit-hint">Click to edit query</div>
-                            </div>
-                            <div class="review-meta">
-                                <span>📅 2026-08-10 13:27</span>
-                                <span>📄 16</span>
-                                <span class="review-reason reason-retrieval-miss">retrieval_miss</span>
-                            </div>
-
-                                <div style="font-size: 0.9em; color: #6c757d; margin-top: 5px;">
-                                    Rejection: [Layer 0] Retrieval miss (hit=0, ground truth not in top-k)
-                                </div>
-
-                                <div class="review-answer">
-                                    <div class="review-answer-label">Ground Truth Answer:</div>
-                                    <div contenteditable="true" class="review-answer-text editable" data-field="ground_truth">在设备底部找到 Reset 按钮，使用针状物长按 10 秒，指示灯闪烁后松开，设备将恢复出厂设置</div>
-                                    <div class="edit-hint">Click to edit answer</div>
-                                </div>
-                        </div>
-                    </div>
-
-                    <div class="review-item" data-filename="review_c1448f20_20260810_132719.json">
-                        <div class="review-item-content">
-                            <div class="review-query">
-                                <strong>Question:</strong>
-                                <div contenteditable="true" class="editable" data-field="query" style="margin-top: 5px;">SmartHub-100 支持哪些语音助手？</div>
-                                <div class="edit-hint">Click to edit query</div>
-                            </div>
-                            <div class="review-meta">
-                                <span>📅 2026-08-10 13:27</span>
-                                <span>📄 16</span>
-                                <span class="review-reason reason-retrieval-miss">retrieval_miss</span>
-                            </div>
-
-                                <div style="font-size: 0.9em; color: #6c757d; margin-top: 5px;">
-                                    Rejection: [Layer 0] Retrieval miss (hit=0, ground truth not in top-k)
-                                </div>
-
-                                <div class="review-answer">
-                                    <div class="review-answer-label">Ground Truth Answer:</div>
-                                    <div contenteditable="true" class="review-answer-text editable" data-field="ground_truth">支持小爱同学、天猫精灵、小度语音助手</div>
-                                    <div class="edit-hint">Click to edit answer</div>
-                                </div>
-                        </div>
-                    </div>
-
-                    <div class="review-item" data-filename="review_e0466dec_20260810_132719.json">
-                        <div class="review-item-content">
-                            <div class="review-query">
-                                <strong>Question:</strong>
-                                <div contenteditable="true" class="editable" data-field="query" style="margin-top: 5px;">SmartHub-100 最多支持多少个设备？</div>
-                                <div class="edit-hint">Click to edit query</div>
-                            </div>
-                            <div class="review-meta">
-                                <span>📅 2026-08-10 13:27</span>
-                                <span>📄 16</span>
-                                <span class="review-reason reason-retrieval-miss">retrieval_miss</span>
-                            </div>
-
-                                <div style="font-size: 0.9em; color: #6c757d; margin-top: 5px;">
-                                    Rejection: [Layer 0] Retrieval miss (hit=0, ground truth not in top-k)
-                                </div>
-
-                                <div class="review-answer">
-                                    <div class="review-answer-label">Ground Truth Answer:</div>
-                                    <div contenteditable="true" class="review-answer-text editable" data-field="ground_truth">SmartHub-100 最多支持 128 个子设备同时在线</div>
-                                    <div class="edit-hint">Click to edit answer</div>
-                                </div>
-                        </div>
-                    </div>
-
-                    <div class="review-item" data-filename="review_dc8728b6_20260810_132719.json">
-                        <div class="review-item-content">
-                            <div class="review-query">
-                                <strong>Question:</strong>
-                                <div contenteditable="true" class="editable" data-field="query" style="margin-top: 5px;">传感器没电了怎么换？</div>
-                                <div class="edit-hint">Click to edit query</div>
-                            </div>
-                            <div class="review-meta">
-                                <span>📅 2026-08-10 13:27</span>
-                                <span>📄 doc5</span>
-                                <span class="review-reason reason-retrieval-miss">retrieval_miss</span>
-                            </div>
-
-                                <div style="font-size: 0.9em; color: #6c757d; margin-top: 5px;">
-                                    Rejection: [Layer 0] Retrieval miss (hit=0, ground truth not in top-k)
-                                </div>
-
-                                <div class="review-answer">
-                                    <div class="review-answer-label">Ground Truth Answer:</div>
-                                    <div contenteditable="true" class="review-answer-text editable" data-field="ground_truth">使用 CR123A 锂电池，续航约 2 年（取决于触发频率）。</div>
-                                    <div class="edit-hint">Click to edit answer</div>
-                                </div>
-                        </div>
-                    </div>
-
-                    <div class="review-item" data-filename="review_bf2169f9_20260810_132719.json">
-                        <div class="review-item-content">
-                            <div class="review-query">
-                                <strong>Question:</strong>
-                                <div contenteditable="true" class="editable" data-field="query" style="margin-top: 5px;">怎样防止摄像头被偷看？</div>
-                                <div class="edit-hint">Click to edit query</div>
-                            </div>
-                            <div class="review-meta">
-                                <span>📅 2026-08-10 13:27</span>
-                                <span>📄 doc2</span>
-                                <span class="review-reason reason-retrieval-miss">retrieval_miss</span>
-                            </div>
-
-                                <div style="font-size: 0.9em; color: #6c757d; margin-top: 5px;">
-                                    Rejection: [Layer 0] Retrieval miss (hit=0, ground truth not in top-k)
-                                </div>
-
-                                <div class="review-answer">
-                                    <div class="review-answer-label">Ground Truth Answer:</div>
-                                    <div contenteditable="true" class="review-answer-text editable" data-field="ground_truth">启动隐私模式后，摄像头自动向下旋转隐藏镜头，并关闭收音。</div>
-                                    <div class="edit-hint">Click to edit answer</div>
-                                </div>
-                        </div>
-                    </div>
-
-                    <div class="review-item" data-filename="review_ab683502_20260810_132719.json">
-                        <div class="review-item-content">
-                            <div class="review-query">
-                                <strong>Question:</strong>
-                                <div contenteditable="true" class="editable" data-field="query" style="margin-top: 5px;">SmartPlug-400 待机功耗多少瓦？</div>
-                                <div class="edit-hint">Click to edit query</div>
-                            </div>
-                            <div class="review-meta">
-                                <span>📅 2026-08-10 13:27</span>
-                                <span>📄 doc6</span>
-                                <span class="review-reason reason-retrieval-miss">retrieval_miss</span>
-                            </div>
-
-                                <div style="font-size: 0.9em; color: #6c757d; margin-top: 5px;">
-                                    Rejection: [Layer 0] Retrieval miss (hit=0, ground truth not in top-k)
-                                </div>
-
-                                <div class="review-answer">
-                                    <div class="review-answer-label">Ground Truth Answer:</div>
-                                    <div contenteditable="true" class="review-answer-text editable" data-field="ground_truth">待机功耗仅 0.3W。</div>
-                                    <div class="edit-hint">Click to edit answer</div>
-                                </div>
-                        </div>
-                    </div>
-
-                    <div class="review-item" data-filename="review_c2224cb6_20260810_132719.json">
-                        <div class="review-item-content">
-                            <div class="review-query">
-                                <strong>Question:</strong>
-                                <div contenteditable="true" class="editable" data-field="query" style="margin-top: 5px;">SmartPlug-400 的充电保护功能是怎样工作的？</div>
-                                <div class="edit-hint">Click to edit query</div>
-                            </div>
-                            <div class="review-meta">
-                                <span>📅 2026-08-10 13:27</span>
-                                <span>📄 doc6</span>
-                                <span class="review-reason reason-retrieval-miss">retrieval_miss</span>
-                            </div>
-
-                                <div style="font-size: 0.9em; color: #6c757d; margin-top: 5px;">
-                                    Rejection: [Layer 0] Retrieval miss (hit=0, ground truth not in top-k)
-                                </div>
-
-                                <div class="review-answer">
-                                    <div class="review-answer-label">Ground Truth Answer:</div>
-                                    <div contenteditable="true" class="review-answer-text editable" data-field="ground_truth">检测到设备电流在短时间内下降至接近零，判定设备充满电，自动关闭插座，防止过充。</div>
-                                    <div class="edit-hint">Click to edit answer</div>
-                                </div>
-                        </div>
-                    </div>
-
+                <div class="empty-state">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <h3>All Clear!</h3>
+                    <p>No pending reviews. The system is performing well.</p>
                 </div>
 
             </div>
@@ -933,7 +705,7 @@
 
         <footer>
             <p>Generated by RAG Bootcamp Iteration 8 - Self-Healing RAG System</p>
-            <p>Last updated: 2026-08-10 22:50:25</p>
+            <p>Last updated: 2026-08-10 15:01:53</p>
         </footer>
     </div>
     
@@ -984,11 +756,11 @@
         const metricsChart = new Chart(metricsCtx, {
             type: 'line',
             data: {
-                labels: ["2026-08-07 18:29", "2026-08-07 18:37", "2026-08-10 13:27", "2026-08-10 14:20", "2026-08-10 14:29", "2026-08-10 14:48"],
+                labels: ["2026-08-07 18:29", "2026-08-07 18:37", "2026-08-10 13:27", "2026-08-10 14:20", "2026-08-10 14:29", "2026-08-10 14:48", "2026-08-10 15:01"],
                 datasets: [
                     {
                         label: 'Faithfulness',
-                        data: [1.0, 0.9583333333333334, 0.9685185185185184, 1.0, 0.9666666666666667, 1.0],
+                        data: [1.0, 0.9583333333333334, 0.9685185185185186, 1.0, 0.9666666666666667, 1.0, 1.0],
                         borderColor: 'rgb(102, 126, 234)',
                         backgroundColor: 'rgba(102, 126, 234, 0.1)',
                         tension: 0.3,
@@ -996,7 +768,7 @@
                     },
                     {
                         label: 'Relevance',
-                        data: [1.0, 0.955, 0.9203703703703704, 1.0, 0.9648148148148148, 1.0],
+                        data: [1.0, 0.955, 0.9203703703703704, 1.0, 0.9648148148148148, 1.0, 1.0],
                         borderColor: 'rgb(118, 75, 162)',
                         backgroundColor: 'rgba(118, 75, 162, 0.1)',
                         tension: 0.3,
@@ -1004,7 +776,7 @@
                     },
                     {
                         label: 'MRR',
-                        data: [0.14285714285714285, 0.5608163265306122, 0.5999999999999999, 0.3333333333333333, 0.6562499999999999, 0.3333333333333333],
+                        data: [0.14285714285714285, 0.5608163265306122, 0.5999999999999999, 0.3333333333333333, 0.6562499999999999, 0.3333333333333333, 0.25],
                         borderColor: 'rgb(255, 159, 64)',
                         backgroundColor: 'rgba(255, 159, 64, 0.1)',
                         tension: 0.3,
@@ -1044,11 +816,11 @@
         const ratesChart = new Chart(ratesCtx, {
             type: 'line',
             data: {
-                labels: ["2026-08-07 18:29", "2026-08-07 18:37", "2026-08-10 13:27", "2026-08-10 14:20", "2026-08-10 14:29", "2026-08-10 14:48"],
+                labels: ["2026-08-07 18:29", "2026-08-07 18:37", "2026-08-10 13:27", "2026-08-10 14:20", "2026-08-10 14:29", "2026-08-10 14:48", "2026-08-10 15:01"],
                 datasets: [
                     {
                         label: 'Hit Rate',
-                        data: [1.0, 0.8857142857142857, 0.7714285714285715, 1.0, 0.84375, 1.0],
+                        data: [1.0, 0.8857142857142857, 0.7714285714285715, 1.0, 0.84375, 1.0, 1.0],
                         borderColor: 'rgb(75, 192, 192)',
                         backgroundColor: 'rgba(75, 192, 192, 0.1)',
                         tension: 0.3,
@@ -1056,7 +828,7 @@
                     },
                     {
                         label: 'Rejection Rate',
-                        data: [0.0, 0.2857142857142857, 0.34285714285714286, 0.0, 0.15625, 0.0],
+                        data: [0.0, 0.2857142857142857, 0.34285714285714286, 0.0, 0.15625, 0.0, 0.0],
                         borderColor: 'rgb(255, 99, 132)',
                         backgroundColor: 'rgba(255, 99, 132, 0.1)',
                         tension: 0.3,
