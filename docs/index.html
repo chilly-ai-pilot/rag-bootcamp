@@ -486,12 +486,12 @@
         <header>
             <h1>🚀 RAG System Evaluation Report</h1>
             <p>Continuous Evaluation Dashboard - Iteration 8 (Self-Healing)</p>
-            <p style="font-size: 0.95em; margin-top: 10px;">Latest: 2026-08-10 13:27 | Total Runs: 3 | Pending Reviews: 13</p>
+            <p style="font-size: 0.95em; margin-top: 10px;">Latest: 2026-08-10 14:20 | Total Runs: 4 | Pending Reviews: 12</p>
         </header>
         
         <div class="tabs">
             <button class="tab active" onclick="switchTab('metrics')">📊 Metrics</button>
-            <button class="tab" onclick="switchTab('review')">🔍 Review (13)</button>
+            <button class="tab" onclick="switchTab('review')">🔍 Review (12)</button>
         </div>
         
         <div id="metrics-tab" class="tab-content active">
@@ -499,28 +499,28 @@
         <div class="summary-cards">
             <div class="card">
                 <h3>Hit Rate</h3>
-                <div class="value">77.1%</div>
-<div class="diff negative">-11.4% vs previous</div>
+                <div class="value">100.0%</div>
+<div class="diff positive">+22.9% vs previous</div>
             </div>
             
             <div class="card">
                 <h3>Faithfulness</h3>
-<div class="value">0.969</div><div class="diff positive">+0.010 vs previous</div>
+<div class="value">1.000</div><div class="diff positive">+0.031 vs previous</div>
             </div>
             
             <div class="card">
                 <h3>Relevance</h3>
-<div class="value">0.920</div><div class="diff negative">-0.035 vs previous</div>
+<div class="value">1.000</div><div class="diff positive">+0.080 vs previous</div>
             </div>
             
             <div class="card">
                 <h3>Rejection Rate</h3>
-<div class="value">34.3%</div><div class="diff negative">+5.7% vs previous</div>
+<div class="value">0.0%</div><div class="diff positive">-34.3% vs previous</div>
             </div>
             
             <div class="card">
                 <h3>MRR Score</h3>
-<div class="value">0.600</div><div class="diff positive">+0.039 vs previous</div>
+<div class="value">0.333</div><div class="diff negative">-0.267 vs previous</div>
             </div>
         </div>
 
@@ -533,7 +533,7 @@
                 </div>
                 <div class="metadata-item">
                     <div class="label">Queries</div>
-                    <div class="value">35</div>
+                    <div class="value">1</div>
                 </div>
                 <div class="metadata-item">
                     <div class="label">Chunking Strategy</div>
@@ -549,7 +549,7 @@
                 </div>
                 <div class="metadata-item">
                     <div class="label">Judge Mode</div>
-                    <div class="value">deepseek</div>
+                    <div class="value">none</div>
                 </div>
                 <div class="metadata-item">
                     <div class="label">Rejection Enabled</div>
@@ -620,6 +620,16 @@
                         <td>0.920</td>
                         <td>34.3%</td>
                         <td>0.600</td>
+                    </tr>
+
+                    <tr>
+                        <td>2026-08-10 14:20</td>
+                        <td><code>fixed_100_50+hybrid+bge</code></td>
+                        <td><span class="badge success">100.0%</span></td>
+                        <td>1.000</td>
+                        <td>1.000</td>
+                        <td>0.0%</td>
+                        <td>0.333</td>
                     </tr>
 
                 </tbody>
@@ -710,29 +720,6 @@
                                 <div class="review-answer">
                                     <div class="review-answer-label">Ground Truth Answer:</div>
                                     <div contenteditable="true" class="review-answer-text editable" data-field="ground_truth">可通过 App 生成一次性或限时临时密码。</div>
-                                    <div class="edit-hint">Click to edit answer</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="review-item" data-filename="review_31fd8078_20260810_204009.json">
-                        <div class="review-item-header">
-                            <input type="checkbox" class="review-checkbox" onchange="updateApproveButton()">
-                            <div class="review-item-content">
-                                <div class="review-query">
-                                    <div contenteditable="true" class="editable" data-field="query">重复查询测试</div>
-                                    <div class="edit-hint">Click to edit query</div>
-                                </div>
-                                <div class="review-meta">
-                                    <span>📅 2026-08-10 20:40</span>
-                                    <span>📄 doc1</span>
-                                    <span class="review-reason reason-retrieval-miss">test</span>
-                                </div>
-
-                                <div class="review-answer">
-                                    <div class="review-answer-label">Ground Truth Answer:</div>
-                                    <div contenteditable="true" class="review-answer-text editable" data-field="ground_truth">答案2（较新）</div>
                                     <div class="edit-hint">Click to edit answer</div>
                                 </div>
                             </div>
@@ -986,7 +973,7 @@
 
         <footer>
             <p>Generated by RAG Bootcamp Iteration 8 - Self-Healing RAG System</p>
-            <p>Last updated: 2026-08-10 13:27:20</p>
+            <p>Last updated: 2026-08-10 14:20:21</p>
         </footer>
     </div>
     
@@ -1079,11 +1066,11 @@
         const metricsChart = new Chart(metricsCtx, {
             type: 'line',
             data: {
-                labels: ["2026-08-07 18:29", "2026-08-07 18:37", "2026-08-10 13:27"],
+                labels: ["2026-08-07 18:29", "2026-08-07 18:37", "2026-08-10 13:27", "2026-08-10 14:20"],
                 datasets: [
                     {
                         label: 'Faithfulness',
-                        data: [1.0, 0.9583333333333334, 0.9685185185185186],
+                        data: [1.0, 0.9583333333333334, 0.9685185185185186, 1.0],
                         borderColor: 'rgb(102, 126, 234)',
                         backgroundColor: 'rgba(102, 126, 234, 0.1)',
                         tension: 0.3,
@@ -1091,7 +1078,7 @@
                     },
                     {
                         label: 'Relevance',
-                        data: [1.0, 0.955, 0.9203703703703704],
+                        data: [1.0, 0.955, 0.9203703703703704, 1.0],
                         borderColor: 'rgb(118, 75, 162)',
                         backgroundColor: 'rgba(118, 75, 162, 0.1)',
                         tension: 0.3,
@@ -1099,7 +1086,7 @@
                     },
                     {
                         label: 'MRR',
-                        data: [0.14285714285714285, 0.5608163265306122, 0.5999999999999999],
+                        data: [0.14285714285714285, 0.5608163265306122, 0.5999999999999999, 0.3333333333333333],
                         borderColor: 'rgb(255, 159, 64)',
                         backgroundColor: 'rgba(255, 159, 64, 0.1)',
                         tension: 0.3,
@@ -1139,11 +1126,11 @@
         const ratesChart = new Chart(ratesCtx, {
             type: 'line',
             data: {
-                labels: ["2026-08-07 18:29", "2026-08-07 18:37", "2026-08-10 13:27"],
+                labels: ["2026-08-07 18:29", "2026-08-07 18:37", "2026-08-10 13:27", "2026-08-10 14:20"],
                 datasets: [
                     {
                         label: 'Hit Rate',
-                        data: [1.0, 0.8857142857142857, 0.7714285714285715],
+                        data: [1.0, 0.8857142857142857, 0.7714285714285715, 1.0],
                         borderColor: 'rgb(75, 192, 192)',
                         backgroundColor: 'rgba(75, 192, 192, 0.1)',
                         tension: 0.3,
@@ -1151,7 +1138,7 @@
                     },
                     {
                         label: 'Rejection Rate',
-                        data: [0.0, 0.2857142857142857, 0.34285714285714286],
+                        data: [0.0, 0.2857142857142857, 0.34285714285714286, 0.0],
                         borderColor: 'rgb(255, 99, 132)',
                         backgroundColor: 'rgba(255, 99, 132, 0.1)',
                         tension: 0.3,
