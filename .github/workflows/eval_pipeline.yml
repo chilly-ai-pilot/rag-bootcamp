@@ -79,6 +79,7 @@ on:
 # 权限设置：需要写入权限以提交结果
 permissions:
   contents: write
+  actions: write  # 允许更新 workflow 文件
 
 jobs:
   evaluate:
@@ -251,9 +252,22 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           
-          # 添加结果文件和报告
+          # 先拉取最新代码，避免冲突
+          echo "🔄 Pulling latest changes first..."
+          git fetch origin main
+          git reset --hard origin/main
+          
+          # 重新生成报告（因为可能被reset了）
+          cd iteration8
+          python generate_report.py \
+            --data-dir ../data \
+            --output-dir ../docs \
+            --review-dir review || echo "⚠️  Report generation failed, using existing report"
+          cd ..
+          
+          # 添加结果文件和报告（只添加这些，不包括其他文件）
           git add data/*.json
-          git add docs/
+          git add docs/index.html
           
           # 添加 review 目录（自愈机制生成的待审核文件）
           if [ -d "iteration8/review" ] && [ "$(ls -A iteration8/review/*.json 2>/dev/null)" ]; then
@@ -278,51 +292,6 @@ jobs:
             COMMIT_MSG="$COMMIT_MSG"$'\n'"Config: ${{ github.event.inputs.chunking_strategy || 'fixed_100_50' }}+${{ github.event.inputs.retrieval_mode || 'hybrid' }}+${{ github.event.inputs.rerank_mode || 'bge' }}"
             
             git commit -m "$COMMIT_MSG"
-            
-            # 推送前先拉取最新代码，特别保护 review 文件
-            echo "🔄 Pulling latest changes before push..."
-            
-            # 保存当前的 review 文件
-            if [ -d "iteration8/review" ] && [ "$(ls -A iteration8/review/*.json 2>/dev/null)" ]; then
-              mkdir -p /tmp/review_backup
-              cp iteration8/review/*.json /tmp/review_backup/ 2>/dev/null || true
-              echo "📦 Backed up $(ls /tmp/review_backup/*.json 2>/dev/null | wc -l) review files"
-            fi
-            
-            # 拉取最新代码
-            git pull --no-rebase origin main || {
-              echo "⚠️  Pull failed, trying force push"
-              
-              # 恢复 review 文件
-              if [ -d "/tmp/review_backup" ]; then
-                cp /tmp/review_backup/*.json iteration8/review/ 2>/dev/null || true
-                git add iteration8/review/*.json
-                echo "🔄 Restored review files after pull failure"
-              fi
-              
-              git push --force-with-lease origin main
-              exit 0
-            }
-            
-            # 合并后，确保 review 文件存在
-            if [ -d "/tmp/review_backup" ]; then
-              # 恢复可能在 pull 中丢失的 review 文件
-              for backup_file in /tmp/review_backup/*.json; do
-                filename=$(basename "$backup_file")
-                if [ ! -f "iteration8/review/$filename" ]; then
-                  cp "$backup_file" "iteration8/review/$filename"
-                  git add "iteration8/review/$filename"
-                  echo "🔄 Restored missing review file: $filename"
-                fi
-              done
-              
-              # 如果有恢复的文件，需要重新提交
-              if ! git diff --staged --quiet; then
-                git commit --amend --no-edit
-              fi
-            fi
-            
-            # 推送结果
             git push origin main
             echo "✅ Results committed and pushed"
           fi
