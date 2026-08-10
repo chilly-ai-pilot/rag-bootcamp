@@ -1,0 +1,1075 @@
+{
+  "metadata": {
+    "timestamp": "20260810_181339",
+    "evaluation_date": "2026-08-10T18:13:39.470575",
+    "corpus_stats": {
+      "num_documents": 27,
+      "num_queries": 32,
+      "corpus_dir": "corpus"
+    },
+    "model_config": {
+      "chunking_strategy": "fixed_100_50",
+      "retrieval_mode": "vector",
+      "rerank_mode": "none",
+      "rerank_top_k": null,
+      "retrieval_top_k": 40,
+      "judge_mode": "none",
+      "rejection_enabled": true,
+      "rejection_preset": "aggressive"
+    }
+  },
+  "config": {
+    "chunking_strategy": "fixed_100_50",
+    "retrieval_mode": "vector",
+    "rerank_mode": "none",
+    "rerank_top_k": null,
+    "retrieval_top_k": 40
+  },
+  "scores": {
+    "chunking_sensitive": 1.0,
+    "exact_match": 1.0,
+    "semantic_paraphrase": 1.0,
+    "overall": 1.0
+  },
+  "mrr_scores": {
+    "chunking_sensitive": 0.5043589743589744,
+    "exact_match": 0.7840909090909091,
+    "semantic_paraphrase": 0.7909090909090909,
+    "overall": 0.6990184294871794
+  },
+  "results": [
+    {
+      "id": 1,
+      "query": "SmartLock-100 如何生成临时密码？",
+      "category": "chunking_sensitive",
+      "hit": 1,
+      "answer_rank": 1,
+      "answer": "可通过 App 生成一次性或限时临时密码[文档1:片段1]。具体操作：在 APP【门锁管理】→【临时密码】→ 选择\"限时密码\"或\"一次性密码\"。限时密码可设置有效期（如今天 8:00-18:00），一次性密码使用后自动失效。密码生成后发给对方即可[文档14:片段12]。SmartLock-100 还支持 20 位虚位密码，可在正确密码前后输入任意数字作为干扰[文档1:片段14]。",
+      "raw_answer": "可通过 App 生成一次性或限时临时密码。具体操作：在 APP【门锁管理】→【临时密码】→ 选择\"限时密码\"或\"一次性密码\"。限时密码可设置有效期（如今天 8:00-18:00），一次性密码使用后自动失效。密码生成后发给对方即可。SmartLock-100 还支持 20 位虚位密码，可在正确密码前后输入任意数字作为干扰。",
+      "citations": [
+        {
+          "span": "具体操作：在 APP【门锁管理】→【临时密码】→ 选择\"限时密码\"或\"一次性密码\"。限时密码可设置有效期（如今天 8:00-18:00），一次性密码使用后自动失效。密码生成后发给对方即可",
+          "source": "文档14:片段12",
+          "chunk_text": "在 APP【门锁管理】→【临时密码】→ 选择\"限时密码\"或\"一次性密码\"。限时密码可设置有效期（如今天 8:00-18:00），一次性密码使用后自动失效。密码生成后发给对方即可。\n\n用户 F：\"摄像头",
+          "chunk_full_id": "doc14:chunk12",
+          "validation_method": "character_overlap"
+        },
+        {
+          "span": "SmartLock-100 还支持 20 位虚位密码，可在正确密码前后输入任意数字作为干扰",
+          "source": "文档1:片段14",
+          "chunk_text": "不可逆，请提前备份数据。支持 20 位虚位密码，可在正确密码前后输入任意数字作为干扰，总长度不超过 20 位即可开锁，有效防止偷窥。可通过 App 生成一次性或限时临时密码，适用于访客或家政服务。一次",
+          "chunk_full_id": "doc1:chunk14",
+          "validation_method": "character_overlap"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": null,
+      "faithfulness_score": 1.0,
+      "relevance_score": 0.9,
+      "rejected": false,
+      "rejection_reason": null
+    },
+    {
+      "id": 2,
+      "query": "SmartCam-200 的 NAS 存储怎么设置？",
+      "category": "chunking_sensitive",
+      "hit": 1,
+      "answer_rank": 3,
+      "answer": "SmartCam-200 支持将录像转存至局域网内 NAS（支持 SMB/CIFS 协议），路径设置需在 APP 中输入 NAS 的 IP 地址、用户名和密码。建议分配专用共享文件夹。[文档2:片段11] 具体操作时，在 APP 中找到存储设置选项，选择“NAS 存储”并填写对应的网络路径信息即可。",
+      "raw_answer": "SmartCam-200 支持将录像转存至局域网内 NAS（支持 SMB/CIFS 协议），路径设置需在 APP 中输入 NAS 的 IP 地址、用户名和密码。建议分配专用共享文件夹。 具体操作时，在 APP 中找到存储设置选项，选择“NAS 存储”并填写对应的网络路径信息即可。",
+      "citations": [
+        {
+          "span": "SmartCam-200 支持将录像转存至局域网内 NAS（支持 SMB/CIFS 协议），路径设置需在 APP 中输入 NAS 的 IP 地址、用户名和密码。建议分配专用共享文件夹。",
+          "source": "文档2:片段11",
+          "chunk_text": "同步显示“设备休眠”状态。适合家庭主人在家时使用。可将录像转存至局域网内 NAS（支持 SMB/CIFS 协议），路径设置需在 APP 中输入 NAS 的 IP 地址、用户名和密码。建议分配专用共享文",
+          "chunk_full_id": "doc2:chunk11",
+          "validation_method": "character_overlap"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": null,
+      "faithfulness_score": 0.75,
+      "relevance_score": 0.9,
+      "rejected": false,
+      "rejection_reason": null
+    },
+    {
+      "id": 3,
+      "query": "SmartBulb-300 断电后记忆功能怎么关闭？",
+      "category": "chunking_sensitive",
+      "hit": 1,
+      "answer_rank": 15,
+      "answer": "抱歉，我在提供的资料中未找到足够充分的信息来准确回答您的问题。建议您查阅完整的产品手册或联系客服获取更详细的解答。",
+      "raw_answer": "抱歉，我在提供的资料中未找到足够充分的信息来准确回答您的问题。建议您查阅完整的产品手册或联系客服获取更详细的解答。",
+      "citations": [],
+      "reasoning": null,
+      "rerank_scores": null,
+      "faithfulness_score": null,
+      "relevance_score": null,
+      "rejected": true,
+      "rejection_reason": "[Layer 0] Answer rank too low (rank=15, threshold=4)"
+    },
+    {
+      "id": 4,
+      "query": "网关断网后自动化场景还能运行吗？",
+      "category": "chunking_sensitive",
+      "hit": 1,
+      "answer_rank": 1,
+      "answer": "网关断网后自动化场景仍可运行。资料说明：“即使外网中断，网关仍可通过本地局域网执行已保存的自动化场景（如传感器联动灯）” [文档4:片段5]。但远程控制及推送通知不可用 [文档4:片段6]。所有场景设置和设备配置会自动保存到本地存储，断电恢复后自动同步 [文档16:片段26]。",
+      "raw_answer": "网关断网后自动化场景仍可运行。资料说明：“即使外网中断，网关仍可通过本地局域网执行已保存的自动化场景（如传感器联动灯）” 。但远程控制及推送通知不可用 。所有场景设置和设备配置会自动保存到本地存储，断电恢复后自动同步 。",
+      "citations": [
+        {
+          "span": "即使外网中断，网关仍可通过本地局域网执行已保存的自动化场景（如传感器联动灯）",
+          "source": "文档4:片段5",
+          "chunk_text": "PP 进入“添加设备”，让子设备进入配网模式，网关自动扫描并添加，约 10–30 秒。若失败，将子设备靠近网关重试。即使外网中断，网关仍可通过本地局域网执行已保存的自动化场景（如传感器联动灯），但远程",
+          "chunk_full_id": "doc4:chunk5",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "远程控制及推送通知不可用",
+          "source": "文档4:片段6",
+          "chunk_text": "备靠近网关重试。即使外网中断，网关仍可通过本地局域网执行已保存的自动化场景（如传感器联动灯），但远程控制及推送通知不可用。语音助手集成方面，所有智能家居设备均可通过官方 App 或主流语音助手控制。在",
+          "chunk_full_id": "doc4:chunk6",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "所有场景设置和设备配置都会自动保存到本地存储和云端，断电恢复后会自动同步",
+          "source": "文档16:片段26",
+          "chunk_text": "免造成死循环。\n\n**Q: 断电后场景设置会丢失吗？**\nA: 不会。所有场景设置和设备配置都会自动保存到本地存储和云端，断电恢复后会自动同步。\n\n## 技术规格\n\n- 尺寸：120mm x 120m",
+          "chunk_full_id": "doc16:chunk26",
+          "validation_method": "exact_match"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": null,
+      "faithfulness_score": 1.0,
+      "relevance_score": 1.0,
+      "rejected": false,
+      "rejection_reason": null
+    },
+    {
+      "id": 5,
+      "query": "ST-500 人体传感器应该装在多高？",
+      "category": "chunking_sensitive",
+      "hit": 1,
+      "answer_rank": 4,
+      "answer": "ST-500 人体传感器安装高度为 \"1.8–2.2 米\"[文档5:片段2]。同时，应避免正对空调出风口或暖气片，防止误触发[文档5:片段2]。",
+      "raw_answer": "ST-500 人体传感器安装高度为 \"1.8–2.2 米\"。同时，应避免正对空调出风口或暖气片，防止误触发。",
+      "citations": [
+        {
+          "span": "ST-500 人体传感器安装高度为 \"1.8–2.2 米\"",
+          "source": "文档5:片段2",
+          "chunk_text": "动 SmartBulb 开灯、SmartCam 录像等。使用 CR123A 锂电池，续航约 2 年（取决于触发频率）。安装高度 1.8–2.2 米，避免正对空调出风口或暖气片，防止误触发。温湿度传感器",
+          "chunk_full_id": "doc5:chunk2",
+          "validation_method": "character_overlap"
+        },
+        {
+          "span": "避免正对空调出风口或暖气片，防止误触发",
+          "source": "文档5:片段2",
+          "chunk_text": "动 SmartBulb 开灯、SmartCam 录像等。使用 CR123A 锂电池，续航约 2 年（取决于触发频率）。安装高度 1.8–2.2 米，避免正对空调出风口或暖气片，防止误触发。温湿度传感器",
+          "chunk_full_id": "doc5:chunk2",
+          "validation_method": "exact_match"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": null,
+      "faithfulness_score": 1.0,
+      "relevance_score": 1.0,
+      "rejected": false,
+      "rejection_reason": null
+    },
+    {
+      "id": 6,
+      "query": "SmartLock-100 的防猫眼功能如何操作？",
+      "category": "chunking_sensitive",
+      "hit": 1,
+      "answer_rank": 15,
+      "answer": "抱歉，我在提供的资料中未找到足够充分的信息来准确回答您的问题。建议您查阅完整的产品手册或联系客服获取更详细的解答。",
+      "raw_answer": "抱歉，我在提供的资料中未找到足够充分的信息来准确回答您的问题。建议您查阅完整的产品手册或联系客服获取更详细的解答。",
+      "citations": [],
+      "reasoning": null,
+      "rerank_scores": null,
+      "faithfulness_score": null,
+      "relevance_score": null,
+      "rejected": true,
+      "rejection_reason": "[Layer 0] Answer rank too low (rank=15, threshold=4)"
+    },
+    {
+      "id": 7,
+      "query": "SmartPlug-400 的充电保护功能是怎样工作的？",
+      "category": "chunking_sensitive",
+      "hit": 1,
+      "answer_rank": 1,
+      "answer": "SmartPlug-400 的充电保护功能是通过检测设备电流在短时间内的变化来判定是否充满电：资料中说明“检测到设备电流在短时间内下降至接近零，判定设备充满电，自动关闭插座，防止过充”[文档26:片段1]。此外，它的待机功耗仅 0.3W[文档25:片段1]。",
+      "raw_answer": "SmartPlug-400 的充电保护功能是通过检测设备电流在短时间内的变化来判定是否充满电：资料中说明“检测到设备电流在短时间内下降至接近零，判定设备充满电，自动关闭插座，防止过充”。此外，它的待机功耗仅 0.3W。",
+      "citations": [
+        {
+          "span": "检测到设备电流在短时间内下降至接近零，判定设备充满电，自动关闭插座，防止过充",
+          "source": "文档26:片段1",
+          "chunk_text": "问：SmartPlug-400 的充电保护功能是怎样工作的？\n\n答：检测到设备电流在短时间内下降至接近零，判定设备充满电，自动关闭插座，防止过充。",
+          "chunk_full_id": "doc26:chunk1",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "待机功耗仅 0.3W",
+          "source": "文档25:片段1",
+          "chunk_text": "问：SmartPlug-400 待机功耗多少瓦？\n\n答：待机功耗仅 0.3W。",
+          "chunk_full_id": "doc25:chunk1",
+          "validation_method": "exact_match"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": null,
+      "faithfulness_score": 1.0,
+      "relevance_score": 0.8,
+      "rejected": false,
+      "rejection_reason": null
+    },
+    {
+      "id": 8,
+      "query": "SmartBulb-300 的音乐律动模式怎么开启？",
+      "category": "chunking_sensitive",
+      "hit": 1,
+      "answer_rank": 4,
+      "answer": "开启音乐律动模式后，灯泡颜色随手机麦克风采集的环境音乐节奏变化，适合派对氛围。需要保持 App 前台运行。可与 ST-500 人体传感器联动，实现人来灯亮、人走延时熄灭。延时时间可在 AP[文档3:片段10]。\n\n开启音乐律动模式后，灯泡颜色随手机麦克风采集的环境音乐节奏变化，适合派对氛围。需要保持[文档3:片段9]。\n\n注意：音乐律动需要保持 APP 前台运行，手机麦克风采集环境声音。不能播放手机音乐文件，必须是外放的音乐声。如果效果不明显，调高手机音量或靠近音源。[文档14:片段16]",
+      "raw_answer": "开启音乐律动模式后，灯泡颜色随手机麦克风采集的环境音乐节奏变化，适合派对氛围。需要保持 App 前台运行。可与 ST-500 人体传感器联动，实现人来灯亮、人走延时熄灭。延时时间可在 AP。\n\n开启音乐律动模式后，灯泡颜色随手机麦克风采集的环境音乐节奏变化，适合派对氛围。需要保持。\n\n注意：音乐律动需要保持 APP 前台运行，手机麦克风采集环境声音。不能播放手机音乐文件，必须是外放的音乐声。如果效果不明显，调高手机音量或靠近音源。",
+      "citations": [
+        {
+          "span": "开启音乐律动模式后，灯泡颜色随手机麦克风采集的环境音乐节奏变化，适合派对氛围。需要保持 App 前台运行。可与 ST-500 人体传感器联动，实现人来灯亮、人走延时熄灭。延时时间可在 AP",
+          "source": "文档3:片段10",
+          "chunk_text": "设备为一组。开启音乐律动模式后，灯泡颜色随手机麦克风采集的环境音乐节奏变化，适合派对氛围。需要保持 App 前台运行。可与 ST-500 人体传感器联动，实现人来灯亮、人走延时熄灭。延时时间可在 AP",
+          "chunk_full_id": "doc3:chunk10",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "开启音乐律动模式后，灯泡颜色随手机麦克风采集的环境音乐节奏变化，适合派对氛围。需要保持",
+          "source": "文档3:片段9",
+          "chunk_text": "关闭，改为上电默认白光。可将多个灯泡加入同一群组（如客厅筒灯群组），统一调光调色，最多支持 32 个设备为一组。开启音乐律动模式后，灯泡颜色随手机麦克风采集的环境音乐节奏变化，适合派对氛围。需要保持 ",
+          "chunk_full_id": "doc3:chunk9",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "注意：音乐律动需要保持 APP 前台运行，手机麦克风采集环境声音。不能播放手机音乐文件，必须是外放的音乐声。如果效果不明显，调高手机音量或靠近音源。",
+          "source": "文档14:片段16",
+          "chunk_text": "不起来？\"\n注意：音乐律动需要保持 APP 前台运行，手机麦克风采集环境声音。不能播放手机音乐文件，必须是外放的音乐声。如果效果不明显，调高手机音量或靠近音源。\n\n【故障与售后】\n用户 H：\"插座显示",
+          "chunk_full_id": "doc14:chunk16",
+          "validation_method": "exact_match"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": null,
+      "faithfulness_score": 1.0,
+      "relevance_score": 0.5,
+      "rejected": false,
+      "rejection_reason": null
+    },
+    {
+      "id": 9,
+      "query": "SmartCam-200 的声音报警音量怎么调节？",
+      "category": "chunking_sensitive",
+      "hit": 1,
+      "answer_rank": 13,
+      "answer": "抱歉，我在提供的资料中未找到足够充分的信息来准确回答您的问题。建议您查阅完整的产品手册或联系客服获取更详细的解答。",
+      "raw_answer": "抱歉，我在提供的资料中未找到足够充分的信息来准确回答您的问题。建议您查阅完整的产品手册或联系客服获取更详细的解答。",
+      "citations": [],
+      "reasoning": null,
+      "rerank_scores": null,
+      "faithfulness_score": null,
+      "relevance_score": null,
+      "rejected": true,
+      "rejection_reason": "[Layer 0] Answer rank too low (rank=13, threshold=4)"
+    },
+    {
+      "id": 10,
+      "query": "GW-200 网关添加子设备失败时怎么办？",
+      "category": "chunking_sensitive",
+      "hit": 1,
+      "answer_rank": 1,
+      "answer": "GW-200 网关添加子设备失败时，可参照以下排查步骤：\n\n1. 确保网关处于正常工作状态：检查网关指示灯是否为蓝灯常亮[文档4:片段11]。\n2. 确认子设备已进入配网模式：添加子设备时确保网关蓝灯常亮，打开 APP 进入\"添加设备\"，让子设备进入配网模式，网关自动扫描并添加[文档4:片段4]。若失败，将子设备靠近网关重试[文档4:片段4]。\n3. 检查网络环境：检查路由器频段（需 2.4GHz）、设备是否进入配网模式、是否超出网关覆盖范围、手机权限是否开启（位置、蓝牙）[文档13:片段29]。同时，检查路由器是否开启 AP 隔离[文档4:片段11]。\n4. 若仍失败，建议将网关与 WiFi 路由器放在同一房间进行测试[文档4:片段11]。\n\n补充说明：添加子设备时，确保网关和子设备距离在覆盖范围内（子设备与网关距离 < 10 米[文档13:片段7]），并避免信号干扰；若设备数量超过限制也可能导致失败，需注意设备数量是否超过 64 个上限[文档13:片段31]。",
+      "raw_answer": "GW-200 网关添加子设备失败时，可参照以下排查步骤：\n\n1. 确保网关处于正常工作状态：检查网关指示灯是否为蓝灯常亮。\n2. 确认子设备已进入配网模式：添加子设备时确保网关蓝灯常亮，打开 APP 进入\"添加设备\"，让子设备进入配网模式，网关自动扫描并添加。若失败，将子设备靠近网关重试。\n3. 检查网络环境：检查路由器频段（需 2.4GHz）、设备是否进入配网模式、是否超出网关覆盖范围、手机权限是否开启（位置、蓝牙）。同时，检查路由器是否开启 AP 隔离。\n4. 若仍失败，建议将网关与 WiFi 路由器放在同一房间进行测试。\n\n补充说明：添加子设备时，确保网关和子设备距离在覆盖范围内（子设备与网关距离 < 10 米），并避免信号干扰；若设备数量超过限制也可能导致失败，需注意设备数量是否超过 64 个上限。",
+      "citations": [
+        {
+          "span": "检查网关指示灯是否为蓝灯常亮",
+          "source": "文档4:片段11",
+          "chunk_text": "检查网关指示灯是否为蓝灯常亮，再检查路由器是否开启 AP 隔离。建议将网关与 WiFi 路由器放在同一房间进行测试。固件升级时请保持设备连接稳定，升级约 3–5 分钟，勿断电。",
+          "chunk_full_id": "doc4:chunk11",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "添加子设备时确保网关蓝灯常亮，打开 APP 进入“添加设备”，让子设备进入配网模式，网关自动扫描并添加",
+          "source": "文档4:片段4",
+          "chunk_text": "常；紫灯闪烁：子设备正在接入；红灯慢闪：固件升级中，请勿断电。添加子设备时确保网关蓝灯常亮，打开 APP 进入“添加设备”，让子设备进入配网模式，网关自动扫描并添加，约 10–30 秒。若失败，将子设",
+          "chunk_full_id": "doc4:chunk4",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "若失败，将子设备靠近网关重试",
+          "source": "文档4:片段4",
+          "chunk_text": "常；紫灯闪烁：子设备正在接入；红灯慢闪：固件升级中，请勿断电。添加子设备时确保网关蓝灯常亮，打开 APP 进入“添加设备”，让子设备进入配网模式，网关自动扫描并添加，约 10–30 秒。若失败，将子设",
+          "chunk_full_id": "doc4:chunk4",
+          "validation_method": "character_overlap"
+        },
+        {
+          "span": "检查路由器频段（需 2.4GHz）、设备是否进入配网模式、是否超出网关覆盖范围、手机权限是否开启（位置、蓝牙）",
+          "source": "文档13:片段29",
+          "chunk_text": "\nQ: 设备添加失败？\nA: 检查路由器频段（需 2.4GHz）、设备是否进入配网模式、是否超出网关覆盖范围、手机权限是否开启（位置、蓝牙）。\n\nQ: Zigbee 设备离线？\nA: 检查网关是否在线",
+          "chunk_full_id": "doc13:chunk29",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "检查路由器是否开启 AP 隔离",
+          "source": "文档4:片段11",
+          "chunk_text": "检查网关指示灯是否为蓝灯常亮，再检查路由器是否开启 AP 隔离。建议将网关与 WiFi 路由器放在同一房间进行测试。固件升级时请保持设备连接稳定，升级约 3–5 分钟，勿断电。",
+          "chunk_full_id": "doc4:chunk11",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "建议将网关与 WiFi 路由器放在同一房间进行测试",
+          "source": "文档4:片段11",
+          "chunk_text": "检查网关指示灯是否为蓝灯常亮，再检查路由器是否开启 AP 隔离。建议将网关与 WiFi 路由器放在同一房间进行测试。固件升级时请保持设备连接稳定，升级约 3–5 分钟，勿断电。",
+          "chunk_full_id": "doc4:chunk11",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "子设备与网关距离 < 10 米",
+          "source": "文档13:片段7",
+          "chunk_text": "，必须优先安装。将网关插入电源，使用 APP 扫描设备底部二维码添加。网关放置位置建议：\n- 距离路由器 < 5 米，保证 WiFi 信号强度\n- 房屋中心位置，与各子设备距离 < 10 米\n- 避免",
+          "chunk_full_id": "doc13:chunk7",
+          "validation_method": "character_overlap"
+        },
+        {
+          "span": "设备数量是否超过 64 个上限",
+          "source": "文档13:片段31",
+          "chunk_text": "、设备电池是否耗尽、是否有金属遮挡、设备数量是否超过 64 个上限。\n\nQ: 固件升级失败？\nA: 保持设备联网稳定、电池设备需 > 30% 电量、升级期间勿操作设备、失败后等待自动回滚。\n",
+          "chunk_full_id": "doc13:chunk31",
+          "validation_method": "exact_match"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": null,
+      "faithfulness_score": 0.95,
+      "relevance_score": 1.0,
+      "rejected": false,
+      "rejection_reason": null
+    },
+    {
+      "id": 11,
+      "query": "故障代码 E02 怎么解决？",
+      "category": "exact_match",
+      "hit": 1,
+      "answer_rank": 2,
+      "answer": "E02 表示电机堵转，通常因为门框变形导致锁舌卡住[文档1:片段11]。高频问题！E02 是电机堵转，90% 因为门框变形锁舌卡死[文档14:片段7]。解决方法：1）检查门是否关严 2）调整门框扣板位置 3）用石墨粉润滑锁舌。千万别用食用油，会粘灰[文档14:片段7]。同时，检查门是否关正，必要时调整门框扣板位置[文档1:片段12]。可用石墨粉润滑锁舌，切勿使用食用油[文档1:片段11]。如问题仍存在，可打开电池盖，长按重置按钮 5 秒，听到“嘀”一声后松开[文档1:片段12]。若仍无法解决，请联系售后[文档1:片段11]。",
+      "raw_answer": "E02 表示电机堵转，通常因为门框变形导致锁舌卡住。高频问题！E02 是电机堵转，90% 因为门框变形锁舌卡死。解决方法：1）检查门是否关严 2）调整门框扣板位置 3）用石墨粉润滑锁舌。千万别用食用油，会粘灰。同时，检查门是否关正，必要时调整门框扣板位置。可用石墨粉润滑锁舌，切勿使用食用油。如问题仍存在，可打开电池盖，长按重置按钮 5 秒，听到“嘀”一声后松开。若仍无法解决，请联系售后。",
+      "citations": [
+        {
+          "span": "E02 表示电机堵转，通常因为门框变形导致锁舌卡住",
+          "source": "文档1:片段11",
+          "chunk_text": "0 分钟后重新安装。如仍无法解决，请联系售后。E02 表示电机堵转，通常因为门框变形导致锁舌卡住。请检查门是否关正，必要时调整门框扣板位置。可用石墨粉润滑锁舌，切勿使用食用油。打开电池盖，长按重置按钮",
+          "chunk_full_id": "doc1:chunk11",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "高频问题！E02 是电机堵转，90% 因为门框变形锁舌卡死",
+          "source": "文档14:片段7",
+          "chunk_text": "置】\n用户 C：\"为什么我的门锁一直提示 E02 错误？\"\n高频问题！E02 是电机堵转，90% 因为门框变形锁舌卡死。解决方法：1）检查门是否关严 2）调整门框扣板位置 3）用石墨粉润滑锁舌。千万别",
+          "chunk_full_id": "doc14:chunk7",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "解决方法：1）检查门是否关严 2）调整门框扣板位置 3）用石墨粉润滑锁舌。千万别用食用油，会粘灰",
+          "source": "文档14:片段7",
+          "chunk_text": "置】\n用户 C：\"为什么我的门锁一直提示 E02 错误？\"\n高频问题！E02 是电机堵转，90% 因为门框变形锁舌卡死。解决方法：1）检查门是否关严 2）调整门框扣板位置 3）用石墨粉润滑锁舌。千万别",
+          "chunk_full_id": "doc14:chunk7",
+          "validation_method": "character_overlap"
+        },
+        {
+          "span": "同时，检查门是否关正，必要时调整门框扣板位置",
+          "source": "文档1:片段12",
+          "chunk_text": "检查门是否关正，必要时调整门框扣板位置。可用石墨粉润滑锁舌，切勿使用食用油。打开电池盖，长按重置按钮 5 秒，听到“嘀”一声后松开，系统将清除所有指纹和密码，管理员密码恢复为默认 123456。此操作",
+          "chunk_full_id": "doc1:chunk12",
+          "validation_method": "character_overlap"
+        },
+        {
+          "span": "可用石墨粉润滑锁舌，切勿使用食用油",
+          "source": "文档1:片段11",
+          "chunk_text": "0 分钟后重新安装。如仍无法解决，请联系售后。E02 表示电机堵转，通常因为门框变形导致锁舌卡住。请检查门是否关正，必要时调整门框扣板位置。可用石墨粉润滑锁舌，切勿使用食用油。打开电池盖，长按重置按钮",
+          "chunk_full_id": "doc1:chunk11",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "如问题仍存在，可打开电池盖，长按重置按钮 5 秒，听到“嘀”一声后松开",
+          "source": "文档1:片段12",
+          "chunk_text": "检查门是否关正，必要时调整门框扣板位置。可用石墨粉润滑锁舌，切勿使用食用油。打开电池盖，长按重置按钮 5 秒，听到“嘀”一声后松开，系统将清除所有指纹和密码，管理员密码恢复为默认 123456。此操作",
+          "chunk_full_id": "doc1:chunk12",
+          "validation_method": "character_overlap"
+        },
+        {
+          "span": "若仍无法解决，请联系售后",
+          "source": "文档1:片段11",
+          "chunk_text": "0 分钟后重新安装。如仍无法解决，请联系售后。E02 表示电机堵转，通常因为门框变形导致锁舌卡住。请检查门是否关正，必要时调整门框扣板位置。可用石墨粉润滑锁舌，切勿使用食用油。打开电池盖，长按重置按钮",
+          "chunk_full_id": "doc1:chunk11",
+          "validation_method": "character_overlap"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": null,
+      "faithfulness_score": 1.0,
+      "relevance_score": 1.0,
+      "rejected": false,
+      "rejection_reason": null
+    },
+    {
+      "id": 12,
+      "query": "GW-200 网关的电源参数是多少？",
+      "category": "exact_match",
+      "hit": 1,
+      "answer_rank": 1,
+      "answer": "网关 GW-200 的电源参数为“DC 5V/1A Micro-USB”[文档4:片段1]，工作温度范围是 -10°C–45°C[文档4:片段2]。",
+      "raw_answer": "网关 GW-200 的电源参数为“DC 5V/1A Micro-USB”，工作温度范围是 -10°C–45°C。",
+      "citations": [
+        {
+          "span": "网关 GW-200 的电源参数为“DC 5V/1A Micro-USB”",
+          "source": "文档4:片段1",
+          "chunk_text": "网关 GW-200 是智能家居 Zigbee+蓝牙双模网关，支持最大 128 个子设备连接，网络接口为 2.4GHz WiFi 及 RJ45 百兆以太网。电源 DC 5V/1A Micro-USB，工",
+          "chunk_full_id": "doc4:chunk1",
+          "validation_method": "character_overlap"
+        },
+        {
+          "span": "工作温度范围是 -10°C–45°C",
+          "source": "文档4:片段2",
+          "chunk_text": "为 2.4GHz WiFi 及 RJ45 百兆以太网。电源 DC 5V/1A Micro-USB，工作温度 -10°C–45°C。指示灯说明：红灯常亮：未连接网络；蓝灯快闪：正在配网；蓝灯常亮：工作正",
+          "chunk_full_id": "doc4:chunk2",
+          "validation_method": "character_overlap"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": null,
+      "faithfulness_score": 1.0,
+      "relevance_score": 1.0,
+      "rejected": false,
+      "rejection_reason": null
+    },
+    {
+      "id": 13,
+      "query": "SmartPlug-400 最大负载多少？",
+      "category": "exact_match",
+      "hit": 1,
+      "answer_rank": 2,
+      "answer": "SmartPlug-400 最大负载为 10A/2500W[文档6:片段1]。\"SmartPlug-400 是一款智能插座，最大负载 10A/2500W\"[文档6:片段1]。",
+      "raw_answer": "SmartPlug-400 最大负载为 10A/2500W。\"SmartPlug-400 是一款智能插座，最大负载 10A/2500W\"。",
+      "citations": [
+        {
+          "span": "SmartPlug-400 最大负载为 10A/2500W",
+          "source": "文档6:片段1",
+          "chunk_text": "SmartPlug-400 是一款智能插座，最大负载 10A/2500W，支持电量统计、定时开关、过载保护。外壳采用 V0 级阻燃材料，插孔带儿童保护门。电流测量精度 ±1%，功率测量精度 ±2%，历",
+          "chunk_full_id": "doc6:chunk1",
+          "validation_method": "character_overlap"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": null,
+      "faithfulness_score": 1.0,
+      "relevance_score": 1.0,
+      "rejected": false,
+      "rejection_reason": null
+    },
+    {
+      "id": 14,
+      "query": "ST-501 的湿度测量精度是多少？",
+      "category": "exact_match",
+      "hit": 1,
+      "answer_rank": 1,
+      "answer": "ST-501 的湿度测量精度为 ±3%RH，依据资料记载：\"ST-501 可实时监测温度（-20°C–60°C，精度 ±0.3°C）和湿度（0%–100% RH，精度 ±3%RH）[文档5:片段4]\"。该数据在另一片段中也有相同表述：\"温湿度传感器 ST-501 可实时监测温度（-20°C–60°C，精度 ±0.3°C）和湿度（0%–100% RH，精度 ±3%RH）[文档5:片段3]\"。",
+      "raw_answer": "ST-501 的湿度测量精度为 ±3%RH，依据资料记载：\"ST-501 可实时监测温度（-20°C–60°C，精度 ±0.3°C）和湿度（0%–100% RH，精度 ±3%RH）\"。该数据在另一片段中也有相同表述：\"温湿度传感器 ST-501 可实时监测温度（-20°C–60°C，精度 ±0.3°C）和湿度（0%–100% RH，精度 ±3%RH）\"。",
+      "citations": [
+        {
+          "span": "ST-501 可实时监测温度（-20°C–60°C，精度 ±0.3°C）和湿度（0%–100% RH，精度 ±3%RH）",
+          "source": "文档5:片段4",
+          "chunk_text": " ST-501 可实时监测温度（-20°C–60°C，精度 ±0.3°C）和湿度（0%–100% RH，精度 ±3%RH）。数据上报间隔 5 分钟，触发阈值可自定义，联动空调或加湿器。正面 1.8 英",
+          "chunk_full_id": "doc5:chunk4",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "温湿度传感器 ST-501 可实时监测温度（-20°C–60°C，精度 ±0.3°C）和湿度（0%–100% RH，精度 ±3%RH）",
+          "source": "文档5:片段3",
+          "chunk_text": "取决于触发频率）。安装高度 1.8–2.2 米，避免正对空调出风口或暖气片，防止误触发。温湿度传感器 ST-501 可实时监测温度（-20°C–60°C，精度 ±0.3°C）和湿度（0%–100% R",
+          "chunk_full_id": "doc5:chunk3",
+          "validation_method": "character_overlap"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": null,
+      "faithfulness_score": 1.0,
+      "relevance_score": 1.0,
+      "rejected": false,
+      "rejection_reason": null
+    },
+    {
+      "id": 15,
+      "query": "SmartBulb-300 色温范围是多少？",
+      "category": "exact_match",
+      "hit": 1,
+      "answer_rank": 1,
+      "answer": "SmartBulb-300 色温范围是 2700K–6500K[文档3:片段1]。资料中明确提到\"色温范围 2700K–6500K\"[文档3:片段2]。",
+      "raw_answer": "SmartBulb-300 色温范围是 2700K–6500K。资料中明确提到\"色温范围 2700K–6500K\"。",
+      "citations": [
+        {
+          "span": "SmartBulb-300 色温范围是 2700K–6500K",
+          "source": "文档3:片段1",
+          "chunk_text": "SmartBulb-300 是一款可调色温、亮度的 LED 智能灯泡，E27 标准螺口，功率 9W（相当于 60W 白炽灯亮度），色温范围 2700K–6500K，支持 1600 万种颜色调节。亮度调",
+          "chunk_full_id": "doc3:chunk1",
+          "validation_method": "character_overlap"
+        },
+        {
+          "span": "资料中明确提到\"色温范围 2700K–6500K\"",
+          "source": "文档3:片段2",
+          "chunk_text": "相当于 60W 白炽灯亮度），色温范围 2700K–6500K，支持 1600 万种颜色调节。亮度调节范围 5%–100%，在 5% 亮度下功耗仅 0.5W。采用 PWM 调光技术，无频闪，适合阅读。",
+          "chunk_full_id": "doc3:chunk2",
+          "validation_method": "character_overlap"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": null,
+      "faithfulness_score": 1.0,
+      "relevance_score": 1.0,
+      "rejected": false,
+      "rejection_reason": null
+    },
+    {
+      "id": 16,
+      "query": "SmartLock-100 指纹容量多少枚？",
+      "category": "exact_match",
+      "hit": 1,
+      "answer_rank": 8,
+      "answer": "抱歉，我在提供的资料中未找到足够充分的信息来准确回答您的问题。建议您查阅完整的产品手册或联系客服获取更详细的解答。",
+      "raw_answer": "抱歉，我在提供的资料中未找到足够充分的信息来准确回答您的问题。建议您查阅完整的产品手册或联系客服获取更详细的解答。",
+      "citations": [],
+      "reasoning": null,
+      "rerank_scores": null,
+      "faithfulness_score": null,
+      "relevance_score": null,
+      "rejected": true,
+      "rejection_reason": "[Layer 0] Answer rank too low (rank=8, threshold=4)"
+    },
+    {
+      "id": 17,
+      "query": "SmartCam-200 的红外夜视距离多远？",
+      "category": "exact_match",
+      "hit": 1,
+      "answer_rank": 2,
+      "answer": "SmartCam-200 的红外夜视距离可达 10 米[文档18:片段1]。具体来说，\"红外夜视距离可达 10 米，配备 8 颗红外补光灯，自动光敏切换\"[文档2:片段2]。在完全黑暗环境下，画面为黑白但清晰可辨。",
+      "raw_answer": "SmartCam-200 的红外夜视距离可达 10 米。具体来说，\"红外夜视距离可达 10 米，配备 8 颗红外补光灯，自动光敏切换\"。在完全黑暗环境下，画面为黑白但清晰可辨。",
+      "citations": [
+        {
+          "span": "红外夜视距离可达 10 米",
+          "source": "文档18:片段1",
+          "chunk_text": "问：SmartCam-200 的夜视距离？\n\n答：红外夜视距离可达 10 米。",
+          "chunk_full_id": "doc18:chunk1",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "红外夜视距离可达 10 米，配备 8 颗红外补光灯，自动光敏切换",
+          "source": "文档2:片段2",
+          "chunk_text": "垂直旋转。具备移动追踪、声音报警、红外夜视功能，可通过 APP 实时查看与回放。红外夜视距离可达 10 米，配备 8 颗红外补光灯，自动光敏切换。在完全黑暗环境下画面仍为黑白但清晰可辨。支持 Micr",
+          "chunk_full_id": "doc2:chunk2",
+          "validation_method": "exact_match"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": null,
+      "faithfulness_score": 1.0,
+      "relevance_score": 1.0,
+      "rejected": false,
+      "rejection_reason": null
+    },
+    {
+      "id": 18,
+      "query": "SmartPlug-400 待机功耗多少瓦？",
+      "category": "exact_match",
+      "hit": 1,
+      "answer_rank": 1,
+      "answer": "待机功耗仅 0.3W[文档25:片段1]。该数据也在另一资料中重复确认：待机功耗仅 0.3W[文档6:片段1]。",
+      "raw_answer": "待机功耗仅 0.3W。该数据也在另一资料中重复确认：待机功耗仅 0.3W。",
+      "citations": [
+        {
+          "span": "待机功耗仅 0.3W",
+          "source": "文档25:片段1",
+          "chunk_text": "问：SmartPlug-400 待机功耗多少瓦？\n\n答：待机功耗仅 0.3W。",
+          "chunk_full_id": "doc25:chunk1",
+          "validation_method": "exact_match"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": null,
+      "faithfulness_score": 1.0,
+      "relevance_score": 0.9,
+      "rejected": false,
+      "rejection_reason": null
+    },
+    {
+      "id": 19,
+      "query": "传感器 ST-500 探测角度是多少？",
+      "category": "exact_match",
+      "hit": 1,
+      "answer_rank": 1,
+      "answer": "ST-500 的探测角度是 120°[文档5:片段1]。",
+      "raw_answer": "ST-500 的探测角度是 120°。",
+      "citations": [
+        {
+          "span": "ST-500 的探测角度是 120°",
+          "source": "文档5:片段1",
+          "chunk_text": "传感器 ST-500 采用红外热释电传感器，探测角度 120°，距离 6 米。可设置感应到人后自动联动 SmartBulb 开灯、SmartCam 录像等。使用 CR123A 锂电池，续航约 2 年（",
+          "chunk_full_id": "doc5:chunk1",
+          "validation_method": "character_overlap"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": null,
+      "faithfulness_score": 1.0,
+      "relevance_score": 1.0,
+      "rejected": false,
+      "rejection_reason": null
+    },
+    {
+      "id": 20,
+      "query": "SmartBulb-300 功率是多少瓦？",
+      "category": "exact_match",
+      "hit": 1,
+      "answer_rank": 1,
+      "answer": "SmartBulb-300 功率 9W（相当于 60W 白炽灯亮度）[文档3:片段1]。需注意其色温范围 2700K–6500K，支持 1600 万种颜色调节。",
+      "raw_answer": "SmartBulb-300 功率 9W（相当于 60W 白炽灯亮度）。需注意其色温范围 2700K–6500K，支持 1600 万种颜色调节。",
+      "citations": [
+        {
+          "span": "SmartBulb-300 功率 9W（相当于 60W 白炽灯亮度）",
+          "source": "文档3:片段1",
+          "chunk_text": "SmartBulb-300 是一款可调色温、亮度的 LED 智能灯泡，E27 标准螺口，功率 9W（相当于 60W 白炽灯亮度），色温范围 2700K–6500K，支持 1600 万种颜色调节。亮度调",
+          "chunk_full_id": "doc3:chunk1",
+          "validation_method": "character_overlap"
+        },
+        {
+          "span": "色温范围 2700K–6500K，支持 1600 万种颜色调节",
+          "source": "文档3:片段1",
+          "chunk_text": "SmartBulb-300 是一款可调色温、亮度的 LED 智能灯泡，E27 标准螺口，功率 9W（相当于 60W 白炽灯亮度），色温范围 2700K–6500K，支持 1600 万种颜色调节。亮度调",
+          "chunk_full_id": "doc3:chunk1",
+          "validation_method": "exact_match"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": null,
+      "faithfulness_score": 1.0,
+      "relevance_score": 0.9,
+      "rejected": false,
+      "rejection_reason": null
+    },
+    {
+      "id": 21,
+      "query": "指纹锁快没电了会有什么提示？",
+      "category": "semantic_paraphrase",
+      "hit": 1,
+      "answer_rank": 2,
+      "answer": "当指纹锁电量低时，会有以下提示：  \n- \"电量低于 15% 时，每次开锁会有低电量提示音，同时 APP 推送提醒\"[文档1:片段5]  \n- 紧急情况下可使用 Micro-USB 外接充电宝临时供电开锁[文档1:片段6]  \n\n补充：电量低时建议及时更换电池，避免影响正常使用。",
+      "raw_answer": "当指纹锁电量低时，会有以下提示：  \n- \"电量低于 15% 时，每次开锁会有低电量提示音，同时 APP 推送提醒\"  \n- 紧急情况下可使用 Micro-USB 外接充电宝临时供电开锁  \n\n补充：电量低时建议及时更换电池，避免影响正常使用。",
+      "citations": [
+        {
+          "span": "电量低于 15% 时，每次开锁会有低电量提示音，同时 APP 推送提醒",
+          "source": "文档1:片段5",
+          "chunk_text": " 15% 时，每次开锁会有低电量提示音，同时 APP 推送提醒。紧急情况下可使用 Micro-USB 外接充电宝临时供电开锁。适用门厚 35mm–60mm 的木门或防盗门，导向片宽度 24mm，门缝间",
+          "chunk_full_id": "doc1:chunk5",
+          "validation_method": "character_overlap"
+        },
+        {
+          "span": "紧急情况下可使用 Micro-USB 外接充电宝临时供电开锁",
+          "source": "文档1:片段6",
+          "chunk_text": " 外接充电宝临时供电开锁。适用门厚 35mm–60mm 的木门或防盗门，导向片宽度 24mm，门缝间隙需在 2mm–5mm 之间。需使用原厂附带的长螺丝固定，安装前请确认开门方向（左开/右开/内开/外",
+          "chunk_full_id": "doc1:chunk6",
+          "validation_method": "embedding_similarity(0.755)"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": null,
+      "faithfulness_score": 1.0,
+      "relevance_score": 1.0,
+      "rejected": false,
+      "rejection_reason": null
+    },
+    {
+      "id": 22,
+      "query": "怎样防止摄像头被偷看？",
+      "category": "semantic_paraphrase",
+      "hit": 1,
+      "answer_rank": 1,
+      "answer": "启动隐私模式后，摄像头自动向下旋转隐藏镜头，并关闭收音[文档24:片段1]。",
+      "raw_answer": "启动隐私模式后，摄像头自动向下旋转隐藏镜头，并关闭收音。",
+      "citations": [
+        {
+          "span": "启动隐私模式后，摄像头自动向下旋转隐藏镜头，并关闭收音",
+          "source": "文档24:片段1",
+          "chunk_text": "问：怎样防止摄像头被偷看？\n\n答：启动隐私模式后，摄像头自动向下旋转隐藏镜头，并关闭收音。",
+          "chunk_full_id": "doc24:chunk1",
+          "validation_method": "exact_match"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": null,
+      "faithfulness_score": 1.0,
+      "relevance_score": 0.8,
+      "rejected": false,
+      "rejection_reason": null
+    },
+    {
+      "id": 23,
+      "query": "插座能不能防止手机过充？",
+      "category": "semantic_paraphrase",
+      "hit": 1,
+      "answer_rank": 1,
+      "answer": "**能。** SmartPlug-400/500 智能插座具备充电保护功能，可防止手机过充。\n\n具体工作方式如下：\n\n- SmartPlug-400：检测到设备电流在短时间内下降至接近零，判定设备充满电，自动关闭插座，防止过充[文档6:片段7]。\n- SmartPlug-500（升级版）：检测到设备电流在 30 秒内下降至 < 50mA，判定充满电，自动关闭 USB 口，防止过充延长电池寿命[文档10:片段5]。同时“AC 插座部分可独立定时控制，USB 口也可单独开关”[文档10:片段5]。\n\n此外，插座还支持充电辅助设置，例如“支持 24 小时倒计时关闭，煮饭或充电时可设置 1 小时后自动断电”[文档6:片段6]，可进一步防止过度充电。",
+      "raw_answer": "**能。** SmartPlug-400/500 智能插座具备充电保护功能，可防止手机过充。\n\n具体工作方式如下：\n\n- SmartPlug-400：检测到设备电流在短时间内下降至接近零，判定设备充满电，自动关闭插座，防止过充。\n- SmartPlug-500（升级版）：检测到设备电流在 30 秒内下降至 < 50mA，判定充满电，自动关闭 USB 口，防止过充延长电池寿命。同时“AC 插座部分可独立定时控制，USB 口也可单独开关”。\n\n此外，插座还支持充电辅助设置，例如“支持 24 小时倒计时关闭，煮饭或充电时可设置 1 小时后自动断电”，可进一步防止过度充电。",
+      "citations": [
+        {
+          "span": "检测到设备电流在短时间内下降至接近零，判定设备充满电，自动关闭插座，防止过充",
+          "source": "文档6:片段7",
+          "chunk_text": " 15 分钟关 45 分钟”用于鱼缸打氧。检测到设备电流在短时间内下降至接近零，判定设备充满电，自动关闭插座，防止过充。可将插座控制权分享给家庭成员，被分享者可查看电量、控制开关，但不能删除设备或解绑",
+          "chunk_full_id": "doc6:chunk7",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "检测到设备电流在 30 秒内下降至 < 50mA，判定充满电，自动关闭 USB 口，防止过充延长电池寿命",
+          "source": "文档10:片段5",
+          "chunk_text": "/周/月生成用电报表，计算电费（需手动设置当地电价）。充电保护功能升级：检测到设备电流在 30 秒内下降至 < 50mA，判定充满电，自动关闭 USB 口，防止过充延长电池寿命。AC 插座部分可独立定",
+          "chunk_full_id": "doc10:chunk5",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "AC 插座部分可独立定时控制，USB 口也可单独开关",
+          "source": "文档10:片段5",
+          "chunk_text": "/周/月生成用电报表，计算电费（需手动设置当地电价）。充电保护功能升级：检测到设备电流在 30 秒内下降至 < 50mA，判定充满电，自动关闭 USB 口，防止过充延长电池寿命。AC 插座部分可独立定",
+          "chunk_full_id": "doc10:chunk5",
+          "validation_method": "character_overlap"
+        },
+        {
+          "span": "支持 24 小时倒计时关闭，煮饭或充电时可设置 1 小时后自动断电",
+          "source": "文档6:片段6",
+          "chunk_text": "水壶”。支持 24 小时倒计时关闭，煮饭或充电时可设置 1 小时后自动断电。还支持循环定时，如“每开 15 分钟关 45 分钟”用于鱼缸打氧。检测到设备电流在短时间内下降至接近零，判定设备充满电，自动",
+          "chunk_full_id": "doc6:chunk6",
+          "validation_method": "exact_match"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": null,
+      "faithfulness_score": 1.0,
+      "relevance_score": 1.0,
+      "rejected": false,
+      "rejection_reason": null
+    },
+    {
+      "id": 24,
+      "query": "怎么让灯泡随着音乐节奏变化？",
+      "category": "semantic_paraphrase",
+      "hit": 1,
+      "answer_rank": 1,
+      "answer": "设置\"音乐律动\"模式后，灯泡颜色随手机麦克风采集的环境音乐节奏变化，适合派对氛围。需要保持 App 前台运行[文档3:片段10]。音乐律动需要保持 APP 前台运行，手机麦克风采集环境声音。不能播放手机音乐文件，必须是外放的音乐声。如果效果不明显，调高手机音量或靠近音源[文档14:片段16]。",
+      "raw_answer": "设置\"音乐律动\"模式后，灯泡颜色随手机麦克风采集的环境音乐节奏变化，适合派对氛围。需要保持 App 前台运行。音乐律动需要保持 APP 前台运行，手机麦克风采集环境声音。不能播放手机音乐文件，必须是外放的音乐声。如果效果不明显，调高手机音量或靠近音源。",
+      "citations": [
+        {
+          "span": "设置\"音乐律动\"模式后，灯泡颜色随手机麦克风采集的环境音乐节奏变化，适合派对氛围。需要保持 App 前台运行",
+          "source": "文档3:片段10",
+          "chunk_text": "设备为一组。开启音乐律动模式后，灯泡颜色随手机麦克风采集的环境音乐节奏变化，适合派对氛围。需要保持 App 前台运行。可与 ST-500 人体传感器联动，实现人来灯亮、人走延时熄灭。延时时间可在 AP",
+          "chunk_full_id": "doc3:chunk10",
+          "validation_method": "character_overlap"
+        },
+        {
+          "span": "音乐律动需要保持 APP 前台运行，手机麦克风采集环境声音。不能播放手机音乐文件，必须是外放的音乐声。如果效果不明显，调高手机音量或靠近音源",
+          "source": "文档14:片段16",
+          "chunk_text": "不起来？\"\n注意：音乐律动需要保持 APP 前台运行，手机麦克风采集环境声音。不能播放手机音乐文件，必须是外放的音乐声。如果效果不明显，调高手机音量或靠近音源。\n\n【故障与售后】\n用户 H：\"插座显示",
+          "chunk_full_id": "doc14:chunk16",
+          "validation_method": "exact_match"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": null,
+      "faithfulness_score": 1.0,
+      "relevance_score": 1.0,
+      "rejected": false,
+      "rejection_reason": null
+    },
+    {
+      "id": 25,
+      "query": "门锁的虚位密码有什么用？",
+      "category": "semantic_paraphrase",
+      "hit": 1,
+      "answer_rank": 1,
+      "answer": "虚位密码的作用是：可在正确密码前后输入任意数字作为干扰，总长度不超过 20 位即可开锁，有效防止偷窥[文档1:片段14]。这意味着即使有人旁观，也难以看出真实密码，提升了输入密码时的安全性。",
+      "raw_answer": "虚位密码的作用是：可在正确密码前后输入任意数字作为干扰，总长度不超过 20 位即可开锁，有效防止偷窥。这意味着即使有人旁观，也难以看出真实密码，提升了输入密码时的安全性。",
+      "citations": [
+        {
+          "span": "可在正确密码前后输入任意数字作为干扰，总长度不超过 20 位即可开锁，有效防止偷窥",
+          "source": "文档1:片段14",
+          "chunk_text": "不可逆，请提前备份数据。支持 20 位虚位密码，可在正确密码前后输入任意数字作为干扰，总长度不超过 20 位即可开锁，有效防止偷窥。可通过 App 生成一次性或限时临时密码，适用于访客或家政服务。一次",
+          "chunk_full_id": "doc1:chunk14",
+          "validation_method": "exact_match"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": null,
+      "faithfulness_score": 1.0,
+      "relevance_score": 1.0,
+      "rejected": false,
+      "rejection_reason": null
+    },
+    {
+      "id": 26,
+      "query": "摄像头晚上能看多远？",
+      "category": "semantic_paraphrase",
+      "hit": 1,
+      "answer_rank": 2,
+      "answer": "摄像头晚上能看多远取决于型号：\n\n- SmartCam-200：红外夜视距离可达 10 米[文档2:片段2]。配备 8 颗红外补光灯，自动光敏切换。在完全黑暗环境下画面仍为黑白但清晰可辨[文档2:片段3]。\n- SmartCam-300：夜视距离达 20 米[文档9:片段2]。配备 12 颗大功率红外灯，夜视距离达 20 米[文档9:片段3]。内置 Spotlight 彩色补光灯，夜间也可录制彩色视频[文档9:片段6]。\n\n如需更精确信息，可参考：SmartCam-200 是室内版，1080P，夜视 10 米；SmartCam-300 是室外版，2K 分辨率，IP66 防水，夜视 20 米[文档14:片段5]。",
+      "raw_answer": "摄像头晚上能看多远取决于型号：\n\n- SmartCam-200：红外夜视距离可达 10 米。配备 8 颗红外补光灯，自动光敏切换。在完全黑暗环境下画面仍为黑白但清晰可辨。\n- SmartCam-300：夜视距离达 20 米。配备 12 颗大功率红外灯，夜视距离达 20 米。内置 Spotlight 彩色补光灯，夜间也可录制彩色视频。\n\n如需更精确信息，可参考：SmartCam-200 是室内版，1080P，夜视 10 米；SmartCam-300 是室外版，2K 分辨率，IP66 防水，夜视 20 米。",
+      "citations": [
+        {
+          "span": "红外夜视距离可达 10 米",
+          "source": "文档2:片段2",
+          "chunk_text": "垂直旋转。具备移动追踪、声音报警、红外夜视功能，可通过 APP 实时查看与回放。红外夜视距离可达 10 米，配备 8 颗红外补光灯，自动光敏切换。在完全黑暗环境下画面仍为黑白但清晰可辨。支持 Micr",
+          "chunk_full_id": "doc2:chunk2",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "配备 8 颗红外补光灯，自动光敏切换。在完全黑暗环境下画面仍为黑白但清晰可辨",
+          "source": "文档2:片段3",
+          "chunk_text": "0 米，配备 8 颗红外补光灯，自动光敏切换。在完全黑暗环境下画面仍为黑白但清晰可辨。支持 MicroSD 卡本地存储（最大 128GB，FAT32 格式）和云存储（需订阅）。事件录像自动上传云端，免",
+          "chunk_full_id": "doc2:chunk3",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "夜视距离达 20 米",
+          "source": "文档9:片段2",
+          "chunk_text": "率提升至 2K（2560×1440），支持 4 倍数字变焦，能清晰捕捉 15 米外的车牌号码。配备 12 颗大功率红外灯，夜视距离达 20 米。内置 AI 芯片，支持人形检测、车辆检测、宠物检测、包裹",
+          "chunk_full_id": "doc9:chunk2",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "配备 12 颗大功率红外灯，夜视距离达 20 米",
+          "source": "文档9:片段3",
+          "chunk_text": "12 颗大功率红外灯，夜视距离达 20 米。内置 AI 芯片，支持人形检测、车辆检测、宠物检测、包裹检测四种模式，准确率 ≥ 95%。可设置警戒区域，只对区域内移动目标报警，避免路人误触发。支持 H.",
+          "chunk_full_id": "doc9:chunk3",
+          "validation_method": "character_overlap"
+        },
+        {
+          "span": "内置 Spotlight 彩色补光灯，夜间也可录制彩色视频",
+          "source": "文档9:片段6",
+          "chunk_text": "光灯，夜间也可录制彩色视频，并可作为庭院照明使用，亮度 800 流明可调。双向语音对讲功能增强，内置降噪算法和回音消除，户外环境下通话更清晰。声音报警音量提升至 100dB，可选警笛、犬吠、警告语音三",
+          "chunk_full_id": "doc9:chunk6",
+          "validation_method": "character_overlap"
+        },
+        {
+          "span": "SmartCam-200 是室内版，1080P，夜视 10 米；SmartCam-300 是室外版，2K 分辨率，IP66 防水，夜视 20 米",
+          "source": "文档14:片段5",
+          "chunk_text": "m-200 是室内版，1080P，夜视 10 米；SmartCam-300 是室外版，2K 分辨率，IP66 防水，夜视 20 米。室内用 200 就够，室外或需要更高清晰度选 300。\n\n【安装与配",
+          "chunk_full_id": "doc14:chunk5",
+          "validation_method": "character_overlap"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": null,
+      "faithfulness_score": 1.0,
+      "relevance_score": 1.0,
+      "rejected": false,
+      "rejection_reason": null
+    },
+    {
+      "id": 27,
+      "query": "传感器没电了怎么换？",
+      "category": "semantic_paraphrase",
+      "hit": 1,
+      "answer_rank": 1,
+      "answer": "问：传感器没电了怎么换？\n\n答：根据资料，传感器型号不同，更换方式也不同：\n\n1. ST-500/ST-501 使用 CR2032 纽扣电池，正常使用 12-18 个月，低电量时 APP 会提前 30 天提醒[文档14:片段20]。具体更换方法在资料中未明确说明。\n\n2. ST-500 人体传感器：使用 CR123A 锂电池，续航约 2 年[文档5:片段1]。\n\n3. ST-600 是锂电池可充电，续航约 12 个月，低电量时 APP 会提前 30 天提醒[文档14:片段21]。\n\n关于具体更换步骤，资料中仅提到“别等到彻底没电才换”[文档14:片段22]，未详细说明如何拆装电池。建议参考设备说明书或联系售后获取更换指导。",
+      "raw_answer": "问：传感器没电了怎么换？\n\n答：根据资料，传感器型号不同，更换方式也不同：\n\n1. ST-500/ST-501 使用 CR2032 纽扣电池，正常使用 12-18 个月，低电量时 APP 会提前 30 天提醒。具体更换方法在资料中未明确说明。\n\n2. ST-500 人体传感器：使用 CR123A 锂电池，续航约 2 年。\n\n3. ST-600 是锂电池可充电，续航约 12 个月，低电量时 APP 会提前 30 天提醒。\n\n关于具体更换步骤，资料中仅提到“别等到彻底没电才换”，未详细说明如何拆装电池。建议参考设备说明书或联系售后获取更换指导。",
+      "citations": [
+        {
+          "span": "ST-500/ST-501 使用 CR2032 纽扣电池，正常使用 12-18 个月，低电量时 APP 会提前 30 天提醒",
+          "source": "文档14:片段20",
+          "chunk_text": "\n\n用户 I：\"传感器电池多久换一次？\"\nST-500/ST-501 用 CR2032 纽扣电池，正常使用 12-18 个月。ST-600 是锂电池可充电，续航约 12 个月。低电量时 APP 会提前",
+          "chunk_full_id": "doc14:chunk20",
+          "validation_method": "character_overlap"
+        },
+        {
+          "span": "ST-500 人体传感器：使用 CR123A 锂电池，续航约 2 年",
+          "source": "文档5:片段1",
+          "chunk_text": "传感器 ST-500 采用红外热释电传感器，探测角度 120°，距离 6 米。可设置感应到人后自动联动 SmartBulb 开灯、SmartCam 录像等。使用 CR123A 锂电池，续航约 2 年（",
+          "chunk_full_id": "doc5:chunk1",
+          "validation_method": "character_overlap"
+        },
+        {
+          "span": "ST-600 是锂电池可充电，续航约 12 个月，低电量时 APP 会提前 30 天提醒",
+          "source": "文档14:片段21",
+          "chunk_text": "常使用 12-18 个月。ST-600 是锂电池可充电，续航约 12 个月。低电量时 APP 会提前 30 天提醒，别等到彻底没电才换。\n\n用户 J：\"人体传感器老是误触发，半夜灯一直亮！\"\n可能原因",
+          "chunk_full_id": "doc14:chunk21",
+          "validation_method": "punctuation_tolerant"
+        },
+        {
+          "span": "别等到彻底没电才换",
+          "source": "文档14:片段22",
+          "chunk_text": " 30 天提醒，别等到彻底没电才换。\n\n用户 J：\"人体传感器老是误触发，半夜灯一直亮！\"\n可能原因：1）安装位置对着窗帘，风吹动触发 2）对着空调出风口，热气流触发 3）灵敏度设置太高。解决：调整安",
+          "chunk_full_id": "doc14:chunk22",
+          "validation_method": "exact_match"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": null,
+      "faithfulness_score": 0.95,
+      "relevance_score": 0.6,
+      "rejected": false,
+      "rejection_reason": null
+    },
+    {
+      "id": 28,
+      "query": "灯泡能不能定时开关？",
+      "category": "semantic_paraphrase",
+      "hit": 1,
+      "answer_rank": 1,
+      "answer": "支持。\"支持日出日落定时、倒计时关灯\"[文档3:片段5]。此外，灯带可设置定时开关，例如\"每晚 22:00 自动关闭，早上 7:00 渐亮模拟日出唤醒\"[文档11:片段11]。",
+      "raw_answer": "支持。\"支持日出日落定时、倒计时关灯\"。此外，灯带可设置定时开关，例如\"每晚 22:00 自动关闭，早上 7:00 渐亮模拟日出唤醒\"。",
+      "citations": [
+        {
+          "span": "支持日出日落定时、倒计时关灯",
+          "source": "文档3:片段5",
+          "chunk_text": " 中搜索设备，灯泡上电后 5 秒内开关 3 次进入配网模式。支持日出日落定时、倒计时关灯。预设阅读、影院、烛光、夜灯四种情景模式，可自定义并同步到语音助手。若灯泡频繁闪烁，先检查是否接有调光开关（此灯",
+          "chunk_full_id": "doc3:chunk5",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "每晚 22:00 自动关闭，早上 7:00 渐亮模拟日出唤醒",
+          "source": "文档11:片段11",
+          "chunk_text": "适配器输出 DC 12V/2A，使用非原装适配器可能导致灯珠烧毁或颜色不准。灯带可设置定时开关，例如每晚 22:00 自动关闭，早上 7:00 渐亮模拟日出唤醒。可与人体传感器联动：检测到人时自动亮起",
+          "chunk_full_id": "doc11:chunk11",
+          "validation_method": "exact_match"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": null,
+      "faithfulness_score": 1.0,
+      "relevance_score": 0.9,
+      "rejected": false,
+      "rejection_reason": null
+    },
+    {
+      "id": 29,
+      "query": "网关的灯一直在闪是啥意思？",
+      "category": "semantic_paraphrase",
+      "hit": 1,
+      "answer_rank": 2,
+      "answer": "根据资料，指示灯的含义取决于闪烁方式，具体如下：\n\n- 蓝灯快闪表示正在配网：\"蓝灯快闪：正在配网\"[文档4:片段3]。\n- 紫灯闪烁表示子设备正在接入：\"紫灯闪烁：子设备正在接入\"[文档4:片段3]。\n- 红灯慢闪表示固件升级中：\"红灯慢闪：固件升级中，请勿断电\"[文档4:片段3]。\n\n另外，资料中提到网关蓝灯慢闪表示离线：\"蓝灯慢闪表示离线\"[文档13:片段8]。\n\n如果蓝灯快闪，说明设备正在配网；如果紫灯闪烁，说明正在接入子设备；如果红灯慢闪，说明正在升级固件；如果蓝灯慢闪，可能是离线状态。具体含义需结合灯的颜色和闪烁频率判断。",
+      "raw_answer": "根据资料，指示灯的含义取决于闪烁方式，具体如下：\n\n- 蓝灯快闪表示正在配网：\"蓝灯快闪：正在配网\"。\n- 紫灯闪烁表示子设备正在接入：\"紫灯闪烁：子设备正在接入\"。\n- 红灯慢闪表示固件升级中：\"红灯慢闪：固件升级中，请勿断电\"。\n\n另外，资料中提到网关蓝灯慢闪表示离线：\"蓝灯慢闪表示离线\"。\n\n如果蓝灯快闪，说明设备正在配网；如果紫灯闪烁，说明正在接入子设备；如果红灯慢闪，说明正在升级固件；如果蓝灯慢闪，可能是离线状态。具体含义需结合灯的颜色和闪烁频率判断。",
+      "citations": [
+        {
+          "span": "蓝灯快闪：正在配网",
+          "source": "文档4:片段3",
+          "chunk_text": "作温度 -10°C–45°C。指示灯说明：红灯常亮：未连接网络；蓝灯快闪：正在配网；蓝灯常亮：工作正常；紫灯闪烁：子设备正在接入；红灯慢闪：固件升级中，请勿断电。添加子设备时确保网关蓝灯常亮，打开 A",
+          "chunk_full_id": "doc4:chunk3",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "紫灯闪烁：子设备正在接入",
+          "source": "文档4:片段3",
+          "chunk_text": "作温度 -10°C–45°C。指示灯说明：红灯常亮：未连接网络；蓝灯快闪：正在配网；蓝灯常亮：工作正常；紫灯闪烁：子设备正在接入；红灯慢闪：固件升级中，请勿断电。添加子设备时确保网关蓝灯常亮，打开 A",
+          "chunk_full_id": "doc4:chunk3",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "红灯慢闪：固件升级中，请勿断电",
+          "source": "文档4:片段3",
+          "chunk_text": "作温度 -10°C–45°C。指示灯说明：红灯常亮：未连接网络；蓝灯快闪：正在配网；蓝灯常亮：工作正常；紫灯闪烁：子设备正在接入；红灯慢闪：固件升级中，请勿断电。添加子设备时确保网关蓝灯常亮，打开 A",
+          "chunk_full_id": "doc4:chunk3",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "蓝灯慢闪表示离线",
+          "source": "文档13:片段8",
+          "chunk_text": "由器 < 5 米，保证 WiFi 信号强度\n- 房屋中心位置，与各子设备距离 < 10 米\n- 避免金属柜、水泥墙遮挡\n指示灯状态：蓝灯常亮表示在线；蓝灯慢闪表示离线；红灯表示故障。\n\n【智能门锁安装",
+          "chunk_full_id": "doc13:chunk8",
+          "validation_method": "exact_match"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": null,
+      "faithfulness_score": 1.0,
+      "relevance_score": 0.95,
+      "rejected": false,
+      "rejection_reason": null
+    },
+    {
+      "id": 30,
+      "query": "门锁的应急钥匙应该放哪里？",
+      "category": "semantic_paraphrase",
+      "hit": 1,
+      "answer_rank": 1,
+      "answer": "根据资料，门锁的应急钥匙应放在亲友处或办公室，不应存放在家中：\"随附两把纯铜应急钥匙，锁芯为超 C 级防盗锁芯，仅在电子系统完全失效时使用，请勿存放在家中，建议放亲友处或办公室[文档1:片段18]。\"",
+      "raw_answer": "根据资料，门锁的应急钥匙应放在亲友处或办公室，不应存放在家中：\"随附两把纯铜应急钥匙，锁芯为超 C 级防盗锁芯，仅在电子系统完全失效时使用，请勿存放在家中，建议放亲友处或办公室。\"",
+      "citations": [
+        {
+          "span": "随附两把纯铜应急钥匙，锁芯为超 C 级防盗锁芯，仅在电子系统完全失效时使用，请勿存放在家中，建议放亲友处或办公室",
+          "source": "文档1:片段18",
+          "chunk_text": "调，亦可静音。随附两把纯铜应急钥匙，锁芯为超 C 级防盗锁芯，仅在电子系统完全失效时使用，请勿存放在家中，建议放亲友处或办公室。可设置特殊指纹或密码作为“胁迫报警指纹/密码”，当使用该指纹或密码开锁时",
+          "chunk_full_id": "doc1:chunk18",
+          "validation_method": "exact_match"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": null,
+      "faithfulness_score": 1.0,
+      "relevance_score": 1.0,
+      "rejected": false,
+      "rejection_reason": null
+    },
+    {
+      "id": 31,
+      "query": "SW-600 的电池型号是什么？",
+      "category": "exact_match",
+      "hit": 1,
+      "answer_rank": 1,
+      "answer": "SW-600 的电池型号是 CR2032×2，具体为：可粘贴于墙面或装入 86 底盒，无需零线，电池供电（CR2032×2），续航约 1 年。[文档27:片段1]",
+      "raw_answer": "SW-600 的电池型号是 CR2032×2，具体为：可粘贴于墙面或装入 86 底盒，无需零线，电池供电（CR2032×2），续航约 1 年。",
+      "citations": [
+        {
+          "span": "可粘贴于墙面或装入 86 底盒，无需零线，电池供电（CR2032×2），续航约 1 年。",
+          "source": "文档27:片段1",
+          "chunk_text": "问：SW-600 的电池型号是什么？\n\n答：可粘贴于墙面或装入 86 底盒，无需零线，电池供电（CR2032×2），续航约 1 年。",
+          "chunk_full_id": "doc27:chunk1",
+          "validation_method": "exact_match"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": null,
+      "faithfulness_score": 1.0,
+      "relevance_score": 1.0,
+      "rejected": false,
+      "rejection_reason": null
+    },
+    {
+      "id": 32,
+      "query": "场景面板的按键图标能不能自定义？",
+      "category": "semantic_paraphrase",
+      "hit": 1,
+      "answer_rank": 5,
+      "answer": "抱歉，我在提供的资料中未找到足够充分的信息来准确回答您的问题。建议您查阅完整的产品手册或联系客服获取更详细的解答。",
+      "raw_answer": "抱歉，我在提供的资料中未找到足够充分的信息来准确回答您的问题。建议您查阅完整的产品手册或联系客服获取更详细的解答。",
+      "citations": [],
+      "reasoning": null,
+      "rerank_scores": null,
+      "faithfulness_score": null,
+      "relevance_score": null,
+      "rejected": true,
+      "rejection_reason": "[Layer 0] Answer rank too low (rank=5, threshold=4)"
+    }
+  ],
+  "self_healing": {
+    "triggered_count": 5,
+    "created_files": [
+      "review/review_c644bad3_20260810_181339.json",
+      "review/review_ee93d2e1_20260810_181339.json",
+      "review/review_b2f73508_20260810_181339.json",
+      "review/review_4ff7380d_20260810_181339.json",
+      "review/review_9713eb11_20260810_181339.json"
+    ],
+    "deduplicated_count": 5
+  }
+}

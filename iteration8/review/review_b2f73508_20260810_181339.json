@@ -1,0 +1,14 @@
+{
+  "query": "SmartCam-200 的声音报警音量怎么调节？",
+  "ground_truth": "可设置触发移动侦测时摄像头发出警笛声，音量可调（70dB/80dB/90dB）。",
+  "source": {
+    "doc_id": "doc2",
+    "char_start": 405,
+    "char_end": 445
+  },
+  "trigger_reason": "low_rank_13",
+  "rejection_reason": "[Layer 0] Answer rank too low (rank=13, threshold=4)",
+  "status": "pending",
+  "created_at": "2026-08-10T18:13:39.466664",
+  "query_hash": "b2f73508"
+}

@@ -1,0 +1,14 @@
+{
+  "query": "SmartBulb-300 断电后记忆功能怎么关闭？",
+  "ground_truth": "断电后重新上电，灯泡会恢复断电前的亮度和色温状态，无需重新设置。",
+  "source": {
+    "doc_id": "doc3",
+    "char_start": 357,
+    "char_end": 389
+  },
+  "trigger_reason": "low_rank_15",
+  "rejection_reason": "[Layer 0] Answer rank too low (rank=15, threshold=4)",
+  "status": "pending",
+  "created_at": "2026-08-10T18:13:39.466400",
+  "query_hash": "c644bad3"
+}

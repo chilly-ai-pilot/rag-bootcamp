@@ -1,0 +1,14 @@
+{
+  "query": "SmartLock-100 的防猫眼功能如何操作？",
+  "ground_truth": "室内面板有防猫眼按钮，开门时需按下此按钮并下压把手同时操作，防止从猫眼伸入工具开门。",
+  "source": {
+    "doc_id": "doc1",
+    "char_start": 775,
+    "char_end": 817
+  },
+  "trigger_reason": "low_rank_15",
+  "rejection_reason": "[Layer 0] Answer rank too low (rank=15, threshold=4)",
+  "status": "pending",
+  "created_at": "2026-08-10T18:13:39.466584",
+  "query_hash": "ee93d2e1"
+}
