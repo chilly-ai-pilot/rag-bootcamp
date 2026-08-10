@@ -75,9 +75,10 @@ jobs:
     runs-on: ubuntu-latest
     
     # 限制并发：同时只运行一个评估
+    # 使用 queue 策略：新任务等待旧任务完成，而不是取消
     concurrency:
       group: evaluation-pipeline
-      cancel-in-progress: false
+      cancel-in-progress: false  # 不取消正在运行的，而是排队等待
     
     steps:
       - name: 📥 Checkout repository
@@ -217,15 +218,48 @@ jobs:
             
             git commit -m "$COMMIT_MSG"
             
-            # 推送前先拉取最新代码，避免冲突
+            # 推送前先拉取最新代码，特别保护 review 文件
             echo "🔄 Pulling latest changes before push..."
             
-            # 直接使用 merge 策略（更稳定）
+            # 保存当前的 review 文件
+            if [ -d "iteration8/review" ] && [ "$(ls -A iteration8/review/*.json 2>/dev/null)" ]; then
+              mkdir -p /tmp/review_backup
+              cp iteration8/review/*.json /tmp/review_backup/ 2>/dev/null || true
+              echo "📦 Backed up $(ls /tmp/review_backup/*.json 2>/dev/null | wc -l) review files"
+            fi
+            
+            # 拉取最新代码
             git pull --no-rebase origin main || {
-              echo "⚠️  Pull failed, will try force push"
+              echo "⚠️  Pull failed, trying force push"
+              
+              # 恢复 review 文件
+              if [ -d "/tmp/review_backup" ]; then
+                cp /tmp/review_backup/*.json iteration8/review/ 2>/dev/null || true
+                git add iteration8/review/*.json
+                echo "🔄 Restored review files after pull failure"
+              fi
+              
               git push --force-with-lease origin main
               exit 0
             }
+            
+            # 合并后，确保 review 文件存在
+            if [ -d "/tmp/review_backup" ]; then
+              # 恢复可能在 pull 中丢失的 review 文件
+              for backup_file in /tmp/review_backup/*.json; do
+                filename=$(basename "$backup_file")
+                if [ ! -f "iteration8/review/$filename" ]; then
+                  cp "$backup_file" "iteration8/review/$filename"
+                  git add "iteration8/review/$filename"
+                  echo "🔄 Restored missing review file: $filename"
+                fi
+              done
+              
+              # 如果有恢复的文件，需要重新提交
+              if ! git diff --staged --quiet; then
+                git commit --amend --no-edit
+              fi
+            fi
             
             # 推送结果
             git push origin main
