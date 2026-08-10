@@ -821,7 +821,10 @@ def main():
                 "retrieval_top_k": args.retrieval_top_k,
                 "judge_mode": args.judge_mode,
                 "rejection_enabled": args.rejection_enabled,
-                "rejection_preset": args.rejection_preset if args.rejection_preset else "custom"
+                "rejection_preset": args.rejection_preset if args.rejection_preset else "custom",
+                "query_from": query_start_idx + 1,  # 保存实际使用的起始查询索引（1-based）
+                "max_queries": args.max_queries,
+                "batch_size": args.batch_size
             }
         },
         "config": {

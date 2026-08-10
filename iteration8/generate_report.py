@@ -848,6 +848,14 @@ def generate_html_report(results: List[Dict], pending_reviews: List[Dict], outpu
                     <div class="label">Rejection Preset</div>
                     <div class="value">{model_config.get('rejection_preset', 'custom')}</div>
                 </div>
+                <div class="metadata-item">
+                    <div class="label">Query From</div>
+                    <div class="value">#{model_config.get('query_from', 'N/A')}</div>
+                </div>
+                <div class="metadata-item">
+                    <div class="label">Batch Size</div>
+                    <div class="value">{model_config.get('batch_size', 'N/A')}</div>
+                </div>
             </div>
         </div>
 """

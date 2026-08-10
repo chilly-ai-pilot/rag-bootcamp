@@ -66,9 +66,9 @@ on:
         default: '1'
         type: string
       query_from:
-        description: 'Start from query index (1-based)'
+        description: 'Start from query index (1-based, leave empty for random)'
         required: false
-        default: '1'
+        default: ''
         type: string
       batch_size:
         description: 'Concurrent batch size for API calls'
@@ -125,6 +125,28 @@ jobs:
           echo "doc_count=$DOC_COUNT" >> $GITHUB_OUTPUT
           echo "Total documents: $DOC_COUNT"
       
+      - name: 🎲 Generate random query-from
+        id: random_query
+        run: |
+          cd iteration8
+          # 读取 queries.json 的总查询数
+          TOTAL_QUERIES=$(python3 -c "import json; data=json.load(open('corpus/queries.json')); print(len(data))")
+          echo "Total queries: $TOTAL_QUERIES"
+          
+          # 检查用户是否指定了 query_from
+          USER_QUERY_FROM="${{ github.event.inputs.query_from }}"
+          
+          if [ -z "$USER_QUERY_FROM" ] || [ "$USER_QUERY_FROM" = "" ]; then
+            # 用户未指定，生成随机数（1 到 TOTAL_QUERIES）
+            RANDOM_FROM=$((1 + RANDOM % TOTAL_QUERIES))
+            echo "🎲 Randomly selected query-from: $RANDOM_FROM"
+            echo "query_from=$RANDOM_FROM" >> $GITHUB_OUTPUT
+          else
+            # 用户指定了，使用用户的值
+            echo "👤 Using user-specified query-from: $USER_QUERY_FROM"
+            echo "query_from=$USER_QUERY_FROM" >> $GITHUB_OUTPUT
+          fi
+      
       - name: 🚀 Run evaluation
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
@@ -138,7 +160,7 @@ jobs:
           JUDGE="${{ github.event.inputs.judge_mode || 'none' }}"
           PRESET="${{ github.event.inputs.rejection_preset || 'aggressive' }}"
           MAX_QUERIES="${{ github.event.inputs.max_queries || '1' }}"
-          QUERY_FROM="${{ github.event.inputs.query_from || '1' }}"
+          QUERY_FROM="${{ steps.random_query.outputs.query_from }}"  # 使用生成的随机值或用户指定的值
           BATCH_SIZE="${{ github.event.inputs.batch_size || '10' }}"
           
           echo "🔧 Configuration:"
@@ -148,7 +170,7 @@ jobs:
           echo "  Judge: $JUDGE"
           echo "  Rejection Preset: $PRESET"
           echo "  Max Queries: $MAX_QUERIES"
-          echo "  Query From: $QUERY_FROM"
+          echo "  Query From: $QUERY_FROM (random or user-specified)"
           echo "  Batch Size: $BATCH_SIZE"
           
           # 运行评估，输出到 ../data 目录
