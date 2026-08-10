@@ -930,10 +930,20 @@ def generate_html_report(results: List[Dict], pending_reviews: List[Dict], outpu
                 <div class="review-header">
                     <h2>🔍 Self-Healing Review</h2>
                     <div class="review-actions">
-                        <button class="btn btn-secondary" onclick="selectAll()">Select All</button>
-                        <button class="btn btn-secondary" onclick="deselectAll()">Deselect All</button>
-                        <button class="btn btn-primary" id="approveBtn" onclick="approveSelected()" disabled>Approve Selected</button>
+                        <button class="btn btn-primary" id="approveBtn" onclick="approveSelected()">🚀 Approve via GitHub Actions</button>
                     </div>
+                </div>
+                <div style="background: #e7f3ff; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #2196F3;">
+                    <strong>💡 How to approve reviews:</strong>
+                    <ol style="margin: 10px 0 0 20px; line-height: 1.8;">
+                        <li>Review the Q&A pairs below (you can edit them inline if needed)</li>
+                        <li>Click the "🚀 Approve via GitHub Actions" button above</li>
+                        <li>On the GitHub Actions page, click "Run workflow" → Choose "yes" → Click the green "Run workflow" button</li>
+                        <li>Wait for the workflow to complete - it will automatically approve all reviews and add them to the corpus</li>
+                    </ol>
+                    <p style="margin-top: 10px; font-size: 0.9em; color: #666;">
+                        Note: Currently, inline edits are for review only. To modify Q&A pairs before approval, edit the JSON files in <code>iteration8/review/</code> directly.
+                    </p>
                 </div>
 """
     
@@ -966,18 +976,17 @@ def generate_html_report(results: List[Dict], pending_reviews: List[Dict], outpu
             
             html_content += f"""
                     <div class="review-item" data-filename="{filename}">
-                        <div class="review-item-header">
-                            <input type="checkbox" class="review-checkbox" onchange="updateApproveButton()">
-                            <div class="review-item-content">
-                                <div class="review-query">
-                                    <div contenteditable="true" class="editable" data-field="query">{query}</div>
-                                    <div class="edit-hint">Click to edit query</div>
-                                </div>
-                                <div class="review-meta">
-                                    <span>📅 {formatted_date}</span>
-                                    <span>📄 {doc_id}</span>
-                                    <span class="review-reason {reason_class}">{trigger_reason}</span>
-                                </div>
+                        <div class="review-item-content">
+                            <div class="review-query">
+                                <strong>Question:</strong>
+                                <div contenteditable="true" class="editable" data-field="query" style="margin-top: 5px;">{query}</div>
+                                <div class="edit-hint">Click to edit query</div>
+                            </div>
+                            <div class="review-meta">
+                                <span>📅 {formatted_date}</span>
+                                <span>📄 {doc_id or 'N/A'}</span>
+                                <span class="review-reason {reason_class}">{trigger_reason}</span>
+                            </div>
 """
             if rejection_reason:
                 html_content += f"""
@@ -991,7 +1000,6 @@ def generate_html_report(results: List[Dict], pending_reviews: List[Dict], outpu
                                     <div contenteditable="true" class="review-answer-text editable" data-field="ground_truth">{ground_truth}</div>
                                     <div class="edit-hint">Click to edit answer</div>
                                 </div>
-                            </div>
                         </div>
                     </div>
 """
@@ -1039,72 +1047,30 @@ def generate_html_report(results: List[Dict], pending_reviews: List[Dict], outpu
             event.target.classList.add('active');
         }}
         
-        // Review Selection
-        function selectAll() {{
-            document.querySelectorAll('.review-checkbox').forEach(checkbox => {{
-                checkbox.checked = true;
-                checkbox.closest('.review-item').classList.add('selected');
-            }});
-            updateApproveButton();
-        }}
-        
-        function deselectAll() {{
-            document.querySelectorAll('.review-checkbox').forEach(checkbox => {{
-                checkbox.checked = false;
-                checkbox.closest('.review-item').classList.remove('selected');
-            }});
-            updateApproveButton();
-        }}
-        
-        function updateApproveButton() {{
-            const checkboxes = document.querySelectorAll('.review-checkbox');
-            const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
-            const approveBtn = document.getElementById('approveBtn');
-            
-            approveBtn.disabled = checkedCount === 0;
-            approveBtn.textContent = checkedCount > 0 ? `Approve Selected (${{checkedCount}})` : 'Approve Selected';
-            
-            // Update item styling
-            checkboxes.forEach(checkbox => {{
-                if (checkbox.checked) {{
-                    checkbox.closest('.review-item').classList.add('selected');
-                }} else {{
-                    checkbox.closest('.review-item').classList.remove('selected');
-                }}
-            }});
-        }}
-        
         function approveSelected() {{
-            const selectedCheckboxes = Array.from(document.querySelectorAll('.review-checkbox:checked'));
-            const filenames = selectedCheckboxes.map(cb => cb.closest('.review-item').dataset.filename);
+            // 直接跳转到 GitHub Actions
+            const repoUrl = 'https://github.com/' + getGitHubRepo();
+            const workflowUrl = repoUrl + '/actions/workflows/approve_reviews.yml';
             
-            if (filenames.length === 0) {{
-                alert('Please select at least one review to approve.');
-                return;
+            if (confirm('Ready to approve reviews?\\n\\nThis will redirect you to GitHub Actions to run the approval workflow.\\n\\nClick OK to continue.')) {{
+                window.open(workflowUrl, '_blank');
             }}
-            
-            if (!confirm(`Are you sure you want to approve ${{filenames.length}} review(s)?\\n\\nThis will add the ground truth content to the corpus.`)) {{
-                return;
+        }}
+        
+        function getGitHubRepo() {{
+            // 尝试从当前 URL 推断仓库路径
+            const hostname = window.location.hostname;
+            if (hostname.includes('github.io')) {{
+                // GitHub Pages: username.github.io/repo-name
+                const pathParts = window.location.pathname.split('/').filter(p => p);
+                if (pathParts.length > 0) {{
+                    const username = hostname.split('.')[0];
+                    const repo = pathParts[0];
+                    return username + '/' + repo;
+                }}
             }}
-            
-            // Collect edited data
-            const reviewData = selectedCheckboxes.map(cb => {{
-                const item = cb.closest('.review-item');
-                const filename = item.dataset.filename;
-                const queryEl = item.querySelector('[data-field="query"]');
-                const groundTruthEl = item.querySelector('[data-field="ground_truth"]');
-                
-                return {{
-                    filename: filename,
-                    query: queryEl ? queryEl.textContent.trim() : '',
-                    ground_truth: groundTruthEl ? groundTruthEl.textContent.trim() : ''
-                }};
-            }});
-            
-            // In a real implementation, this would call a backend API
-            // For now, we show instructions
-            console.log('Review data with edits:', reviewData);
-            alert(`To approve these reviews, run:\\n\\npython approve_reviews.py ${{filenames.join(' ')}}\\n\\nOr use the GitHub Actions workflow to batch approve.\\n\\nNote: Manual edits in the UI are not saved. To edit, modify the review JSON files directly.`);
+            // 默认值 - 用户需要在生成报告时配置
+            return 'chilly-ai-pilot/rag-bootcamp';
         }}
         
         // Metrics Trend Chart

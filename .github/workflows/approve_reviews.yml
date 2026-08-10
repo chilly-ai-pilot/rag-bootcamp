@@ -1,0 +1,94 @@
+name: Approve Reviews
+
+on:
+  workflow_dispatch:
+    inputs:
+      approve_all:
+        description: 'Approve all pending reviews?'
+        required: true
+        default: 'yes'
+        type: choice
+        options:
+          - 'yes'
+          - 'no'
+
+jobs:
+  approve:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Install dependencies
+      run: |
+        cd iteration8
+        pip install -r requirements.txt
+    
+    - name: Check pending reviews
+      id: check_reviews
+      run: |
+        cd iteration8
+        review_count=$(ls review/*.json 2>/dev/null | grep -c "review_" || echo 0)
+        echo "review_count=$review_count" >> $GITHUB_OUTPUT
+        echo "📋 Found $review_count pending review files"
+    
+    - name: Approve all reviews
+      if: steps.check_reviews.outputs.review_count > 0 && github.event.inputs.approve_all == 'yes'
+      env:
+        DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+      run: |
+        cd iteration8
+        echo "🔄 Approving all pending reviews..."
+        echo "y" | python approve_reviews.py --all --review-dir review --corpus-dir corpus
+    
+    - name: Commit and push approved reviews
+      if: steps.check_reviews.outputs.review_count > 0 && github.event.inputs.approve_all == 'yes'
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        
+        # Add all changes
+        git add .
+        
+        # Check if there are changes to commit
+        if git diff --staged --quiet; then
+          echo "ℹ️  No changes to commit"
+        else
+          # Count approved reviews and new documents
+          approved_count=$(git diff --staged --name-only | grep -c "review_.*\.json" || echo 0)
+          new_docs=$(git diff --staged --name-only | grep "iteration8/corpus/doc-" | wc -l || echo 0)
+          
+          git commit -m "✅ Approved $approved_count reviews, added $new_docs new documents"
+          
+          # Pull with merge strategy
+          echo "🔄 Pulling latest changes..."
+          git pull origin main --no-rebase || true
+          
+          # Push changes
+          echo "📤 Pushing changes..."
+          git push origin main || git push origin main --force-with-lease
+          
+          echo "✅ Successfully approved and pushed reviews"
+        fi
+    
+    - name: Summary
+      if: steps.check_reviews.outputs.review_count > 0
+      run: |
+        echo "✅ Approval completed!"
+        echo "📊 Processed: ${{ steps.check_reviews.outputs.review_count }} reviews"
+        echo "💡 New documents have been added to corpus/"
+        echo "🔄 Run eval_pipeline workflow to see the improvements"
+    
+    - name: No reviews found
+      if: steps.check_reviews.outputs.review_count == 0
+      run: |
+        echo "ℹ️  No pending reviews to approve"
+        echo "✨ All reviews have been processed!"
