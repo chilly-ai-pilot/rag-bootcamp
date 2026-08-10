@@ -54,7 +54,7 @@ on:
       rejection_preset:
         description: 'Rejection preset'
         required: false
-        default: 'aggressive'
+        default: 'moderate'
         type: choice
         options:
           - conservative
@@ -183,7 +183,7 @@ jobs:
           RETRIEVAL="${{ github.event.inputs.retrieval_mode || 'hybrid' }}"
           RERANK="${{ github.event.inputs.rerank_mode || 'bge' }}"
           JUDGE="${{ github.event.inputs.judge_mode || 'none' }}"
-          PRESET="${{ github.event.inputs.rejection_preset || 'aggressive' }}"
+          PRESET="${{ github.event.inputs.rejection_preset || 'moderate' }}"
           MAX_QUERIES="${{ github.event.inputs.max_queries || '1' }}"
           QUERY_FROM="${{ steps.random_query.outputs.query_from }}"  # 使用生成的随机值或用户指定的值
           BATCH_SIZE="${{ github.event.inputs.batch_size || '10' }}"
