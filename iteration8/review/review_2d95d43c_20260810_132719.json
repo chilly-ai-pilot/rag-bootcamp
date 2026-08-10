@@ -8,7 +8,9 @@
   },
   "trigger_reason": "retrieval_miss",
   "rejection_reason": "[Layer 0] Retrieval miss (hit=0, ground truth not in top-k)",
-  "status": "pending",
+  "status": "approved",
   "created_at": "2026-08-10T13:27:19.434140",
-  "query_hash": "2d95d43c"
+  "query_hash": "2d95d43c",
+  "approved_at": "2026-08-10T14:55:55.850859",
+  "new_doc_id": "doc-20"
 }
