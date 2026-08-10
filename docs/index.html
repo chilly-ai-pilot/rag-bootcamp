@@ -486,12 +486,12 @@
         <header>
             <h1>🚀 RAG System Evaluation Report</h1>
             <p>Continuous Evaluation Dashboard - Iteration 8 (Self-Healing)</p>
-            <p style="font-size: 0.95em; margin-top: 10px;">Latest: 2026-08-10 19:06 | Total Runs: 2 | Pending Reviews: 0</p>
+            <p style="font-size: 0.95em; margin-top: 10px;">Latest: 2026-08-10 19:28 | Total Runs: 3 | Pending Reviews: 1</p>
         </header>
         
         <div class="tabs">
             <button class="tab active" onclick="switchTab('metrics')">📊 Metrics</button>
-            <button class="tab" onclick="switchTab('review')">🔍 Review (0)</button>
+            <button class="tab" onclick="switchTab('review')">🔍 Review (1)</button>
         </div>
         
         <div id="metrics-tab" class="tab-content active">
@@ -499,28 +499,28 @@
         <div class="summary-cards">
             <div class="card">
                 <h3>Hit Rate</h3>
-                <div class="value">100.0%</div>
-<div class="diff positive">+0.0% vs previous</div>
+                <div class="value">0.0%</div>
+<div class="diff negative">-100.0% vs previous</div>
             </div>
             
             <div class="card">
                 <h3>Faithfulness</h3>
-<div class="value">0.000</div><div class="diff negative">-0.972 vs previous</div>
+<div class="value">0.000</div><div class="diff positive">+0.000 vs previous</div>
             </div>
             
             <div class="card">
                 <h3>Relevance</h3>
-<div class="value">0.000</div><div class="diff negative">-0.920 vs previous</div>
+<div class="value">0.000</div><div class="diff positive">+0.000 vs previous</div>
             </div>
             
             <div class="card">
                 <h3>Rejection Rate</h3>
-<div class="value">0.0%</div><div class="diff negative">+0.0% vs previous</div>
+<div class="value">100.0%</div><div class="diff negative">+100.0% vs previous</div>
             </div>
             
             <div class="card">
                 <h3>MRR Score</h3>
-<div class="value">1.000</div><div class="diff positive">+0.201 vs previous</div>
+<div class="value">0.000</div><div class="diff negative">-1.000 vs previous</div>
             </div>
         </div>
 
@@ -529,7 +529,7 @@
             <div class="metadata-grid">
                 <div class="metadata-item">
                     <div class="label">Documents</div>
-                    <div class="value">27</div>
+                    <div class="value">16</div>
                 </div>
                 <div class="metadata-item">
                     <div class="label">Queries</div>
@@ -612,6 +612,16 @@
                         <td>1.000</td>
                     </tr>
 
+                    <tr>
+                        <td>2026-08-10 19:28</td>
+                        <td><code>fixed_100_50+hybrid+bge</code></td>
+                        <td><span class="badge danger">0.0%</span></td>
+                        <td>0.000</td>
+                        <td>0.000</td>
+                        <td>100.0%</td>
+                        <td>0.000</td>
+                    </tr>
+
                 </tbody>
             </table>
         </div>
@@ -641,12 +651,33 @@
                     </p>
                 </div>
 
-                <div class="empty-state">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    <h3>All Clear!</h3>
-                    <p>No pending reviews. The system is performing well.</p>
+                <div class="review-list">
+
+                    <div class="review-item" data-filename="review_34743fa8_20260810_192832.json">
+                        <div class="review-item-content">
+                            <div class="review-query">
+                                <strong>Question:</strong>
+                                <div contenteditable="true" class="editable" data-field="query" style="margin-top: 5px;">SmartLock-100 如何生成临时密码？</div>
+                                <div class="edit-hint">Click to edit query</div>
+                            </div>
+                            <div class="review-meta">
+                                <span>📅 2026-08-10 19:28</span>
+                                <span>📄 doc1</span>
+                                <span class="review-reason reason-retrieval-miss">retrieval_miss</span>
+                            </div>
+
+                                <div style="font-size: 0.9em; color: #6c757d; margin-top: 5px;">
+                                    Rejection: [Layer 0] Retrieval miss (hit=0, ground truth not in top-k)
+                                </div>
+
+                                <div class="review-answer">
+                                    <div class="review-answer-label">Ground Truth Answer:</div>
+                                    <div contenteditable="true" class="review-answer-text editable" data-field="ground_truth">可通过 App 生成一次性或限时临时密码，适用于访客或家政服务。</div>
+                                    <div class="edit-hint">Click to edit answer</div>
+                                </div>
+                        </div>
+                    </div>
+
                 </div>
 
             </div>
@@ -655,7 +686,7 @@
 
         <footer>
             <p>Generated by RAG Bootcamp Iteration 8 - Self-Healing RAG System</p>
-            <p>Last updated: 2026-08-10 19:06:28</p>
+            <p>Last updated: 2026-08-10 19:28:34</p>
         </footer>
     </div>
     
@@ -706,11 +737,11 @@
         const metricsChart = new Chart(metricsCtx, {
             type: 'line',
             data: {
-                labels: ["2026-08-10 19:02", "2026-08-10 19:06"],
+                labels: ["2026-08-10 19:02", "2026-08-10 19:06", "2026-08-10 19:28"],
                 datasets: [
                     {
                         label: 'Faithfulness',
-                        data: [0.9724999999999999, 0],
+                        data: [0.9724999999999999, 0, 0],
                         borderColor: 'rgb(102, 126, 234)',
                         backgroundColor: 'rgba(102, 126, 234, 0.1)',
                         tension: 0.3,
@@ -718,7 +749,7 @@
                     },
                     {
                         label: 'Relevance',
-                        data: [0.9203125, 0],
+                        data: [0.9203125, 0, 0],
                         borderColor: 'rgb(118, 75, 162)',
                         backgroundColor: 'rgba(118, 75, 162, 0.1)',
                         tension: 0.3,
@@ -726,7 +757,7 @@
                     },
                     {
                         label: 'MRR',
-                        data: [0.7994791666666666, 1.0],
+                        data: [0.7994791666666666, 1.0, 0.0],
                         borderColor: 'rgb(255, 159, 64)',
                         backgroundColor: 'rgba(255, 159, 64, 0.1)',
                         tension: 0.3,
@@ -766,11 +797,11 @@
         const ratesChart = new Chart(ratesCtx, {
             type: 'line',
             data: {
-                labels: ["2026-08-10 19:02", "2026-08-10 19:06"],
+                labels: ["2026-08-10 19:02", "2026-08-10 19:06", "2026-08-10 19:28"],
                 datasets: [
                     {
                         label: 'Hit Rate',
-                        data: [1.0, 1.0],
+                        data: [1.0, 1.0, 0.0],
                         borderColor: 'rgb(75, 192, 192)',
                         backgroundColor: 'rgba(75, 192, 192, 0.1)',
                         tension: 0.3,
@@ -778,7 +809,7 @@
                     },
                     {
                         label: 'Rejection Rate',
-                        data: [0.0, 0.0],
+                        data: [0.0, 0.0, 1.0],
                         borderColor: 'rgb(255, 99, 132)',
                         backgroundColor: 'rgba(255, 99, 132, 0.1)',
                         tension: 0.3,
