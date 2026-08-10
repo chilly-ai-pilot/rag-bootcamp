@@ -211,14 +211,31 @@ jobs:
             
             # 推送前先拉取最新代码，避免冲突
             echo "🔄 Pulling latest changes before push..."
-            git pull --rebase origin main || {
-              echo "⚠️  Rebase failed, trying merge strategy..."
+            
+            # 保存当前的 commit SHA
+            LOCAL_COMMIT=$(git rev-parse HEAD)
+            
+            # 尝试 rebase
+            if git pull --rebase origin main; then
+              echo "✅ Rebase successful"
+            else
+              echo "⚠️  Rebase failed, aborting and trying merge strategy..."
               git rebase --abort
-              git pull --no-rebase origin main
-            }
+              
+              # 回到提交后的状态
+              git reset --hard $LOCAL_COMMIT
+              
+              # 使用 merge 策略
+              if git pull --no-rebase origin main; then
+                echo "✅ Merge successful"
+              else
+                echo "⚠️  Merge also failed, will force push (last resort)"
+                git reset --hard $LOCAL_COMMIT
+              fi
+            fi
             
             # 推送结果
-            git push
+            git push origin main
             echo "✅ Results committed and pushed"
           fi
       
