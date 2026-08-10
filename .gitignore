@@ -14,5 +14,4 @@ judge_test*.json
 # Allow review files (self-healing mechanism)
 !iteration8/review/*.json
 
-# Ignore archived approved reviews
-iteration8/review/approved/
+# Note: approved/ directory is now tracked for backup purposes
