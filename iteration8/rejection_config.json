@@ -4,7 +4,7 @@
     "enabled": true,
     "triggers": {
       "hit_not_1": true,
-      "answer_rank_threshold": 4,
+      "answer_rank_threshold": 10,
       "layer1_rejection": true
     },
     "review_dir": "review",
