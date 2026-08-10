@@ -14,7 +14,7 @@
     "layer0_retrieval_hit": {
       "enabled": true,
       "require_hit": true,
-      "require_rank_threshold": 4,
+      "require_rank_threshold": 10,
       "description": "基于ground truth命中检查的拒答（仅用于评估模式，生产环境不适用）- 如果检索未命中正确答案则拒答"
     },
     "layer1_retrieval": {
