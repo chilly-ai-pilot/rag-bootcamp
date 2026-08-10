@@ -194,8 +194,8 @@
     "category": "semantic_paraphrase",
     "doc_id": "doc2",
     "ground_truth_text": "启动隐私模式后，摄像头自动向下旋转隐藏镜头，并关闭收音。",
-    "char_start": 319,
-    "char_end": 347
+    "char_start": 468,
+    "char_end": 496
   },
   {
     "id": 23,
