@@ -119,7 +119,7 @@ jobs:
           CHUNKING="${{ github.event.inputs.chunking_strategy || 'fixed_100_50' }}"
           RETRIEVAL="${{ github.event.inputs.retrieval_mode || 'hybrid' }}"
           RERANK="${{ github.event.inputs.rerank_mode || 'bge' }}"
-          JUDGE="${{ github.event.inputs.judge_mode || 'deepseek' }}"
+          JUDGE="${{ github.event.inputs.judge_mode || 'none' }}"
           PRESET="${{ github.event.inputs.rejection_preset || 'aggressive' }}"
           
           echo "🔧 Configuration:"
