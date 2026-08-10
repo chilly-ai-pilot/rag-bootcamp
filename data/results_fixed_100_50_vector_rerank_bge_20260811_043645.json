@@ -1,0 +1,99 @@
+{
+  "metadata": {
+    "timestamp": "20260811_043645",
+    "evaluation_date": "2026-08-11T04:36:45.610603",
+    "corpus_stats": {
+      "num_documents": 17,
+      "num_queries": 1,
+      "corpus_dir": "corpus"
+    },
+    "model_config": {
+      "chunking_strategy": "fixed_100_50",
+      "retrieval_mode": "vector",
+      "rerank_mode": "bge",
+      "rerank_top_k": 5,
+      "retrieval_top_k": 40,
+      "judge_mode": "none",
+      "rejection_enabled": false,
+      "rejection_preset": "custom",
+      "query_from": 7,
+      "max_queries": 1,
+      "batch_size": 1
+    }
+  },
+  "config": {
+    "chunking_strategy": "fixed_100_50",
+    "retrieval_mode": "vector",
+    "rerank_mode": "bge",
+    "rerank_top_k": 5,
+    "retrieval_top_k": 40
+  },
+  "scores": {
+    "chunking_sensitive": 1.0,
+    "overall": 1.0
+  },
+  "mrr_scores": {
+    "chunking_sensitive": 0.3333333333333333,
+    "overall": 0.3333333333333333
+  },
+  "results": [
+    {
+      "id": 1,
+      "query": "SmartLock-100 如何生成临时密码？",
+      "category": "chunking_sensitive",
+      "hit": 1,
+      "answer_rank": 3,
+      "answer": "\"可通过 App 生成一次性或限时临时密码，适用于访客或家政服务。[文档17:片段1] 在 APP【门锁管理】→【临时密码】→ 选择\"限时密码\"或\"一次性密码\"。限时密码可设置有效期（如今天 8:00-18:00），一次性密码使用后自动失效。密码生成后发给对方即可。[文档14:片段12] 支持 20 位虚位密码，可在正确密码前后输入任意数字作为干扰，总长度不超过 20 位即可开锁，有效防止偷窥。[文档1:片段14] 支持临时密码生成算法，无需联网即可根据日期时间生成一次性密码，适合无网络环境使用。[文档8:片段10]\" 生成后，一次性密码自动失效，限时密码在设定时间段内有效[文档1:片段15]。",
+      "raw_answer": "\"可通过 App 生成一次性或限时临时密码，适用于访客或家政服务。 在 APP【门锁管理】→【临时密码】→ 选择\"限时密码\"或\"一次性密码\"。限时密码可设置有效期（如今天 8:00-18:00），一次性密码使用后自动失效。密码生成后发给对方即可。 支持 20 位虚位密码，可在正确密码前后输入任意数字作为干扰，总长度不超过 20 位即可开锁，有效防止偷窥。 支持临时密码生成算法，无需联网即可根据日期时间生成一次性密码，适合无网络环境使用。\" 生成后，一次性密码自动失效，限时密码在设定时间段内有效。",
+      "citations": [
+        {
+          "span": "可通过 App 生成一次性或限时临时密码，适用于访客或家政服务。",
+          "source": "文档17:片段1",
+          "chunk_text": "问：SmartLock-100 如何生成临时密码？\n答：可通过 App 生成一次性或限时临时密码，适用于访客或家政服务。",
+          "chunk_full_id": "doc17:chunk1",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "在 APP【门锁管理】→【临时密码】→ 选择\"限时密码\"或\"一次性密码\"。限时密码可设置有效期（如今天 8:00-18:00），一次性密码使用后自动失效。密码生成后发给对方即可。",
+          "source": "文档14:片段12",
+          "chunk_text": "在 APP【门锁管理】→【临时密码】→ 选择\"限时密码\"或\"一次性密码\"。限时密码可设置有效期（如今天 8:00-18:00），一次性密码使用后自动失效。密码生成后发给对方即可。\n\n用户 F：\"摄像头",
+          "chunk_full_id": "doc14:chunk12",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "支持 20 位虚位密码，可在正确密码前后输入任意数字作为干扰，总长度不超过 20 位即可开锁，有效防止偷窥。",
+          "source": "文档1:片段14",
+          "chunk_text": "不可逆，请提前备份数据。支持 20 位虚位密码，可在正确密码前后输入任意数字作为干扰，总长度不超过 20 位即可开锁，有效防止偷窥。可通过 App 生成一次性或限时临时密码，适用于访客或家政服务。一次",
+          "chunk_full_id": "doc1:chunk14",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "支持临时密码生成算法，无需联网即可根据日期时间生成一次性密码，适合无网络环境使用。",
+          "source": "文档8:片段10",
+          "chunk_text": "。防撬报警声提升至 110 分贝，可选连接声光报警器。支持临时密码生成算法，无需联网即可根据日期时间生成一次性密码，适合无网络环境使用。可设置双重验证开锁：指纹+密码、人脸+指纹等组合，提升安全性。室",
+          "chunk_full_id": "doc8:chunk10",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "生成后，一次性密码自动失效，限时密码在设定时间段内有效",
+          "source": "文档1:片段15",
+          "chunk_text": "20 位即可开锁，有效防止偷窥。可通过 App 生成一次性或限时临时密码，适用于访客或家政服务。一次性密码使用后自动失效，限时密码在设定时间段内有效。室内面板有防猫眼按钮，开门时需按下此按钮并下压把手",
+          "chunk_full_id": "doc1:chunk15",
+          "validation_method": "character_overlap"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": [
+        0.9999268874567189,
+        0.9920002454916221,
+        0.9690910414827888,
+        0.9623913644941934,
+        0.9489172630429474
+      ],
+      "faithfulness_score": null,
+      "relevance_score": null,
+      "rejected": false,
+      "rejection_reason": null
+    }
+  ]
+}

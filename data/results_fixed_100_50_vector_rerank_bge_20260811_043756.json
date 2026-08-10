@@ -1,0 +1,78 @@
+{
+  "metadata": {
+    "timestamp": "20260811_043756",
+    "evaluation_date": "2026-08-11T04:37:56.545975",
+    "corpus_stats": {
+      "num_documents": 17,
+      "num_queries": 1,
+      "corpus_dir": "corpus"
+    },
+    "model_config": {
+      "chunking_strategy": "fixed_100_50",
+      "retrieval_mode": "vector",
+      "rerank_mode": "bge",
+      "rerank_top_k": 5,
+      "retrieval_top_k": 40,
+      "judge_mode": "none",
+      "rejection_enabled": false,
+      "rejection_preset": "custom",
+      "query_from": 7,
+      "max_queries": 1,
+      "batch_size": 1
+    }
+  },
+  "config": {
+    "chunking_strategy": "fixed_100_50",
+    "retrieval_mode": "vector",
+    "rerank_mode": "bge",
+    "rerank_top_k": 5,
+    "retrieval_top_k": 40
+  },
+  "scores": {
+    "chunking_sensitive": 0.0,
+    "overall": 0.0
+  },
+  "mrr_scores": {
+    "chunking_sensitive": 0.0,
+    "overall": 0.0
+  },
+  "results": [
+    {
+      "id": 7,
+      "query": "SmartPlug-400 的充电保护功能是怎样工作的？",
+      "category": "chunking_sensitive",
+      "hit": 0,
+      "answer_rank": null,
+      "answer": "SmartPlug-400 的充电保护功能在资料中未明确说明，因为该功能描述属于 SmartPlug-500 的升级内容：\"充电保护功能升级：检测到设备电流在 30 秒内下降至 < 50mA，判定充满电，自动关闭 USB 口，防止过充延长电池寿命[文档10:片段5]\"——此为 SmartPlug-500 的描述，且 SmartPlug-400 不具备 USB 口（其描述中仅提到电量统计、定时开关、过载保护等[文档6:片段1]），因此该保护功能不适用于 SmartPlug-400。未找到充分依据。",
+      "raw_answer": "SmartPlug-400 的充电保护功能在资料中未明确说明，因为该功能描述属于 SmartPlug-500 的升级内容：\"充电保护功能升级：检测到设备电流在 30 秒内下降至 < 50mA，判定充满电，自动关闭 USB 口，防止过充延长电池寿命\"——此为 SmartPlug-500 的描述，且 SmartPlug-400 不具备 USB 口（其描述中仅提到电量统计、定时开关、过载保护等），因此该保护功能不适用于 SmartPlug-400。未找到充分依据。",
+      "citations": [
+        {
+          "span": "充电保护功能升级：检测到设备电流在 30 秒内下降至 < 50mA，判定充满电，自动关闭 USB 口，防止过充延长电池寿命",
+          "source": "文档10:片段5",
+          "chunk_text": "/周/月生成用电报表，计算电费（需手动设置当地电价）。充电保护功能升级：检测到设备电流在 30 秒内下降至 < 50mA，判定充满电，自动关闭 USB 口，防止过充延长电池寿命。AC 插座部分可独立定",
+          "chunk_full_id": "doc10:chunk5",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "其描述中仅提到电量统计、定时开关、过载保护等",
+          "source": "文档6:片段1",
+          "chunk_text": "SmartPlug-400 是一款智能插座，最大负载 10A/2500W，支持电量统计、定时开关、过载保护。外壳采用 V0 级阻燃材料，插孔带儿童保护门。电流测量精度 ±1%，功率测量精度 ±2%，历",
+          "chunk_full_id": "doc6:chunk1",
+          "validation_method": "character_overlap"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": [
+        0.971401639453534,
+        0.9119668847111934,
+        0.7874412447275286,
+        0.7335472948353806,
+        0.4532315972669758
+      ],
+      "faithfulness_score": null,
+      "relevance_score": null,
+      "rejected": false,
+      "rejection_reason": null
+    }
+  ]
+}

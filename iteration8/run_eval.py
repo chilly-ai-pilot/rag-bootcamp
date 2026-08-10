@@ -483,9 +483,26 @@ def run_single_strategy(args, chunking_strategy, retrieval_mode=None):
         queries = json.load(f)
     
     # 限制查询数量（测试模式）
+    queries_original_count = len(queries)
+    
+    # 处理 query-from 参数（从1开始的索引，转换为从0开始）
+    query_start_idx = max(0, args.query_from - 1)  # 确保不小于0
+    
+    # 处理 max-queries 参数
     if args.max_queries is not None and args.max_queries > 0:
-        queries = queries[:args.max_queries]
-        print(f"⚠️  测试模式: 仅评估前 {len(queries)} 个查询")
+        query_end_idx = min(query_start_idx + args.max_queries, queries_original_count)
+    else:
+        query_end_idx = queries_original_count
+    
+    # 检查边界
+    if query_start_idx >= queries_original_count:
+        print(f"❌ 错误: query-from={args.query_from} 超出范围（总共 {queries_original_count} 个查询）")
+        return None, None, [], None, None, None, None
+    
+    # 切片查询
+    if query_start_idx > 0 or query_end_idx < queries_original_count:
+        queries = queries[query_start_idx:query_end_idx]
+        print(f"⚠️  测试模式: 评估查询 #{query_start_idx+1} 到 #{query_end_idx} （共 {len(queries)}/{queries_original_count} 个）")
     
     # 构建文档块索引（使用指定的 chunking 策略）
     chunks = build_corpus_chunks(args.corpus_dir, strategy=chunking_strategy)
