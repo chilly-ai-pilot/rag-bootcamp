@@ -482,6 +482,11 @@ def run_single_strategy(args, chunking_strategy, retrieval_mode=None):
     with open(args.query_file, "r", encoding="utf-8") as f:
         queries = json.load(f)
     
+    # 限制查询数量（测试模式）
+    if args.max_queries is not None and args.max_queries > 0:
+        queries = queries[:args.max_queries]
+        print(f"⚠️  测试模式: 仅评估前 {len(queries)} 个查询")
+    
     # 构建文档块索引（使用指定的 chunking 策略）
     chunks = build_corpus_chunks(args.corpus_dir, strategy=chunking_strategy)
     
@@ -726,6 +731,10 @@ def main():
     ap.add_argument("--output-dir", type=str, default=".",
                     help="输出目录路径（默认当前目录，CI/CD 建议使用 ../data）")
     
+    # Iteration 8: 测试模式
+    ap.add_argument("--max-queries", type=int, default=None,
+                    help="最大查询数量（用于测试，默认 None 表示所有查询）")
+    
     args = ap.parse_args()
     
     # 设置拒答开关
@@ -754,6 +763,12 @@ def main():
     
     with open(args.query_file, "r", encoding="utf-8") as f:
         queries = json.load(f)
+    
+    # 限制查询数量（测试模式）
+    if args.max_queries is not None and args.max_queries > 0:
+        queries_original_count = len(queries)
+        queries = queries[:args.max_queries]
+        print(f"⚠️  测试模式: 仅评估前 {len(queries)}/{queries_original_count} 个查询")
     
     # 构建完整的结果数据（包含元数据）
     result_data = {

@@ -9,6 +9,7 @@ results_*.json
 judge_test*.json
 .DS_Store
 .env*
+.vscode
 
 # Allow review files (self-healing mechanism)
 !iteration8/review/*.json

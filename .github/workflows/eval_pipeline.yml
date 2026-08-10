@@ -60,6 +60,11 @@ on:
           - conservative
           - moderate
           - aggressive
+      max_queries:
+        description: 'Max queries to evaluate (for testing)'
+        required: false
+        default: '1'
+        type: string
 
 # 权限设置：需要写入权限以提交结果
 permissions:
@@ -121,6 +126,7 @@ jobs:
           RERANK="${{ github.event.inputs.rerank_mode || 'bge' }}"
           JUDGE="${{ github.event.inputs.judge_mode || 'none' }}"
           PRESET="${{ github.event.inputs.rejection_preset || 'aggressive' }}"
+          MAX_QUERIES="${{ github.event.inputs.max_queries || '1' }}"
           
           echo "🔧 Configuration:"
           echo "  Chunking: $CHUNKING"
@@ -128,6 +134,7 @@ jobs:
           echo "  Rerank: $RERANK"
           echo "  Judge: $JUDGE"
           echo "  Rejection Preset: $PRESET"
+          echo "  Max Queries: $MAX_QUERIES"
           
           # 运行评估，输出到 ../data 目录
           python run_eval.py \
@@ -137,6 +144,7 @@ jobs:
             --judge-mode "$JUDGE" \
             --rejection-preset "$PRESET" \
             --output-dir ../data \
+            --max-queries "$MAX_QUERIES" \
             --batch-size 5
       
       - name: 📊 Generate HTML report
@@ -212,27 +220,12 @@ jobs:
             # 推送前先拉取最新代码，避免冲突
             echo "🔄 Pulling latest changes before push..."
             
-            # 保存当前的 commit SHA
-            LOCAL_COMMIT=$(git rev-parse HEAD)
-            
-            # 尝试 rebase
-            if git pull --rebase origin main; then
-              echo "✅ Rebase successful"
-            else
-              echo "⚠️  Rebase failed, aborting and trying merge strategy..."
-              git rebase --abort
-              
-              # 回到提交后的状态
-              git reset --hard $LOCAL_COMMIT
-              
-              # 使用 merge 策略
-              if git pull --no-rebase origin main; then
-                echo "✅ Merge successful"
-              else
-                echo "⚠️  Merge also failed, will force push (last resort)"
-                git reset --hard $LOCAL_COMMIT
-              fi
-            fi
+            # 直接使用 merge 策略（更稳定）
+            git pull --no-rebase origin main || {
+              echo "⚠️  Pull failed, will try force push"
+              git push --force-with-lease origin main
+              exit 0
+            }
             
             # 推送结果
             git push origin main
