@@ -50,6 +50,14 @@ jobs:
         echo "🔄 Approving all pending reviews..."
         echo "y" | python approve_reviews.py --all --review-dir review --corpus-dir corpus
     
+    - name: Regenerate HTML report
+      if: steps.check_reviews.outputs.review_count > 0 && github.event.inputs.approve_all == 'yes'
+      run: |
+        cd iteration8
+        echo "📊 Regenerating GitHub Pages report..."
+        python generate_report.py --data-dir ../data --output-dir ../docs --review-dir review
+        echo "✅ Report updated - Review tab will show 0 pending"
+    
     - name: Commit and push approved reviews
       if: steps.check_reviews.outputs.review_count > 0 && github.event.inputs.approve_all == 'yes'
       run: |
