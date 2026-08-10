@@ -486,12 +486,12 @@
         <header>
             <h1>🚀 RAG System Evaluation Report</h1>
             <p>Continuous Evaluation Dashboard - Iteration 8 (Self-Healing)</p>
-            <p style="font-size: 0.95em; margin-top: 10px;">Latest: 2026-08-10 21:57 | Total Runs: 3 | Pending Reviews: 0</p>
+            <p style="font-size: 0.95em; margin-top: 10px;">Latest: 2026-08-10 22:05 | Total Runs: 4 | Pending Reviews: 5</p>
         </header>
         
         <div class="tabs">
             <button class="tab active" onclick="switchTab('metrics')">📊 Metrics</button>
-            <button class="tab" onclick="switchTab('review')">🔍 Review (0)</button>
+            <button class="tab" onclick="switchTab('review')">🔍 Review (5)</button>
         </div>
         
         <div id="metrics-tab" class="tab-content active">
@@ -499,8 +499,8 @@
         <div class="summary-cards">
             <div class="card">
                 <h3>Hit Rate</h3>
-                <div class="value">100.0%</div>
-<div class="diff positive">+0.0% vs previous</div>
+                <div class="value">90.6%</div>
+<div class="diff negative">-9.4% vs previous</div>
             </div>
             
             <div class="card">
@@ -515,12 +515,12 @@
             
             <div class="card">
                 <h3>Rejection Rate</h3>
-<div class="value">0.0%</div><div class="diff negative">+0.0% vs previous</div>
+<div class="value">15.6%</div><div class="diff negative">+15.6% vs previous</div>
             </div>
             
             <div class="card">
                 <h3>MRR Score</h3>
-<div class="value">0.250</div><div class="diff negative">-0.083 vs previous</div>
+<div class="value">0.666</div><div class="diff positive">+0.416 vs previous</div>
             </div>
         </div>
 
@@ -533,7 +533,7 @@
                 </div>
                 <div class="metadata-item">
                     <div class="label">Queries</div>
-                    <div class="value">1</div>
+                    <div class="value">32</div>
                 </div>
                 <div class="metadata-item">
                     <div class="label">Chunking Strategy</div>
@@ -561,7 +561,7 @@
                 </div>
                 <div class="metadata-item">
                     <div class="label">Query From</div>
-                    <div class="value">#3</div>
+                    <div class="value">#1</div>
                 </div>
                 <div class="metadata-item">
                     <div class="label">Batch Size</div>
@@ -630,6 +630,16 @@
                         <td>0.250</td>
                     </tr>
 
+                    <tr>
+                        <td>2026-08-10 22:05</td>
+                        <td><code>fixed_100_50+hybrid+bge</code></td>
+                        <td><span class="badge success">90.6%</span></td>
+                        <td>0.000</td>
+                        <td>0.000</td>
+                        <td>15.6%</td>
+                        <td>0.666</td>
+                    </tr>
+
                 </tbody>
             </table>
         </div>
@@ -659,12 +669,133 @@
                     </p>
                 </div>
 
-                <div class="empty-state">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    <h3>All Clear!</h3>
-                    <p>No pending reviews. The system is performing well.</p>
+                <div class="review-list">
+
+                    <div class="review-item" data-filename="review_267cd82d_20260810_220529.json">
+                        <div class="review-item-content">
+                            <div class="review-query">
+                                <strong>Question:</strong>
+                                <div contenteditable="true" class="editable" data-field="query" style="margin-top: 5px;">SW-600 的电池型号是什么？</div>
+                                <div class="edit-hint">Click to edit query</div>
+                            </div>
+                            <div class="review-meta">
+                                <span>📅 2026-08-10 22:05</span>
+                                <span>📄 doc7</span>
+                                <span class="review-reason reason-retrieval-miss">retrieval_miss</span>
+                            </div>
+
+                                <div style="font-size: 0.9em; color: #6c757d; margin-top: 5px;">
+                                    Rejection: [Layer 0] Retrieval miss (hit=0, ground truth not in top-k)
+                                </div>
+
+                                <div class="review-answer">
+                                    <div class="review-answer-label">Ground Truth Answer:</div>
+                                    <div contenteditable="true" class="review-answer-text editable" data-field="ground_truth">电池供电（CR2032×2）</div>
+                                    <div class="edit-hint">Click to edit answer</div>
+                                </div>
+                        </div>
+                    </div>
+
+                    <div class="review-item" data-filename="review_dc8728b6_20260810_220529.json">
+                        <div class="review-item-content">
+                            <div class="review-query">
+                                <strong>Question:</strong>
+                                <div contenteditable="true" class="editable" data-field="query" style="margin-top: 5px;">传感器没电了怎么换？</div>
+                                <div class="edit-hint">Click to edit query</div>
+                            </div>
+                            <div class="review-meta">
+                                <span>📅 2026-08-10 22:05</span>
+                                <span>📄 doc5</span>
+                                <span class="review-reason reason-retrieval-miss">retrieval_miss</span>
+                            </div>
+
+                                <div style="font-size: 0.9em; color: #6c757d; margin-top: 5px;">
+                                    Rejection: [Layer 0] Retrieval miss (hit=0, ground truth not in top-k)
+                                </div>
+
+                                <div class="review-answer">
+                                    <div class="review-answer-label">Ground Truth Answer:</div>
+                                    <div contenteditable="true" class="review-answer-text editable" data-field="ground_truth">使用 CR123A 锂电池，续航约 2 年（取决于触发频率）。</div>
+                                    <div class="edit-hint">Click to edit answer</div>
+                                </div>
+                        </div>
+                    </div>
+
+                    <div class="review-item" data-filename="review_bf2169f9_20260810_220529.json">
+                        <div class="review-item-content">
+                            <div class="review-query">
+                                <strong>Question:</strong>
+                                <div contenteditable="true" class="editable" data-field="query" style="margin-top: 5px;">怎样防止摄像头被偷看？</div>
+                                <div class="edit-hint">Click to edit query</div>
+                            </div>
+                            <div class="review-meta">
+                                <span>📅 2026-08-10 22:05</span>
+                                <span>📄 doc2</span>
+                                <span class="review-reason reason-low-rank">low_rank_6</span>
+                            </div>
+
+                                <div style="font-size: 0.9em; color: #6c757d; margin-top: 5px;">
+                                    Rejection: [Layer 0] Answer rank too low (rank=6, threshold=4)
+                                </div>
+
+                                <div class="review-answer">
+                                    <div class="review-answer-label">Ground Truth Answer:</div>
+                                    <div contenteditable="true" class="review-answer-text editable" data-field="ground_truth">启动隐私模式后，摄像头自动向下旋转隐藏镜头，并关闭收音。</div>
+                                    <div class="edit-hint">Click to edit answer</div>
+                                </div>
+                        </div>
+                    </div>
+
+                    <div class="review-item" data-filename="review_ab683502_20260810_220529.json">
+                        <div class="review-item-content">
+                            <div class="review-query">
+                                <strong>Question:</strong>
+                                <div contenteditable="true" class="editable" data-field="query" style="margin-top: 5px;">SmartPlug-400 待机功耗多少瓦？</div>
+                                <div class="edit-hint">Click to edit query</div>
+                            </div>
+                            <div class="review-meta">
+                                <span>📅 2026-08-10 22:05</span>
+                                <span>📄 doc6</span>
+                                <span class="review-reason reason-low-rank">low_rank_7</span>
+                            </div>
+
+                                <div style="font-size: 0.9em; color: #6c757d; margin-top: 5px;">
+                                    Rejection: [Layer 0] Answer rank too low (rank=7, threshold=4)
+                                </div>
+
+                                <div class="review-answer">
+                                    <div class="review-answer-label">Ground Truth Answer:</div>
+                                    <div contenteditable="true" class="review-answer-text editable" data-field="ground_truth">待机功耗仅 0.3W。</div>
+                                    <div class="edit-hint">Click to edit answer</div>
+                                </div>
+                        </div>
+                    </div>
+
+                    <div class="review-item" data-filename="review_c2224cb6_20260810_220529.json">
+                        <div class="review-item-content">
+                            <div class="review-query">
+                                <strong>Question:</strong>
+                                <div contenteditable="true" class="editable" data-field="query" style="margin-top: 5px;">SmartPlug-400 的充电保护功能是怎样工作的？</div>
+                                <div class="edit-hint">Click to edit query</div>
+                            </div>
+                            <div class="review-meta">
+                                <span>📅 2026-08-10 22:05</span>
+                                <span>📄 doc6</span>
+                                <span class="review-reason reason-retrieval-miss">retrieval_miss</span>
+                            </div>
+
+                                <div style="font-size: 0.9em; color: #6c757d; margin-top: 5px;">
+                                    Rejection: [Layer 0] Retrieval miss (hit=0, ground truth not in top-k)
+                                </div>
+
+                                <div class="review-answer">
+                                    <div class="review-answer-label">Ground Truth Answer:</div>
+                                    <div contenteditable="true" class="review-answer-text editable" data-field="ground_truth">检测到设备电流在短时间内下降至接近零，判定设备充满电，自动关闭插座，防止过充。</div>
+                                    <div class="edit-hint">Click to edit answer</div>
+                                </div>
+                        </div>
+                    </div>
+
                 </div>
 
             </div>
@@ -673,7 +804,7 @@
 
         <footer>
             <p>Generated by RAG Bootcamp Iteration 8 - Self-Healing RAG System</p>
-            <p>Last updated: 2026-08-10 21:57:11</p>
+            <p>Last updated: 2026-08-10 22:05:30</p>
         </footer>
     </div>
     
@@ -724,11 +855,11 @@
         const metricsChart = new Chart(metricsCtx, {
             type: 'line',
             data: {
-                labels: ["2026-08-10 20:35", "2026-08-10 21:44", "2026-08-10 21:57"],
+                labels: ["2026-08-10 20:35", "2026-08-10 21:44", "2026-08-10 21:57", "2026-08-10 22:05"],
                 datasets: [
                     {
                         label: 'Faithfulness',
-                        data: [0, 0, 0],
+                        data: [0, 0, 0, 0],
                         borderColor: 'rgb(102, 126, 234)',
                         backgroundColor: 'rgba(102, 126, 234, 0.1)',
                         tension: 0.3,
@@ -736,7 +867,7 @@
                     },
                     {
                         label: 'Relevance',
-                        data: [0, 0, 0],
+                        data: [0, 0, 0, 0],
                         borderColor: 'rgb(118, 75, 162)',
                         backgroundColor: 'rgba(118, 75, 162, 0.1)',
                         tension: 0.3,
@@ -744,7 +875,7 @@
                     },
                     {
                         label: 'MRR',
-                        data: [0.6484374999999999, 0.3333333333333333, 0.25],
+                        data: [0.6484374999999999, 0.3333333333333333, 0.25, 0.665922619047619],
                         borderColor: 'rgb(255, 159, 64)',
                         backgroundColor: 'rgba(255, 159, 64, 0.1)',
                         tension: 0.3,
@@ -784,11 +915,11 @@
         const ratesChart = new Chart(ratesCtx, {
             type: 'line',
             data: {
-                labels: ["2026-08-10 20:35", "2026-08-10 21:44", "2026-08-10 21:57"],
+                labels: ["2026-08-10 20:35", "2026-08-10 21:44", "2026-08-10 21:57", "2026-08-10 22:05"],
                 datasets: [
                     {
                         label: 'Hit Rate',
-                        data: [0.8125, 1.0, 1.0],
+                        data: [0.8125, 1.0, 1.0, 0.90625],
                         borderColor: 'rgb(75, 192, 192)',
                         backgroundColor: 'rgba(75, 192, 192, 0.1)',
                         tension: 0.3,
@@ -796,7 +927,7 @@
                     },
                     {
                         label: 'Rejection Rate',
-                        data: [0.1875, 0.0, 0.0],
+                        data: [0.1875, 0.0, 0.0, 0.15625],
                         borderColor: 'rgb(255, 99, 132)',
                         backgroundColor: 'rgba(255, 99, 132, 0.1)',
                         tension: 0.3,
