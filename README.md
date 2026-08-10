@@ -11,7 +11,7 @@
 
 ## 🎯 项目目标
 
-通过 7 次迭代，逐步构建一个**可维护、可评估、可优化**的生产级 RAG 系统。
+通过 8 次迭代，逐步构建一个**可维护、可评估、可优化、可自愈**的生产级 RAG 系统。
 
 ## 📚 迭代概览
 
@@ -25,6 +25,7 @@
 | [5](iteration5/) | **LLM-as-Judge** | Faithfulness + Relevance 自动评估 | ✅ 完成 |
 | [6](iteration6/) | **拒答机制** | 多层拒答 + 阈值配置 | ✅ 完成 |
 | [7](iteration7/) | **持续评估闭环** | GitHub Actions + 自动化 CI/CD | ✅ 完成 |
+| [8](iteration8/) | **自愈机制** | 自动缺陷检测 + 人工审核 + Corpus 更新 | ✅ 完成 |
 
 ## 🚀 快速开始
 
@@ -36,27 +37,40 @@
 ### 安装依赖
 
 ```bash
-cd iteration7
+cd iteration8
 pip install -r requirements.txt
 ```
 
 ### 运行评估
 
 ```bash
-# 本地评估
+# 本地评估（带自愈机制）
 python run_eval.py \
   --chunking-strategy fixed_100_50 \
   --retrieval-mode hybrid \
   --rerank-mode bge \
-  --judge-mode deepseek
+  --judge-mode deepseek \
+  --rejection-preset aggressive
 
-# 生成报告
-python generate_report.py --data-dir ../data --output-dir ../docs
+# 生成报告（带审核 UI）
+python generate_report.py --data-dir ../data --output-dir ../docs --review-dir review
 ```
 
 ### 查看报告
 
 打开 `docs/index.html` 或访问 [GitHub Pages](https://YOUR_USERNAME.github.io/rag-bootcamp/)。
+
+在 **Review 标签页** 可以查看待审核项。
+
+### 批量审核
+
+```bash
+# 查看待审核项
+python approve_reviews.py
+
+# 批量通过所有审核
+python approve_reviews.py --all
+```
 
 ## 📊 系统架构
 
@@ -75,8 +89,21 @@ python generate_report.py --data-dir ../data --output-dir ../docs
     ↓
 [Rejection] 拒答判断（Multi-layer）
     ↓
+[Self-Healing] 缺陷检测与自动修复 🆕
+    ↓
 最终答案
 ```
+
+### 🔄 Self-Healing 工作流 (Iteration 8)
+
+```
+评估运行 → 检测问题 → 生成审核文件 → 人工审核 → 更新 Corpus → 重新评估
+```
+
+**触发条件:**
+1. **检索未命中** (`hit != 1`) - 知识库缺少相关内容
+2. **答案排名过低** (`answer_rank > 4`) - 检索相关性不足
+3. **低分拒答** (`low_score_rejection`) - Rerank 分数过低
 
 ## 🎓 核心特性
 
@@ -122,9 +149,18 @@ python generate_report.py --data-dir ../data --output-dir ../docs
 - **结果持久化**: 保存到 `data/` 目录，可追溯
 - **可视化报告**: 自动生成 HTML 报告并部署到 GitHub Pages
 
+### 7. 自愈机制 🆕 (Iteration 8)
+
+- **自动缺陷检测**: 在 3 个时间节点检测知识库问题
+- **审核文件生成**: 自动生成待审核的 JSON 文件
+- **智能去重**: 基于 query 内容自动去重
+- **可视化审核 UI**: HTML 报告中的 Review 标签页
+- **批量审核**: 一键批量通过审核并更新 corpus
+- **完整闭环**: 评估 → 检测 → 审核 → 更新 → 重新评估
+
 ## 📈 性能指标
 
-最新评估结果（截至 Iteration 7）：
+最新评估结果（截至 Iteration 8）：
 
 | 指标 | 数值 | 说明 |
 |------|------|------|
@@ -133,6 +169,7 @@ python generate_report.py --data-dir ../data --output-dir ../docs
 | **Answer Relevance** | ~0.85 | 答案相关性 |
 | **Rejection Rate** | ~12% | 拒答率（适度） |
 | **MRR** | ~0.75 | 平均倒数排名 |
+| **Self-Healing** | 自动检测 | 知识库缺陷自动发现 🆕 |
 
 查看完整报告：[GitHub Pages](https://YOUR_USERNAME.github.io/rag-bootcamp/)
 
@@ -160,20 +197,28 @@ rag-bootcamp/
 ├── iteration4/          # Reranker
 ├── iteration5/          # LLM-as-Judge
 ├── iteration6/          # 拒答机制
-├── iteration7/          # 持续评估闭环 ⭐️
+├── iteration7/          # 持续评估闭环
+├── iteration8/          # 自愈机制 ⭐️ 最新
 │   ├── chunking.py
 │   ├── retrieval.py
 │   ├── generation.py
 │   ├── scoring.py
 │   ├── evaluation.py
 │   ├── run_eval.py
-│   ├── generate_report.py      # 报告生成器
-│   ├── expand_testset.py       # 测试集扩充工具
-│   ├── rejection_config.json   # 拒答配置
+│   ├── generate_report.py      # 报告生成器（带审核 UI）
+│   ├── self_healing.py         # 自愈核心逻辑 🆕
+│   ├── approve_reviews.py      # 批量审核脚本 🆕
+│   ├── rejection_config.json   # 拒答和自愈配置
 │   ├── corpus/                 # 文档语料库
+│   ├── review/                 # 待审核文件 🆕
+│   ├── SELF_HEALING_GUIDE.md   # 自愈使用指南 🆕
 │   └── README.md
+├── rag-mcp/             # RAG MCP Server 🆕
+│   ├── mcp_server/      # MCP 协议层
+│   ├── rag_core/        # RAG 核心逻辑
+│   └── tests/           # 测试
 ├── data/                # 评估结果历史
-├── docs/             # HTML 报告（GitHub Pages）
+├── docs/                # HTML 报告（GitHub Pages）
 ├── .github/workflows/   # CI/CD 配置
 └── docs/                # 设计文档
 ```
@@ -231,6 +276,11 @@ python expand_testset.py --action validate
 7. [Iteration 5](iteration5/README.md) - 自动化评估
 8. [Iteration 6](iteration6/README.md) - 拒答机制
 9. [Iteration 7](iteration7/README.md) - 持续评估 CI/CD
+10. [Iteration 8](iteration8/README.md) - 自愈机制 🆕
+
+### MCP Server
+
+11. [RAG MCP Server](rag-mcp/README.md) - Model Context Protocol 集成 🆕
 
 ## 🎯 最佳实践
 
@@ -243,17 +293,25 @@ python expand_testset.py --action validate
 
 ### Retrieval
 
-推荐配置：`hybrid + rerank`
+推荐配置：`hybrid + rerank`（默认）
 - Stage 1: Hybrid (Vector + BM25), top-40
 - Stage 2: BGE-Reranker, top-5
 - 最佳的召回和精度平衡
 
 ### Rejection
 
-推荐配置：`moderate` preset
-- Layer 1: Rerank top1 > 0.5
-- Layer 3: Faithfulness > 0.8, Relevance > 0.75
-- 适度的拒答率（~10-15%）
+推荐配置：`aggressive` preset（用于自愈）
+- Layer 1: Rerank top1 > 0.6
+- Layer 3: Faithfulness > 0.85, Relevance > 0.80
+- 更严格的拒答标准，触发更多自愈审核
+
+### Self-Healing 🆕
+
+推荐配置：全部启用
+- `hit_not_1`: true - 检测检索未命中
+- `answer_rank_threshold`: 4 - 检测答案排名过低
+- `layer1_rejection`: true - 检测低分拒答
+- `auto_deduplicate`: true - 自动去重审核文件
 
 ## 🚨 故障排除
 
@@ -280,7 +338,9 @@ python expand_testset.py --action validate
 
 - [设计文档](docs/iteration-plan.md)
 - [RAG 认知框架](docs/RAG-Cognition.md)
-- [测试集扩充指南](iteration7/TESTSET_EXPANSION_GUIDE.md)
+- [Self-Healing 使用指南](iteration8/SELF_HEALING_GUIDE.md) 🆕
+- [RAG MCP Server](docs/RAG-MCP.md) 🆕
+- [Iteration 8 自愈设计](docs/iteration8-自愈.md) 🆕
 
 ## 🤝 贡献指南
 
@@ -292,6 +352,7 @@ python expand_testset.py --action validate
 - 优化 Reranker 性能
 - 扩充测试集
 - 改进可视化报告
+- 增强自愈机制（UI 编辑保存、自动化审核等）🆕
 
 ## 📄 许可证
 

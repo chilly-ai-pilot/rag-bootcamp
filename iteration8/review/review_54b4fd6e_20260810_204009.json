@@ -1,0 +1,14 @@
+{
+  "query": "网关的指示灯含义？",
+  "ground_truth": "红灯常亮：未连接网络；蓝灯常亮：工作正常。",
+  "source": {
+    "doc_id": "doc4",
+    "char_start": 115,
+    "char_end": 145
+  },
+  "trigger_reason": "layer1_rejection",
+  "rejection_reason": "[Layer 1] Top-1 rerank score too low",
+  "status": "pending",
+  "created_at": "2026-08-10T20:40:09.354892",
+  "query_hash": "54b4fd6e"
+}

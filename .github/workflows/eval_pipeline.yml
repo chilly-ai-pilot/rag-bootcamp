@@ -6,11 +6,11 @@ on:
     branches:
       - main
     paths:
-      - 'iteration7/corpus/doc-*.txt'
-      - 'iteration7/corpus/queries.json'
-      - 'iteration7/*.py'
-      - 'iteration7/requirements.txt'
-      - 'iteration7/rejection_config.json'
+      - 'iteration8/corpus/doc-*.txt'
+      - 'iteration8/corpus/queries.json'
+      - 'iteration8/*.py'
+      - 'iteration8/requirements.txt'
+      - 'iteration8/rejection_config.json'
   
   # 支持手动触发
   workflow_dispatch:
@@ -28,7 +28,7 @@ on:
       retrieval_mode:
         description: 'Retrieval mode'
         required: false
-        default: 'vector'
+        default: 'hybrid'
         type: choice
         options:
           - hybrid
@@ -38,7 +38,7 @@ on:
       rerank_mode:
         description: 'Rerank mode'
         required: false
-        default: 'none'
+        default: 'bge'
         type: choice
         options:
           - bge
@@ -46,7 +46,7 @@ on:
       judge_mode:
         description: 'Judge mode'
         required: false
-        default: 'deepseek'
+        default: 'none'
         type: choice
         options:
           - deepseek
@@ -90,19 +90,19 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/huggingface
-          key: hf-models-${{ hashFiles('iteration7/requirements.txt') }}
+          key: hf-models-${{ hashFiles('iteration8/requirements.txt') }}
           restore-keys: |
             hf-models-
       
       - name: 📦 Install dependencies
         run: |
-          cd iteration7
+          cd iteration8
           pip install -r requirements.txt
       
       - name: 🔍 Check corpus changes
         id: corpus_check
         run: |
-          cd iteration7/corpus
+          cd iteration8/corpus
           echo "📊 Current corpus files:"
           ls -lh doc-*.txt || echo "No doc files found"
           DOC_COUNT=$(ls doc-*.txt 2>/dev/null | wc -l)
@@ -113,12 +113,12 @@ jobs:
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
         run: |
-          cd iteration7
+          cd iteration8
           
           # 从手动输入或使用默认值
           CHUNKING="${{ github.event.inputs.chunking_strategy || 'fixed_100_50' }}"
-          RETRIEVAL="${{ github.event.inputs.retrieval_mode || 'vector' }}"
-          RERANK="${{ github.event.inputs.rerank_mode || 'none' }}"
+          RETRIEVAL="${{ github.event.inputs.retrieval_mode || 'hybrid' }}"
+          RERANK="${{ github.event.inputs.rerank_mode || 'bge' }}"
           JUDGE="${{ github.event.inputs.judge_mode || 'deepseek' }}"
           PRESET="${{ github.event.inputs.rejection_preset || 'aggressive' }}"
           
@@ -141,10 +141,24 @@ jobs:
       
       - name: 📊 Generate HTML report
         run: |
-          cd iteration7
+          cd iteration8
           python generate_report.py \
             --data-dir ../data \
-            --output-dir ../docs
+            --output-dir ../docs \
+            --review-dir review
+      
+      - name: 📋 Check self-healing reviews
+        id: review_check
+        run: |
+          cd iteration8
+          if [ -d "review" ] && [ "$(ls -A review/*.json 2>/dev/null)" ]; then
+            REVIEW_COUNT=$(ls review/*.json 2>/dev/null | wc -l)
+            echo "review_count=$REVIEW_COUNT" >> $GITHUB_OUTPUT
+            echo "📝 Found $REVIEW_COUNT pending review(s)"
+          else
+            echo "review_count=0" >> $GITHUB_OUTPUT
+            echo "✅ No pending reviews"
+          fi
       
       - name: 📈 Display summary
         run: |
@@ -158,15 +172,24 @@ jobs:
           echo ""
           echo "📊 Corpus stats:"
           echo "  Documents: ${{ steps.corpus_check.outputs.doc_count }}"
+          echo ""
+          echo "📝 Self-healing:"
+          echo "  Pending reviews: ${{ steps.review_check.outputs.review_count }}"
       
       - name: 💾 Commit and push results
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           
-          # 添加结果文件和报告（.gitignore 已配置允许 data/ 目录下的结果）
+          # 添加结果文件和报告
           git add data/*.json
           git add docs/
+          
+          # 添加 review 目录（自愈机制生成的待审核文件）
+          if [ -d "iteration8/review" ] && [ "$(ls -A iteration8/review/*.json 2>/dev/null)" ]; then
+            git add iteration8/review/*.json
+            echo "📝 Added review files"
+          fi
           
           # 检查是否有变更
           if git diff --staged --quiet; then
@@ -175,10 +198,16 @@ jobs:
             # 生成提交信息
             TIMESTAMP=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
             DOC_COUNT=${{ steps.corpus_check.outputs.doc_count }}
+            REVIEW_COUNT=${{ steps.review_check.outputs.review_count }}
             
-            git commit -m "🤖 Auto-eval: $TIMESTAMP" \
-                       -m "Documents: $DOC_COUNT" \
-                       -m "Config: ${{ github.event.inputs.chunking_strategy || 'fixed_100_50' }}+${{ github.event.inputs.retrieval_mode || 'vector' }}+${{ github.event.inputs.rerank_mode || 'none' }}"
+            COMMIT_MSG="🤖 Auto-eval: $TIMESTAMP"
+            COMMIT_MSG="$COMMIT_MSG"$'\n'"Documents: $DOC_COUNT"
+            if [ "$REVIEW_COUNT" -gt 0 ]; then
+              COMMIT_MSG="$COMMIT_MSG"$'\n'"Pending Reviews: $REVIEW_COUNT"
+            fi
+            COMMIT_MSG="$COMMIT_MSG"$'\n'"Config: ${{ github.event.inputs.chunking_strategy || 'fixed_100_50' }}+${{ github.event.inputs.retrieval_mode || 'hybrid' }}+${{ github.event.inputs.rerank_mode || 'bge' }}"
+            
+            git commit -m "$COMMIT_MSG"
             
             # 推送前先拉取最新代码，避免冲突
             echo "🔄 Pulling latest changes before push..."
@@ -198,6 +227,7 @@ jobs:
         run: |
           echo "📊 Evaluation completed for commit ${{ github.sha }}"
           echo "🌐 View report: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+          echo "📝 Pending reviews: ${{ steps.review_check.outputs.review_count }}"
       
       # 失败时发送通知（可选，需要配置 Slack webhook 等）
       - name: 🚨 Notify on failure

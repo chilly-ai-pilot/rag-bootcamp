@@ -1,0 +1,14 @@
+{
+  "query": "重复查询测试",
+  "ground_truth": "答案2（较新）",
+  "source": {
+    "doc_id": "doc1",
+    "char_start": 0,
+    "char_end": 10
+  },
+  "trigger_reason": "test",
+  "rejection_reason": null,
+  "status": "pending",
+  "created_at": "2026-08-10T20:40:09.353271",
+  "query_hash": "31fd8078"
+}

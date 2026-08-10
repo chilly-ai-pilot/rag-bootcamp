@@ -1,0 +1,14 @@
+{
+  "query": "SmartCam-200 的夜视距离？",
+  "ground_truth": "红外夜视距离可达 10 米。",
+  "source": {
+    "doc_id": "doc2",
+    "char_start": 90,
+    "char_end": 110
+  },
+  "trigger_reason": "low_rank_5",
+  "rejection_reason": null,
+  "status": "pending",
+  "created_at": "2026-08-10T20:40:09.354762",
+  "query_hash": "d0343d1b"
+}

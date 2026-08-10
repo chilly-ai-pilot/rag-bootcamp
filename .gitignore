@@ -8,3 +8,7 @@ results_*.json
 !data/results_*.json
 judge_test*.json
 .DS_Store
+.env*
+
+# Allow review files (self-healing mechanism)
+!iteration8/review/*.json
