@@ -6,7 +6,7 @@
     "doc_id": "doc1",
     "ground_truth_text": "可通过 App 生成一次性或限时临时密码，适用于访客或家政服务。",
     "char_start": 716,
-    "char_end": 747
+    "char_end": 748
   },
   {
     "id": 2,
@@ -158,8 +158,8 @@
     "category": "exact_match",
     "doc_id": "doc6",
     "ground_truth_text": "待机功耗仅 0.3W。",
-    "char_start": 197,
-    "char_end": 208
+    "char_start": 114,
+    "char_end": 125
   },
   {
     "id": 19,
@@ -239,8 +239,8 @@
     "category": "semantic_paraphrase",
     "doc_id": "doc5",
     "ground_truth_text": "使用 CR123A 锂电池，续航约 2 年（取决于触发频率）。",
-    "char_start": 60,
-    "char_end": 91
+    "char_start": 78,
+    "char_end": 109
   },
   {
     "id": 28,
@@ -275,8 +275,8 @@
     "category": "exact_match",
     "doc_id": "doc7",
     "ground_truth_text": "可粘贴于墙面或装入 86 底盒，无需零线，电池供电（CR2032×2），续航约 1 年。",
-    "char_start": 54,
-    "char_end": 98
+    "char_start": 84,
+    "char_end": 128
   },
   {
     "id": 32,
@@ -292,26 +292,26 @@
     "query": "SmartHub-100 最多支持多少个设备？",
     "category": "exact_match",
     "doc_id": "doc16",
-    "ground_truth_text": "SmartHub-100 是智能家居中控主机，作为全屋设备协调中心。最多支持 128 个子设备同时在线，支持本地联动、场景自动化和语音控制。",
-    "char_start": 0,
-    "char_end": 72
+    "ground_truth_text": "SmartHub-100 是一款全屋智能家居中控设备，支持连接多达 128 个智能设备",
+    "char_start": 37,
+    "char_end": 80
   },
   {
     "id": 34,
     "query": "SmartHub-100 支持哪些语音助手？",
     "category": "exact_match",
     "doc_id": "doc16",
-    "ground_truth_text": "支持小爱同学、天猫精灵、小度等主流语音助手",
-    "char_start": 73,
-    "char_end": 95
+    "ground_truth_text": "支持小爱同学、天猫精灵、小度语音助手",
+    "char_start": 377,
+    "char_end": 395
   },
   {
     "id": 35,
     "query": "智能中控如何恢复出厂设置？",
     "category": "semantic_paraphrase",
     "doc_id": "doc16",
-    "ground_truth_text": "在设备底部找到 Reset 按钮，使用针状物长按 10 秒，指示灯闪烁后松开，设备将恢复出厂设置（所有配置和设备绑定信息将被清空）。",
-    "char_start": 96,
-    "char_end": 157
+    "ground_truth_text": "在设备底部找到 Reset 按钮，使用针状物长按 10 秒，指示灯闪烁后松开，设备将恢复出厂设置。",
+    "char_start": 1051,
+    "char_end": 1100
   }
 ]
