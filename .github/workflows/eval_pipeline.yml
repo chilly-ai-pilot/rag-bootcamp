@@ -65,6 +65,16 @@ on:
         required: false
         default: '1'
         type: string
+      query_from:
+        description: 'Start from query index (1-based)'
+        required: false
+        default: '1'
+        type: string
+      batch_size:
+        description: 'Concurrent batch size for API calls'
+        required: false
+        default: '10'
+        type: string
 
 # 权限设置：需要写入权限以提交结果
 permissions:
@@ -128,6 +138,8 @@ jobs:
           JUDGE="${{ github.event.inputs.judge_mode || 'none' }}"
           PRESET="${{ github.event.inputs.rejection_preset || 'aggressive' }}"
           MAX_QUERIES="${{ github.event.inputs.max_queries || '1' }}"
+          QUERY_FROM="${{ github.event.inputs.query_from || '1' }}"
+          BATCH_SIZE="${{ github.event.inputs.batch_size || '10' }}"
           
           echo "🔧 Configuration:"
           echo "  Chunking: $CHUNKING"
@@ -136,6 +148,8 @@ jobs:
           echo "  Judge: $JUDGE"
           echo "  Rejection Preset: $PRESET"
           echo "  Max Queries: $MAX_QUERIES"
+          echo "  Query From: $QUERY_FROM"
+          echo "  Batch Size: $BATCH_SIZE"
           
           # 运行评估，输出到 ../data 目录
           python run_eval.py \
@@ -146,7 +160,8 @@ jobs:
             --rejection-preset "$PRESET" \
             --output-dir ../data \
             --max-queries "$MAX_QUERIES" \
-            --batch-size 5
+            --query-from "$QUERY_FROM" \
+            --batch-size "$BATCH_SIZE"
       
       - name: 📊 Generate HTML report
         run: |
