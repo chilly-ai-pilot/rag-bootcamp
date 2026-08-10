@@ -119,6 +119,15 @@ jobs:
           restore-keys: |
             hf-models-
       
+      - name: 📦 Cache ChromaDB vector database
+        uses: actions/cache@v4
+        with:
+          path: iteration8/chroma_db
+          key: chroma-db-${{ hashFiles('iteration8/corpus/doc-*.txt') }}-${{ github.event.inputs.chunking_strategy || 'fixed_100_50' }}
+          restore-keys: |
+            chroma-db-${{ hashFiles('iteration8/corpus/doc-*.txt') }}-
+            chroma-db-
+      
       - name: 📦 Install dependencies
         run: |
           cd iteration8
