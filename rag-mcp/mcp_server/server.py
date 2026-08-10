@@ -12,6 +12,7 @@ import os
 import sys
 import json
 import asyncio
+import logging
 from typing import Any, Dict
 
 # 添加父目录到路径
@@ -21,7 +22,7 @@ from mcp.server import Server
 from mcp.types import Tool, TextContent
 import mcp.server.stdio
 
-from rag_core import search_knowledge, generate_answer_with_retrieval
+from rag_core import search_knowledge, generate_answer
 
 
 # 创建 MCP Server 实例
@@ -36,6 +37,7 @@ RAG_CONFIG = {
 }
 
 # 加载拒答配置
+# 注意：配置在进程启动时固定，修改 rejection_config.json 需重启 MCP Server
 def load_rejection_config() -> Dict:
     """加载拒答配置"""
     config_path = os.path.join(os.path.dirname(__file__), '../rag_core/rejection_config.json')
@@ -79,8 +81,10 @@ async def list_tools() -> list[Tool]:
         Tool(
             name="search_knowledge",
             description=(
-                "纯检索知识库，不做生成。用于判断知识库里有没有相关内容、够不够回答。"
+                "在知识库中检索与用户问题相关的文档片段。"
+                "当需要查找具体事实、数据或文档内容时调用。"
                 "支持 Layer 0/1 拒答检查（基于 rerank 分数）。"
+                "注意：如果用户只是闲聊、问通用知识、或者不需要查资料就能回答，不要调用此工具。"
             ),
             inputSchema={
                 "type": "object",
@@ -103,8 +107,10 @@ async def list_tools() -> list[Tool]:
         Tool(
             name="generate_answer",
             description=(
-                "完整生成：检索 + 两段式生成 + 确定性校验。"
+                "基于知识库内容生成回答用户问题的答案。"
+                "当用户询问需要参考文档、手册或知识库内容才能回答的问题时调用。"
                 "返回带引用标注的答案，支持完整的四层拒答机制（Layer 0-3）。"
+                "注意：如果用户只是打招呼、闲聊、或者问题不需要查询知识库就能回答，不要调用此工具。"
             ),
             inputSchema={
                 "type": "object",
@@ -136,6 +142,9 @@ async def call_tool(name: str, arguments: Any) -> list[TextContent]:
         query = arguments.get("query")
         top_k = arguments.get("top_k", 10)
         
+        # 兜底：强制限制 top_k 范围
+        top_k = max(1, min(20, top_k))
+        
         if not query:
             return [TextContent(
                 type="text",
@@ -164,14 +173,17 @@ async def call_tool(name: str, arguments: Any) -> list[TextContent]:
         query = arguments.get("query")
         top_k = arguments.get("top_k", 5)
         
+        # 兜底：强制限制 top_k 范围
+        top_k = max(1, min(10, top_k))
+        
         if not query:
             return [TextContent(
                 type="text",
                 text=json.dumps({"error": "query is required"}, ensure_ascii=False)
             )]
         
-        # 调用 rag_core 的生成函数（异步）
-        result = await generate_answer_with_retrieval(
+        # 调用 rag_core 的生成函数（同步版，避免 MCP 超时）
+        result = generate_answer(
             query=query,
             top_k=top_k,
             retrieval_mode=RAG_CONFIG["retrieval_mode"],
@@ -196,6 +208,13 @@ async def call_tool(name: str, arguments: Any) -> list[TextContent]:
 
 async def main():
     """启动 MCP Server"""
+    # 【关键修复】配置日志输出到 stderr，避免污染 MCP 协议通道（stdout）
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s [%(levelname)s] %(message)s',
+        stream=sys.stderr  # 不污染 stdout
+    )
+    
     # 使用 stdio 传输（标准输入/输出）
     async with mcp.server.stdio.stdio_server() as (read_stream, write_stream):
         await app.run(
