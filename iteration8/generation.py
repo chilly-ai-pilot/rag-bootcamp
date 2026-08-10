@@ -760,73 +760,78 @@ async def generate_answer_async(
     # 从外部传入的rejection_config（如果有）
     rejection_config = locals().get('rejection_config')
     
+    # 只有在rejection_enabled=True且Layer 3启用时才调用Judge
+    # 注意：judge_mode=none时，Layer 3应该已经被禁用（在run_eval.py中处理）
     if rejection_config and rejection_config.get('rejection_enabled', False):
-        try:
-            # 导入Judge评估函数
-            from evaluation import llm_combined_check_async
-            
-            # 获取Judge配置
-            judge_model = rejection_config.get('judge_model', 'deepseek-chat')
-            judge_base_url = rejection_config.get('judge_base_url', 'https://api.deepseek.com')
-            judge_api_key = rejection_config.get('judge_api_key') or os.getenv('DEEPSEEK_API_KEY')
-            
-            if judge_api_key:
-                # 创建Judge客户端（与generator分离）
-                judge_client = AsyncOpenAI(
-                    api_key=judge_api_key,
-                    base_url=judge_base_url,
-                    timeout=60.0  # 60秒超时
-                )
-                
-                # 调用Judge评估
-                judge_result = await llm_combined_check_async(
-                    query,
-                    raw_answer_clean,
-                    retrieved_chunks,
-                    judge_client,
-                    judge_model
-                )
-                
-                await judge_client.close()
-                
-                # 提取分数
-                import re as re_module
-                response_text = judge_result['raw_response']
-                
-                # 提取Faithfulness分数
-                faith_match = re_module.search(r'【Faithfulness 分数】\s*\n?\s*([0-9.]+)', response_text)
-                if faith_match:
-                    faithfulness_score = float(faith_match.group(1))
-                    if faithfulness_score > 1:
-                        faithfulness_score /= 100
-                
-                # 提取Relevance分数
-                rel_match = re_module.search(r'【Relevance 分数】\s*\n?\s*([0-9.]+)', response_text)
-                if rel_match:
-                    relevance_score = float(rel_match.group(1))
-                    if relevance_score > 1:
-                        relevance_score /= 100
-                
-                # 检查是否需要拒答
-                layer3_cfg = rejection_config['rejection_layers']['layer3_judge']
-                if layer3_cfg['enabled']:
-                    f_threshold = layer3_cfg['faithfulness_threshold']
-                    r_threshold = layer3_cfg['relevance_threshold']
-                    
-                    if (faithfulness_score is not None and faithfulness_score < f_threshold) or \
-                       (relevance_score is not None and relevance_score < r_threshold):
-                        rejected = True
-                        rejection_reason = f"Low quality (F={faithfulness_score:.2f}, R={relevance_score:.2f})"
-                        
-                        # 替换答案为拒答消息
-                        rejection_message = rejection_config.get('rejection_message', generate_rejection_answer())
-                        raw_answer_with_tags = rejection_message
-                        raw_answer_clean = rejection_message
-                        citations = []  # 拒答时清空引用
+        layer3_enabled = rejection_config.get('rejection_layers', {}).get('layer3_judge', {}).get('enabled', False)
         
-        except Exception as e:
-            print(f"⚠️  Judge evaluation in generator failed: {e}")
-            # Judge失败不影响生成，继续返回原答案
+        if layer3_enabled:
+            try:
+                # 导入Judge评估函数
+                from evaluation import llm_combined_check_async
+                
+                # 获取Judge配置
+                judge_model = rejection_config.get('judge_model', 'deepseek-chat')
+                judge_base_url = rejection_config.get('judge_base_url', 'https://api.deepseek.com')
+                judge_api_key = rejection_config.get('judge_api_key') or os.getenv('DEEPSEEK_API_KEY')
+                
+                if judge_api_key:
+                    # 创建Judge客户端（与generator分离）
+                    judge_client = AsyncOpenAI(
+                        api_key=judge_api_key,
+                        base_url=judge_base_url,
+                        timeout=60.0  # 60秒超时
+                    )
+                    
+                    # 调用Judge评估
+                    judge_result = await llm_combined_check_async(
+                        query,
+                        raw_answer_clean,
+                        retrieved_chunks,
+                        judge_client,
+                        judge_model
+                    )
+                    
+                    await judge_client.close()
+                    
+                    # 提取分数
+                    import re as re_module
+                    response_text = judge_result['raw_response']
+                    
+                    # 提取Faithfulness分数
+                    faith_match = re_module.search(r'【Faithfulness 分数】\s*\n?\s*([0-9.]+)', response_text)
+                    if faith_match:
+                        faithfulness_score = float(faith_match.group(1))
+                        if faithfulness_score > 1:
+                            faithfulness_score /= 100
+                    
+                    # 提取Relevance分数
+                    rel_match = re_module.search(r'【Relevance 分数】\s*\n?\s*([0-9.]+)', response_text)
+                    if rel_match:
+                        relevance_score = float(rel_match.group(1))
+                        if relevance_score > 1:
+                            relevance_score /= 100
+                    
+                    # 检查是否需要拒答
+                    layer3_cfg = rejection_config['rejection_layers']['layer3_judge']
+                    if layer3_cfg['enabled']:
+                        f_threshold = layer3_cfg['faithfulness_threshold']
+                        r_threshold = layer3_cfg['relevance_threshold']
+                        
+                        if (faithfulness_score is not None and faithfulness_score < f_threshold) or \
+                           (relevance_score is not None and relevance_score < r_threshold):
+                            rejected = True
+                            rejection_reason = f"Low quality (F={faithfulness_score:.2f}, R={relevance_score:.2f})"
+                            
+                            # 替换答案为拒答消息
+                            rejection_message = rejection_config.get('rejection_message', generate_rejection_answer())
+                            raw_answer_with_tags = rejection_message
+                            raw_answer_clean = rejection_message
+                            citations = []  # 拒答时清空引用
+            
+            except Exception as e:
+                print(f"⚠️  Judge evaluation in generator failed: {e}")
+                # Judge失败不影响生成，继续返回原答案
     
     # ============================================================
     # 返回结果
