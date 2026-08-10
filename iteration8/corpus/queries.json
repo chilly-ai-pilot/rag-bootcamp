@@ -274,9 +274,9 @@
     "query": "SW-600 的电池型号是什么？",
     "category": "exact_match",
     "doc_id": "doc7",
-    "ground_truth_text": "可粘贴于墙面或装入 86 底盒，无需零线，电池供电（CR2032×2），续航约 1 年。",
-    "char_start": 84,
-    "char_end": 128
+    "ground_truth_text": "电池供电（CR2032×2）",
+    "char_start": 105,
+    "char_end": 119
   },
   {
     "id": 32,
