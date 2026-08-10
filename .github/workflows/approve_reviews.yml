@@ -12,15 +12,20 @@ on:
           - 'yes'
           - 'no'
 
+# 权限设置：需要写入权限以提交和推送
+permissions:
+  contents: write
+
 jobs:
   approve:
     runs-on: ubuntu-latest
     
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
-        fetch-depth: 0
+        fetch-depth: 0  # 获取完整历史，避免合并问题
+        token: ${{ secrets.GITHUB_TOKEN }}  # 使用 GitHub 自动提供的 token
     
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -66,15 +71,20 @@ jobs:
           approved_count=$(git diff --staged --name-only | grep -c "review_.*\.json" || echo 0)
           new_docs=$(git diff --staged --name-only | grep "iteration8/corpus/doc-" | wc -l || echo 0)
           
-          git commit -m "✅ Approved $approved_count reviews, added $new_docs new documents"
+          TIMESTAMP=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          git commit -m "✅ Approved reviews: $TIMESTAMP" -m "Approved: $approved_count reviews" -m "Added: $new_docs new documents"
           
-          # Pull with merge strategy
-          echo "🔄 Pulling latest changes..."
-          git pull origin main --no-rebase || true
+          # Pull with merge strategy (same as eval_pipeline)
+          echo "🔄 Pulling latest changes before push..."
+          git pull --no-rebase origin main || {
+            echo "⚠️  Pull failed, trying force push with lease"
+            git push --force-with-lease origin main
+            exit 0
+          }
           
           # Push changes
           echo "📤 Pushing changes..."
-          git push origin main || git push origin main --force-with-lease
+          git push origin main
           
           echo "✅ Successfully approved and pushed reviews"
         fi
