@@ -370,7 +370,7 @@ def approve_reviews(
             query = review_data['query']
             
             # 构建新文档内容
-            new_content = f"问：{query}\n\n答：{ground_truth}"
+            new_content = f"问：{query}\n答：{ground_truth}"
             new_content_hash = hashlib.md5(new_content.strip().encode('utf-8')).hexdigest()
             
             # 检查是否重复
@@ -379,15 +379,9 @@ def approve_reviews(
                 print(f"     Query: {query}")
                 skipped_count += 1
                 
-                # 归档或删除重复的review文件
-                if archive and archive_dir:
-                    archive_path = os.path.join(archive_dir, os.path.basename(filepath))
-                    review_data['status'] = 'skipped_duplicate'
-                    review_data['skipped_at'] = datetime.now().isoformat()
-                    with open(archive_path, 'w', encoding='utf-8') as f:
-                        json.dump(review_data, f, ensure_ascii=False, indent=2)
-                    os.remove(filepath)
-                    archived_count += 1
+                # 删除重复的review文件（不归档）
+                os.remove(filepath)
+                print(f"⚠️  已删除重复 review: {os.path.basename(filepath)}")
                 
                 continue
             
