@@ -486,12 +486,12 @@
         <header>
             <h1>🚀 RAG System Evaluation Report</h1>
             <p>Continuous Evaluation Dashboard - Iteration 8 (Self-Healing)</p>
-            <p style="font-size: 0.95em; margin-top: 10px;">Latest: 2026-08-10 22:19 | Total Runs: 5 | Pending Reviews: <span id="pending-count">Loading...</span></p>
+            <p style="font-size: 0.95em; margin-top: 10px;">Latest: 2026-08-10 22:18 | Total Runs: 5 | Pending Reviews: 0</p>
         </header>
         
         <div class="tabs">
             <button class="tab active" onclick="switchTab('metrics')">📊 Metrics</button>
-            <button class="tab" onclick="switchTab('review')">🔍 Review (<span id="review-count">0</span>)</button>
+            <button class="tab" onclick="switchTab('review')">🔍 Review (0)</button>
         </div>
         
         <div id="metrics-tab" class="tab-content active">
@@ -679,83 +679,12 @@
                     </p>
                 </div>
 
-                <div class="review-list">
-
-                    <div class="review-item" data-filename="review_267cd82d_20260810_221838.json">
-                        <div class="review-item-content">
-                            <div class="review-query">
-                                <strong>Question:</strong>
-                                <div contenteditable="true" class="editable" data-field="query" style="margin-top: 5px;">SW-600 的电池型号是什么？</div>
-                                <div class="edit-hint">Click to edit query</div>
-                            </div>
-                            <div class="review-meta">
-                                <span>📅 2026-08-10 22:18</span>
-                                <span>📄 doc7</span>
-                                <span class="review-reason reason-retrieval-miss">retrieval_miss</span>
-                            </div>
-
-                                <div style="font-size: 0.9em; color: #6c757d; margin-top: 5px;">
-                                    Rejection: [Layer 0] Retrieval miss (hit=0, ground truth not in top-k)
-                                </div>
-
-                                <div class="review-answer">
-                                    <div class="review-answer-label">Ground Truth Answer:</div>
-                                    <div contenteditable="true" class="review-answer-text editable" data-field="ground_truth">电池供电（CR2032×2）</div>
-                                    <div class="edit-hint">Click to edit answer</div>
-                                </div>
-                        </div>
-                    </div>
-
-                    <div class="review-item" data-filename="review_dc8728b6_20260810_221838.json">
-                        <div class="review-item-content">
-                            <div class="review-query">
-                                <strong>Question:</strong>
-                                <div contenteditable="true" class="editable" data-field="query" style="margin-top: 5px;">传感器没电了怎么换？</div>
-                                <div class="edit-hint">Click to edit query</div>
-                            </div>
-                            <div class="review-meta">
-                                <span>📅 2026-08-10 22:18</span>
-                                <span>📄 doc5</span>
-                                <span class="review-reason reason-retrieval-miss">retrieval_miss</span>
-                            </div>
-
-                                <div style="font-size: 0.9em; color: #6c757d; margin-top: 5px;">
-                                    Rejection: [Layer 0] Retrieval miss (hit=0, ground truth not in top-k)
-                                </div>
-
-                                <div class="review-answer">
-                                    <div class="review-answer-label">Ground Truth Answer:</div>
-                                    <div contenteditable="true" class="review-answer-text editable" data-field="ground_truth">使用 CR123A 锂电池，续航约 2 年（取决于触发频率）。</div>
-                                    <div class="edit-hint">Click to edit answer</div>
-                                </div>
-                        </div>
-                    </div>
-
-                    <div class="review-item" data-filename="review_c2224cb6_20260810_221838.json">
-                        <div class="review-item-content">
-                            <div class="review-query">
-                                <strong>Question:</strong>
-                                <div contenteditable="true" class="editable" data-field="query" style="margin-top: 5px;">SmartPlug-400 的充电保护功能是怎样工作的？</div>
-                                <div class="edit-hint">Click to edit query</div>
-                            </div>
-                            <div class="review-meta">
-                                <span>📅 2026-08-10 22:18</span>
-                                <span>📄 doc6</span>
-                                <span class="review-reason reason-retrieval-miss">retrieval_miss</span>
-                            </div>
-
-                                <div style="font-size: 0.9em; color: #6c757d; margin-top: 5px;">
-                                    Rejection: [Layer 0] Retrieval miss (hit=0, ground truth not in top-k)
-                                </div>
-
-                                <div class="review-answer">
-                                    <div class="review-answer-label">Ground Truth Answer:</div>
-                                    <div contenteditable="true" class="review-answer-text editable" data-field="ground_truth">检测到设备电流在短时间内下降至接近零，判定设备充满电，自动关闭插座，防止过充。</div>
-                                    <div class="edit-hint">Click to edit answer</div>
-                                </div>
-                        </div>
-                    </div>
-
+                <div class="empty-state">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <h3>All Clear!</h3>
+                    <p>No pending reviews. The system is performing well.</p>
                 </div>
 
             </div>
@@ -764,7 +693,7 @@
 
         <footer>
             <p>Generated by RAG Bootcamp Iteration 8 - Self-Healing RAG System</p>
-            <p>Last updated: 2026-08-10 22:18:40</p>
+            <p>Last updated: 2026-08-10 22:37:56</p>
         </footer>
     </div>
     
@@ -926,46 +855,6 @@
                 }
             }
         });
-        
-        // Dynamic review count loading from GitHub API
-        async function loadReviewCount() {
-            try {
-                const repo = getGitHubRepo();
-                const response = await fetch(`https://api.github.com/repos/${repo}/contents/iteration8/review`);
-                
-                if (!response.ok) {
-                    throw new Error(`GitHub API returned ${response.status}`);
-                }
-                
-                const files = await response.json();
-                
-                // Filter review files: review_*.json
-                const reviewFiles = files.filter(f => 
-                    f.type === 'file' && 
-                    f.name.startsWith('review_') && 
-                    f.name.endsWith('.json')
-                );
-                
-                const count = reviewFiles.length;
-                
-                // Update both count displays
-                document.getElementById('pending-count').textContent = count;
-                document.getElementById('review-count').textContent = count;
-                
-                console.log(`✓ Loaded ${count} review files from GitHub`);
-            } catch (error) {
-                console.error('Failed to load review count:', error);
-                document.getElementById('pending-count').textContent = '?';
-                document.getElementById('review-count').textContent = '?';
-            }
-        }
-        
-        // Load review count when page loads
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', loadReviewCount);
-        } else {
-            loadReviewCount();
-        }
     </script>
 </body>
 </html>
