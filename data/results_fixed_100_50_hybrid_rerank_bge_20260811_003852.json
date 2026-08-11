@@ -1,0 +1,115 @@
+{
+  "metadata": {
+    "timestamp": "20260811_003852",
+    "evaluation_date": "2026-08-11T00:38:52.254027",
+    "corpus_stats": {
+      "num_documents": 19,
+      "num_queries": 1,
+      "corpus_dir": "corpus"
+    },
+    "model_config": {
+      "chunking_strategy": "fixed_100_50",
+      "retrieval_mode": "hybrid",
+      "rerank_mode": "bge",
+      "rerank_top_k": 10,
+      "retrieval_top_k": 40,
+      "judge_mode": "deepseek",
+      "rejection_enabled": true,
+      "rejection_preset": "custom",
+      "query_from": 8,
+      "max_queries": 1,
+      "batch_size": 1
+    }
+  },
+  "config": {
+    "chunking_strategy": "fixed_100_50",
+    "retrieval_mode": "hybrid",
+    "rerank_mode": "bge",
+    "rerank_top_k": 10,
+    "retrieval_top_k": 40
+  },
+  "scores": {
+    "chunking_sensitive": 1.0,
+    "overall": 1.0
+  },
+  "mrr_scores": {
+    "chunking_sensitive": 0.3333333333333333,
+    "overall": 0.3333333333333333
+  },
+  "results": [
+    {
+      "id": 8,
+      "query": "SmartBulb-300 的音乐律动模式怎么开启？",
+      "category": "chunking_sensitive",
+      "hit": 1,
+      "answer_rank": 3,
+      "answer": "开启音乐律动模式后，灯泡颜色随手机麦克风采集的环境音乐节奏变化，适合派对氛围[文档3:片段9]。需要保持 App 前台运行[文档3:片段10]。音乐律动需要保持 APP 前台运行，手机麦克风采集环境声音。不能播放手机音乐文件，必须是外放的音乐声。如果效果不明显，调高手机音量或靠近音源[文档14:片段16]。",
+      "raw_answer": "开启音乐律动模式后，灯泡颜色随手机麦克风采集的环境音乐节奏变化，适合派对氛围。需要保持 App 前台运行。音乐律动需要保持 APP 前台运行，手机麦克风采集环境声音。不能播放手机音乐文件，必须是外放的音乐声。如果效果不明显，调高手机音量或靠近音源。",
+      "citations": [
+        {
+          "span": "开启音乐律动模式后，灯泡颜色随手机麦克风采集的环境音乐节奏变化，适合派对氛围",
+          "source": "文档3:片段9",
+          "chunk_text": "关闭，改为上电默认白光。可将多个灯泡加入同一群组（如客厅筒灯群组），统一调光调色，最多支持 32 个设备为一组。开启音乐律动模式后，灯泡颜色随手机麦克风采集的环境音乐节奏变化，适合派对氛围。需要保持 ",
+          "chunk_full_id": "doc3:chunk9",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "需要保持 App 前台运行",
+          "source": "文档3:片段10",
+          "chunk_text": "设备为一组。开启音乐律动模式后，灯泡颜色随手机麦克风采集的环境音乐节奏变化，适合派对氛围。需要保持 App 前台运行。可与 ST-500 人体传感器联动，实现人来灯亮、人走延时熄灭。延时时间可在 AP",
+          "chunk_full_id": "doc3:chunk10",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "音乐律动需要保持 APP 前台运行，手机麦克风采集环境声音。不能播放手机音乐文件，必须是外放的音乐声。如果效果不明显，调高手机音量或靠近音源",
+          "source": "文档14:片段16",
+          "chunk_text": "不起来？\"\n注意：音乐律动需要保持 APP 前台运行，手机麦克风采集环境声音。不能播放手机音乐文件，必须是外放的音乐声。如果效果不明显，调高手机音量或靠近音源。\n\n【故障与售后】\n用户 H：\"插座显示",
+          "chunk_full_id": "doc14:chunk16",
+          "validation_method": "exact_match"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": [
+        0.9951201639975596,
+        0.985557116712191,
+        0.9672257718972199,
+        0.9660516636906195,
+        0.9353476939085353,
+        0.8299123888268075,
+        0.6980496676063042,
+        0.5428165448732424,
+        0.4372948366541982,
+        0.17672756426982342
+      ],
+      "faithfulness_score": 1.0,
+      "relevance_score": 0.5,
+      "rejected": false,
+      "rejection_reason": null
+    }
+  ],
+  "faithfulness_analysis": {
+    "count": 1,
+    "mean": 1.0,
+    "median": 1.0,
+    "min": 1.0,
+    "max": 1.0,
+    "std": 0.0,
+    "hit_mean": 1.0,
+    "hit_count": 1
+  },
+  "relevance_analysis": {
+    "count": 1,
+    "mean": 0.5,
+    "median": 0.5,
+    "min": 0.5,
+    "max": 0.5,
+    "std": 0.0,
+    "hit_mean": 0.5,
+    "hit_count": 1
+  },
+  "self_healing": {
+    "triggered_count": 0,
+    "created_files": [],
+    "deduplicated_count": 0
+  }
+}
