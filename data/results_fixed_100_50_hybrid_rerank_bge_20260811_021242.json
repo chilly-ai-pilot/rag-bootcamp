@@ -1,0 +1,95 @@
+{
+  "metadata": {
+    "timestamp": "20260811_021242",
+    "evaluation_date": "2026-08-11T02:12:42.388377",
+    "corpus_stats": {
+      "num_documents": 22,
+      "num_queries": 1,
+      "corpus_dir": "corpus"
+    },
+    "model_config": {
+      "chunking_strategy": "fixed_100_50",
+      "retrieval_mode": "hybrid",
+      "rerank_mode": "bge",
+      "rerank_top_k": 10,
+      "retrieval_top_k": 40,
+      "judge_mode": "none",
+      "rejection_enabled": true,
+      "rejection_preset": "moderate",
+      "query_from": 26,
+      "max_queries": 1,
+      "batch_size": 10
+    }
+  },
+  "config": {
+    "chunking_strategy": "fixed_100_50",
+    "retrieval_mode": "hybrid",
+    "rerank_mode": "bge",
+    "rerank_top_k": 10,
+    "retrieval_top_k": 40
+  },
+  "scores": {
+    "semantic_paraphrase": 1.0,
+    "overall": 1.0
+  },
+  "mrr_scores": {
+    "semantic_paraphrase": 0.3333333333333333,
+    "overall": 0.3333333333333333
+  },
+  "results": [
+    {
+      "id": 26,
+      "query": "摄像头晚上能看多远？",
+      "category": "semantic_paraphrase",
+      "hit": 1,
+      "answer_rank": 3,
+      "answer": "SmartCam-300 室外版：\"夜视距离达 20 米[文档15:片段10]\"。SmartCam-200 室内版：\"红外夜视距离可达 10 米[文档2:片段1]\"。另一处概述也印证：\"SmartCam-200 是室内版，1080P，夜视 10 米；SmartCam-300 是室外版，2K 分辨率，IP66 防水，夜视 20 米[文档14:片段5]\"。",
+      "raw_answer": "SmartCam-300 室外版：\"夜视距离达 20 米\"。SmartCam-200 室内版：\"红外夜视距离可达 10 米\"。另一处概述也印证：\"SmartCam-200 是室内版，1080P，夜视 10 米；SmartCam-300 是室外版，2K 分辨率，IP66 防水，夜视 20 米\"。",
+      "citations": [
+        {
+          "span": "夜视距离达 20 米",
+          "source": "文档15:片段10",
+          "chunk_text": "IP66 防水防尘，能承受 -20°C 低温和暴雨。内置 AI 芯片可识别人、车、宠物、包裹四类对象，准确率 > 95%。夜视距离达 20 米，配备彩色补光灯，夜间也能录制彩色视频。售价 499 元，",
+          "chunk_full_id": "doc15:chunk10",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "红外夜视距离可达 10 米",
+          "source": "文档2:片段1",
+          "chunk_text": "SmartCam-200 是一款 1080P 全高清智能摄像头，支持 360° 水平旋转和 90° 垂直旋转。具备移动追踪、声音报警、红外夜视功能，可通过 APP 实时查看与回放。红外夜视距离可达 1",
+          "chunk_full_id": "doc2:chunk1",
+          "validation_method": "character_overlap"
+        },
+        {
+          "span": "SmartCam-200 是室内版，1080P，夜视 10 米；SmartCam-300 是室外版，2K 分辨率，IP66 防水，夜视 20 米",
+          "source": "文档14:片段5",
+          "chunk_text": "m-200 是室内版，1080P，夜视 10 米；SmartCam-300 是室外版，2K 分辨率，IP66 防水，夜视 20 米。室内用 200 就够，室外或需要更高清晰度选 300。\n\n【安装与配",
+          "chunk_full_id": "doc14:chunk5",
+          "validation_method": "character_overlap"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": [
+        0.9577151769145302,
+        0.8562299483380641,
+        0.848789530032557,
+        0.8001187066294315,
+        0.656761093482855,
+        0.4291595462797844,
+        0.35437295301541344,
+        0.33607613316773827,
+        0.14744637120596546,
+        0.12507627496500215
+      ],
+      "faithfulness_score": null,
+      "relevance_score": null,
+      "rejected": false,
+      "rejection_reason": null
+    }
+  ],
+  "self_healing": {
+    "triggered_count": 0,
+    "created_files": [],
+    "deduplicated_count": 0
+  }
+}
