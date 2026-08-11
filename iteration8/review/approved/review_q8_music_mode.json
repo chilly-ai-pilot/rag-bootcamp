@@ -8,8 +8,10 @@
   },
   "trigger_reason": "low_relevance",
   "rejection_reason": "[Layer 3] Judge low relevance (F=1.00, R=0.60, threshold=0.80)",
-  "status": "pending",
+  "status": "approved",
   "created_at": "2026-08-11T00:00:00.000000",
   "query_hash": "q8_manual",
-  "notes": "原文档只描述了开启后的效果，缺少具体开启步骤。此答案补充了完整的操作流程和注意事项。"
+  "notes": "原文档只描述了开启后的效果，缺少具体开启步骤。此答案补充了完整的操作流程和注意事项。",
+  "approved_at": "2026-08-11T00:54:35.599365",
+  "new_doc_id": "doc-20"
 }
