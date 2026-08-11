@@ -1,0 +1,95 @@
+{
+  "metadata": {
+    "timestamp": "20260811_022124",
+    "evaluation_date": "2026-08-11T02:21:24.248791",
+    "corpus_stats": {
+      "num_documents": 22,
+      "num_queries": 1,
+      "corpus_dir": "corpus"
+    },
+    "model_config": {
+      "chunking_strategy": "fixed_100_50",
+      "retrieval_mode": "hybrid",
+      "rerank_mode": "bge",
+      "rerank_top_k": 10,
+      "retrieval_top_k": 40,
+      "judge_mode": "none",
+      "rejection_enabled": true,
+      "rejection_preset": "moderate",
+      "query_from": 24,
+      "max_queries": 1,
+      "batch_size": 10
+    }
+  },
+  "config": {
+    "chunking_strategy": "fixed_100_50",
+    "retrieval_mode": "hybrid",
+    "rerank_mode": "bge",
+    "rerank_top_k": 10,
+    "retrieval_top_k": 40
+  },
+  "scores": {
+    "semantic_paraphrase": 1.0,
+    "overall": 1.0
+  },
+  "mrr_scores": {
+    "semantic_paraphrase": 1.0,
+    "overall": 1.0
+  },
+  "results": [
+    {
+      "id": 24,
+      "query": "怎么让灯泡随着音乐节奏变化？",
+      "category": "semantic_paraphrase",
+      "hit": 1,
+      "answer_rank": 1,
+      "answer": "在 App 中找到 SmartBulb-300，点击进入设备详情，选择「音乐律动」模式并点击开启。开启后，灯泡颜色会随手机麦克风采集的环境音乐节奏自动变化，适合派对氛围。注意：使用时需要保持 App 前台运行，必须是外放的音乐（不能播放手机音乐文件[文档20:片段2]。另外，可关闭改为上电默认白光或加入群组统一调光[文档3:片段9]；注意需保持 App 前台运行，且需外放音乐声，效果不明显时调高手机音量或靠近音源[文档14:片段17]。",
+      "raw_answer": "在 App 中找到 SmartBulb-300，点击进入设备详情，选择「音乐律动」模式并点击开启。开启后，灯泡颜色会随手机麦克风采集的环境音乐节奏自动变化，适合派对氛围。注意：使用时需要保持 App 前台运行，必须是外放的音乐（不能播放手机音乐文件。另外，可关闭改为上电默认白光或加入群组统一调光；注意需保持 App 前台运行，且需外放音乐声，效果不明显时调高手机音量或靠近音源。",
+      "citations": [
+        {
+          "span": "必须是外放的音乐（不能播放手机音乐文件",
+          "source": "文档20:片段2",
+          "chunk_text": "-300，点击进入设备详情，选择「音乐律动」模式并点击开启。开启后，灯泡颜色会随手机麦克风采集的环境音乐节奏自动变化，适合派对氛围。注意：使用时需要保持 App 前台运行，必须是外放的音乐（不能播放手",
+          "chunk_full_id": "doc20:chunk2",
+          "validation_method": "character_overlap"
+        },
+        {
+          "span": "关闭，改为上电默认白光。可将多个灯泡加入同一群组（如客厅筒灯群组），统一调光调色，最多支持 32 个设备为一组。开启音乐律动模式后，灯泡颜色随手机麦克风采集的环境音乐节奏变化，适合派对氛围。需要保持 App 前台运行。",
+          "source": "文档3:片段9",
+          "chunk_text": "关闭，改为上电默认白光。可将多个灯泡加入同一群组（如客厅筒灯群组），统一调光调色，最多支持 32 个设备为一组。开启音乐律动模式后，灯泡颜色随手机麦克风采集的环境音乐节奏变化，适合派对氛围。需要保持 ",
+          "chunk_full_id": "doc3:chunk9",
+          "validation_method": "character_overlap"
+        },
+        {
+          "span": "注意：使用时需要保持 App 前台运行，必须是外放的音乐（不能播放手机音乐文件。另外，可关闭改为上电默认白光或加入群组统一调光。注意需保持 App 前台运行，且需外放音乐声，效果不明显时调高手机音量或靠近音源。",
+          "source": "文档14:片段17",
+          "chunk_text": "必须是外放的音乐声。如果效果不明显，调高手机音量或靠近音源。\n\n【故障与售后】\n用户 H：\"插座显示离线，但指示灯是亮的？\"\n离线原因排查：1）路由器重启了？2）WiFi 密码改了？3）路由器开启了 ",
+          "chunk_full_id": "doc14:chunk17",
+          "validation_method": "embedding_similarity(0.735)"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": [
+        0.9973550409908092,
+        0.9867793494664291,
+        0.9583860343874707,
+        0.8360275461138645,
+        0.7437891616555573,
+        0.7073693907714504,
+        0.6389037357336287,
+        0.16636103235601568,
+        0.0856704447951855,
+        0.054649091095175274
+      ],
+      "faithfulness_score": null,
+      "relevance_score": null,
+      "rejected": false,
+      "rejection_reason": null
+    }
+  ],
+  "self_healing": {
+    "triggered_count": 0,
+    "created_files": [],
+    "deduplicated_count": 0
+  }
+}
