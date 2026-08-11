@@ -699,6 +699,64 @@ async def generate_answer_async(
         citations = valid_citations
         valid_citations_count = len(citations)
         
+        # ============================================================
+        # 清理答案：移除验证失败的引用及其对应的文本片段
+        # ============================================================
+        # 提取所有有效引用的source标记
+        valid_sources = {cit['source'] for cit in valid_citations}
+        
+        # 解析答案文本，找到所有引用标记及其位置
+        # 使用正则表达式匹配所有 [文档X:片段N] 标记
+        citation_pattern = r'\[文档(\d+):片段(\d+)\]'
+        matches = list(re.finditer(citation_pattern, raw_answer_with_tags))
+        
+        if matches:
+            # 从后往前处理，避免位置偏移问题
+            cleaned_answer = raw_answer_with_tags
+            
+            for i in range(len(matches) - 1, -1, -1):
+                match = matches[i]
+                source = f"文档{match.group(1)}:片段{match.group(2)}"
+                
+                # 如果这个引用验证失败
+                if source not in valid_sources:
+                    # 找到这个引用标记的起始和结束位置
+                    tag_start = match.start()
+                    tag_end = match.end()
+                    
+                    # 找到这个引用标记前面的内容的起始位置
+                    # 策略：从前一个引用标记之后开始，或从句子开头开始
+                    content_start = 0
+                    
+                    # 如果前面还有引用标记，从前一个标记后开始
+                    if i > 0:
+                        prev_match = matches[i-1]
+                        content_start = prev_match.end()
+                    else:
+                        # 这是第一个引用，从句子开头或上一个句号/分号后开始
+                        # 向前查找句子边界
+                        sentence_delimiters = ['。', '；', '\n', '^']
+                        temp_start = tag_start
+                        while temp_start > 0:
+                            temp_start -= 1
+                            if cleaned_answer[temp_start] in sentence_delimiters:
+                                content_start = temp_start + 1
+                                break
+                    
+                    # 移除从 content_start 到 tag_end 的内容
+                    cleaned_answer = cleaned_answer[:content_start] + cleaned_answer[tag_end:]
+                    
+                    print(f"🔧 Removed invalid citation and its content: {source}")
+            
+            # 清理可能产生的多余空格、分号等
+            cleaned_answer = re.sub(r'\s+', ' ', cleaned_answer)  # 多个空格变单个
+            cleaned_answer = re.sub(r'；\s*；', '；', cleaned_answer)  # 重复分号
+            cleaned_answer = re.sub(r'^\s*；', '', cleaned_answer)  # 开头的分号
+            cleaned_answer = cleaned_answer.strip()
+            
+            # 更新答案
+            raw_answer_with_tags = cleaned_answer
+        
     except Exception as e:
         print(f"❌ Step 2 (citation extraction) failed: {e}")
         print(f"Raw response: {raw_response if 'raw_response' in locals() else 'N/A'}")
