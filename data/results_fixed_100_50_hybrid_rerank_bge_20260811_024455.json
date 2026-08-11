@@ -1,0 +1,143 @@
+{
+  "metadata": {
+    "timestamp": "20260811_024455",
+    "evaluation_date": "2026-08-11T02:44:55.376692",
+    "corpus_stats": {
+      "num_documents": 22,
+      "num_queries": 1,
+      "corpus_dir": "corpus"
+    },
+    "model_config": {
+      "chunking_strategy": "fixed_100_50",
+      "retrieval_mode": "hybrid",
+      "rerank_mode": "bge",
+      "rerank_top_k": 10,
+      "retrieval_top_k": 40,
+      "judge_mode": "deepseek",
+      "rejection_enabled": true,
+      "rejection_preset": "custom",
+      "query_from": 27,
+      "max_queries": 1,
+      "batch_size": 1
+    }
+  },
+  "config": {
+    "chunking_strategy": "fixed_100_50",
+    "retrieval_mode": "hybrid",
+    "rerank_mode": "bge",
+    "rerank_top_k": 10,
+    "retrieval_top_k": 40
+  },
+  "scores": {
+    "semantic_paraphrase": 1.0,
+    "overall": 1.0
+  },
+  "mrr_scores": {
+    "semantic_paraphrase": 0.5,
+    "overall": 0.5
+  },
+  "results": [
+    {
+      "id": 27,
+      "query": "传感器没电了怎么换？",
+      "category": "semantic_paraphrase",
+      "hit": 1,
+      "answer_rank": 2,
+      "answer": "传感器更换电池步骤：1) 使用硬币逆时针旋转传感器背面的电池仓盖；2) 取出旧电池；3) 按照电池仓内的正负极标识，装入新的 CR123A 锂电池；4) 顺时针旋转盖上电池仓盖并拧紧[文档21:片段1][文档21:片段3]。电池续航约 2 年（取决于触发频率）[文档18:片段1]。APP 会在低电量时提前 30 天提醒更换[文档21:片段3]。注意：不同型号传感器电池不同，ST-500/ST-501 用 CR2032 纽扣电池，ST-600 是可充电锂电池[文档21:片段4]。ST-500/ST-501 正常使用 12-18 个月，ST-600 续航约 12 个月[文档14:片段19][文档14:片段20]。",
+      "raw_answer": "传感器更换电池步骤：1) 使用硬币逆时针旋转传感器背面的电池仓盖；2) 取出旧电池；3) 按照电池仓内的正负极标识，装入新的 CR123A 锂电池；4) 顺时针旋转盖上电池仓盖并拧紧。电池续航约 2 年（取决于触发频率）。APP 会在低电量时提前 30 天提醒更换。注意：不同型号传感器电池不同，ST-500/ST-501 用 CR2032 纽扣电池，ST-600 是可充电锂电池。ST-500/ST-501 正常使用 12-18 个月，ST-600 续航约 12 个月。",
+      "citations": [
+        {
+          "span": "传感器更换电池步骤：1) 使用硬币逆时针旋转传感器背面的电池仓盖；2) 取出旧电池；3) 按照电池仓内的正负极标识，装入新的 CR123A 锂电池；4) 顺时针旋转盖上电池仓盖并拧紧",
+          "source": "文档21:片段1",
+          "chunk_text": "问：传感器没电了怎么换？\n答：传感器更换电池步骤：1) 使用硬币逆时针旋转传感器背面的电池仓盖；2) 取出旧电池；3) 按照电池仓内的正负极标识，装入新的 CR123A 锂电池；4) 顺时针旋转盖上电",
+          "chunk_full_id": "doc21:chunk1",
+          "validation_method": "character_overlap"
+        },
+        {
+          "span": "传感器更换电池步骤：1) 使用硬币逆时针旋转传感器背面的电池仓盖；2) 取出旧电池；3) 按照电池仓内的正负极标识，装入新的 CR123A 锂电池；4) 顺时针旋转盖上电池仓盖并拧紧",
+          "source": "文档21:片段3",
+          "chunk_text": "池仓盖并拧紧。电池续航约 2 年（取决于触发频率）。APP 会在低电量时提前 30 天提醒更换。注意：不同型号传感器电池不同，ST-500/ST-501 用 CR2032 纽扣电池，ST-600 是可",
+          "chunk_full_id": "doc21:chunk3",
+          "validation_method": "embedding_similarity(0.694)"
+        },
+        {
+          "span": "电池续航约 2 年（取决于触发频率）",
+          "source": "文档18:片段1",
+          "chunk_text": "问：传感器没电了怎么换？\n答：使用 CR123A 锂电池，续航约 2 年（取决于触发频率）。",
+          "chunk_full_id": "doc18:chunk1",
+          "validation_method": "punctuation_tolerant"
+        },
+        {
+          "span": "APP 会在低电量时提前 30 天提醒更换",
+          "source": "文档21:片段3",
+          "chunk_text": "池仓盖并拧紧。电池续航约 2 年（取决于触发频率）。APP 会在低电量时提前 30 天提醒更换。注意：不同型号传感器电池不同，ST-500/ST-501 用 CR2032 纽扣电池，ST-600 是可",
+          "chunk_full_id": "doc21:chunk3",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "不同型号传感器电池不同，ST-500/ST-501 用 CR2032 纽扣电池，ST-600 是可充电锂电池",
+          "source": "文档21:片段4",
+          "chunk_text": "：不同型号传感器电池不同，ST-500/ST-501 用 CR2032 纽扣电池，ST-600 是可充电锂电池。",
+          "chunk_full_id": "doc21:chunk4",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "ST-500/ST-501 正常使用 12-18 个月",
+          "source": "文档14:片段19",
+          "chunk_text": "MAC 地址过滤？4）设备距离路由器太远信号弱？先尝试重启插座，长按 10 秒恢复出厂设置重新配网。\n\n用户 I：\"传感器电池多久换一次？\"\nST-500/ST-501 用 CR2032 纽扣电池，正",
+          "chunk_full_id": "doc14:chunk19",
+          "validation_method": "character_overlap"
+        },
+        {
+          "span": "ST-600 续航约 12 个月",
+          "source": "文档14:片段20",
+          "chunk_text": "\n\n用户 I：\"传感器电池多久换一次？\"\nST-500/ST-501 用 CR2032 纽扣电池，正常使用 12-18 个月。ST-600 是锂电池可充电，续航约 12 个月。低电量时 APP 会提前",
+          "chunk_full_id": "doc14:chunk20",
+          "validation_method": "character_overlap"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": [
+        0.9997544362681472,
+        0.9991066463222464,
+        0.9730244436281917,
+        0.8418369328693277,
+        0.8059808909489027,
+        0.7948107247039488,
+        0.7342623460782356,
+        0.6250744586814713,
+        0.617863405355424,
+        0.5560179428173322
+      ],
+      "faithfulness_score": 1.0,
+      "relevance_score": 1.0,
+      "rejected": false,
+      "rejection_reason": null
+    }
+  ],
+  "faithfulness_analysis": {
+    "count": 1,
+    "mean": 1.0,
+    "median": 1.0,
+    "min": 1.0,
+    "max": 1.0,
+    "std": 0.0,
+    "hit_mean": 1.0,
+    "hit_count": 1
+  },
+  "relevance_analysis": {
+    "count": 1,
+    "mean": 1.0,
+    "median": 1.0,
+    "min": 1.0,
+    "max": 1.0,
+    "std": 0.0,
+    "hit_mean": 1.0,
+    "hit_count": 1
+  },
+  "self_healing": {
+    "triggered_count": 0,
+    "created_files": [],
+    "deduplicated_count": 0
+  }
+}
