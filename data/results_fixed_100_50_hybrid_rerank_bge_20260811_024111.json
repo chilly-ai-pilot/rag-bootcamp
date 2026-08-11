@@ -1,0 +1,95 @@
+{
+  "metadata": {
+    "timestamp": "20260811_024111",
+    "evaluation_date": "2026-08-11T02:41:11.619652",
+    "corpus_stats": {
+      "num_documents": 22,
+      "num_queries": 1,
+      "corpus_dir": "corpus"
+    },
+    "model_config": {
+      "chunking_strategy": "fixed_100_50",
+      "retrieval_mode": "hybrid",
+      "rerank_mode": "bge",
+      "rerank_top_k": 10,
+      "retrieval_top_k": 40,
+      "judge_mode": "none",
+      "rejection_enabled": true,
+      "rejection_preset": "moderate",
+      "query_from": 9,
+      "max_queries": 1,
+      "batch_size": 10
+    }
+  },
+  "config": {
+    "chunking_strategy": "fixed_100_50",
+    "retrieval_mode": "hybrid",
+    "rerank_mode": "bge",
+    "rerank_top_k": 10,
+    "retrieval_top_k": 40
+  },
+  "scores": {
+    "chunking_sensitive": 1.0,
+    "overall": 1.0
+  },
+  "mrr_scores": {
+    "chunking_sensitive": 0.25,
+    "overall": 0.25
+  },
+  "results": [
+    {
+      "id": 9,
+      "query": "SmartCam-200 的声音报警音量怎么调节？",
+      "category": "chunking_sensitive",
+      "hit": 1,
+      "answer_rank": 4,
+      "answer": "SmartCam-200 的声音报警音量可通过以下方式调节： “可设置触发移动侦测时摄像头发出警笛声，音量可调（70dB/80dB/90dB）[文档2:片段9]”。 此外，该设备还支持“声音报警音量提升至 100dB，可选警笛、犬吠、警告语音三种声音[文档9:片段7]”。 需注意，在安装时“使用高档并关闭声音报警避免误报[文档2:片段7]”，同时可通过 APP 进行具体音量设置。",
+      "raw_answer": "SmartCam-200 的声音报警音量可通过以下方式调节： “可设置触发移动侦测时摄像头发出警笛声，音量可调（70dB/80dB/90dB）”。 此外，该设备还支持“声音报警音量提升至 100dB，可选警笛、犬吠、警告语音三种声音”。 需注意，在安装时“使用高档并关闭声音报警避免误报”，同时可通过 APP 进行具体音量设置。",
+      "citations": [
+        {
+          "span": "可设置触发移动侦测时摄像头发出警笛声，音量可调（70dB/80dB/90dB）",
+          "source": "文档2:片段9",
+          "chunk_text": "启或损坏。可设置触发移动侦测时摄像头发出警笛声，音量可调（70dB/80dB/90dB）。还可通过 APP 远程喊话，实时威慑可疑人员。启动隐私模式后，摄像头自动向下旋转隐藏镜头，并关闭收音。APP ",
+          "chunk_full_id": "doc2:chunk9",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "声音报警音量提升至 100dB，可选警笛、犬吠、警告语音三种声音",
+          "source": "文档9:片段7",
+          "chunk_text": "降噪算法和回音消除，户外环境下通话更清晰。声音报警音量提升至 100dB，可选警笛、犬吠、警告语音三种声音。支持 MicroSD 卡（最大 256GB）和云存储双备份。事件录像智能分类存储：人物、车辆",
+          "chunk_full_id": "doc9:chunk7",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "使用高档并关闭声音报警避免误报",
+          "source": "文档2:片段7",
+          "chunk_text": "使用高档并关闭声音报警避免误报。安装高度建议 2–2.5 米，避免正对阳光或强光源。如需墙体打孔，请使用附带的塑料膨胀管和螺丝。连接电源前请确认电压为 DC 5V/1A，使用非原装电源适配器可能导致重",
+          "chunk_full_id": "doc2:chunk7",
+          "validation_method": "exact_match"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": [
+        0.9919321453701656,
+        0.9597734362446706,
+        0.9541764229579859,
+        0.9061573787141363,
+        0.8757752161526335,
+        0.7784581932710274,
+        0.5084078208870771,
+        0.38954116644525144,
+        0.09703690234676778,
+        0.06743703256803125
+      ],
+      "faithfulness_score": null,
+      "relevance_score": null,
+      "rejected": false,
+      "rejection_reason": null
+    }
+  ],
+  "self_healing": {
+    "triggered_count": 0,
+    "created_files": [],
+    "deduplicated_count": 0
+  }
+}
