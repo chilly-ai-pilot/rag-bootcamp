@@ -72,11 +72,13 @@ def load_rejection_config(config_path: str = "rejection_config.json", preset: st
             print(f"📋 Using rejection preset: {preset}")
             print(f"   {preset_config['description']}")
             
-            # 更新layer配置
+            # 更新所有layer配置
             if 'layer3_judge' in preset_config:
                 config['rejection_layers']['layer3_judge'].update(preset_config['layer3_judge'])
-            if 'layer1_rerank' in preset_config:
-                config['rejection_layers']['layer1_rerank'].update(preset_config['layer1_rerank'])
+            if 'layer2_citation' in preset_config:
+                config['rejection_layers']['layer2_citation'].update(preset_config['layer2_citation'])
+            if 'layer1_retrieval' in preset_config:
+                config['rejection_layers']['layer1_retrieval'].update(preset_config['layer1_retrieval'])
         
         return config
     except FileNotFoundError:
