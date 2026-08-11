@@ -71,6 +71,7 @@ def test_create_review():
     print("="*60)
     
     filepath = create_review_file(
+        query_id=1,
         query="测试查询：SmartLock-100 的功能",
         ground_truth="SmartLock-100 支持指纹、密码、卡片等多种开锁方式。",
         doc_id="doc1",
@@ -90,7 +91,9 @@ def test_create_review():
     assert data['query'] == "测试查询：SmartLock-100 的功能"
     assert data['status'] == "pending"
     assert 'query_hash' in data
+    assert data['query_id'] == 1
     
+    print(f"   Query ID: {data['query_id']}")
     print(f"   Query hash: {data['query_hash']}")
     print(f"   Status: {data['status']}")
 
@@ -105,6 +108,7 @@ def test_deduplicate():
     query = "重复查询测试"
     
     create_review_file(
+        query_id=99,
         query=query,
         ground_truth="答案1",
         doc_id="doc1",
@@ -119,6 +123,7 @@ def test_deduplicate():
     time.sleep(0.1)  # 确保时间戳不同
     
     create_review_file(
+        query_id=99,
         query=query,
         ground_truth="答案2（较新）",
         doc_id="doc1",

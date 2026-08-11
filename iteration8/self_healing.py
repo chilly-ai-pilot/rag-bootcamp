@@ -63,6 +63,7 @@ def should_trigger_self_healing(
 
 
 def create_review_file(
+    query_id: int,
     query: str,
     ground_truth: str,
     doc_id: str,
@@ -76,12 +77,13 @@ def create_review_file(
     创建审核文件
     
     参数:
+        query_id: 查询 ID
         query: 查询问题
         ground_truth: 真实答案
         doc_id: 文档 ID
         char_start: 答案起始位置
         char_end: 答案结束位置
-        trigger_reason: 触发原因
+        trigger_reason: 触发原因（如 retrieval_miss, low_rank_5, low_score_rejection）
         rejection_reason: 拒答原因（如果有）
         review_dir: 审核目录
     
@@ -91,11 +93,19 @@ def create_review_file(
     # 确保 review 目录存在
     os.makedirs(review_dir, exist_ok=True)
     
-    # 生成文件名（基于 query 哈希）
-    query_hash = generate_query_hash(query)
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = f"review_{query_hash}_{timestamp}.json"
+    # 生成文件名：review_q{id}_{reason}_{timestamp}.json
+    # 时间戳使用秒级时间戳（更紧凑）
+    import time
+    timestamp = int(time.time())
+    
+    # 清理 trigger_reason 作为文件名的一部分（移除特殊字符）
+    reason_slug = trigger_reason.replace('_', '-')
+    
+    filename = f"review_q{query_id}_{reason_slug}_{timestamp}.json"
     filepath = os.path.join(review_dir, filename)
+    
+    # 生成 query_hash（用于去重）
+    query_hash = generate_query_hash(query)
     
     # 创建审核数据
     review_data = {
@@ -110,7 +120,8 @@ def create_review_file(
         "rejection_reason": rejection_reason,
         "status": "pending",
         "created_at": datetime.now().isoformat(),
-        "query_hash": query_hash
+        "query_hash": query_hash,
+        "query_id": query_id
     }
     
     # 写入文件
@@ -229,6 +240,7 @@ def process_self_healing(
             
             # 创建审核文件
             filepath = create_review_file(
+                query_id=query_id,
                 query=query_data['query'],
                 ground_truth=query_data.get('ground_truth_text', ''),
                 doc_id=query_data['doc_id'],
