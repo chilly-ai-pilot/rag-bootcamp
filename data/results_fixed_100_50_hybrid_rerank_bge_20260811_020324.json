@@ -1,0 +1,59 @@
+{
+  "metadata": {
+    "timestamp": "20260811_020324",
+    "evaluation_date": "2026-08-11T02:03:24.303806",
+    "corpus_stats": {
+      "num_documents": 22,
+      "num_queries": 1,
+      "corpus_dir": "corpus"
+    },
+    "model_config": {
+      "chunking_strategy": "fixed_100_50",
+      "retrieval_mode": "hybrid",
+      "rerank_mode": "bge",
+      "rerank_top_k": 10,
+      "retrieval_top_k": 40,
+      "judge_mode": "none",
+      "rejection_enabled": true,
+      "rejection_preset": "moderate",
+      "query_from": 12,
+      "max_queries": 1,
+      "batch_size": 10
+    }
+  },
+  "config": {
+    "chunking_strategy": "fixed_100_50",
+    "retrieval_mode": "hybrid",
+    "rerank_mode": "bge",
+    "rerank_top_k": 10,
+    "retrieval_top_k": 40
+  },
+  "scores": {
+    "exact_match": 0.0,
+    "overall": 0.0
+  },
+  "mrr_scores": {
+    "exact_match": 0.0,
+    "overall": 0.0
+  },
+  "results": [
+    {
+      "id": 12,
+      "query": "GW-200 网关的电源参数是多少？",
+      "category": "exact_match",
+      "hit": false,
+      "answer_rank": null,
+      "answer": "[ERROR] We couldn't connect to 'https://huggingface.co' to load the files, and couldn't find them in the cached files.\nCheck your internet connection or see how to run the library in offline mode at 'https://huggingface.co/docs/transformers/installation#offline-mode'.",
+      "raw_answer": "",
+      "citations": [],
+      "reasoning": null
+    }
+  ],
+  "self_healing": {
+    "triggered_count": 1,
+    "created_files": [
+      "review/review_6d5315a4_20260811_020324.json"
+    ],
+    "deduplicated_count": 0
+  }
+}
