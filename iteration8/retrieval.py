@@ -636,12 +636,19 @@ def rerank_chunks(query: str, chunks: List[Dict], top_k: int = 5) -> List[Dict]:
     # 计算 rerank 分数（normalize=True: 归一化到 [0, 1]）
     scores = reranker.compute_score(pairs, normalize=True)
     
-    # 为每个块添加 rerank 分数
+    # 确保 scores 是 Python list（可能是 numpy array 或 tensor）
+    if hasattr(scores, 'tolist'):
+        scores = scores.tolist()
+    
+    # 创建新的chunk列表（带rerank分数），避免修改原始chunks
+    chunks_with_scores = []
     for i, chunk in enumerate(chunks):
-        chunk['rerank_score'] = float(scores[i])
+        new_chunk = chunk.copy()  # 浅拷贝，避免修改原始dict
+        new_chunk['rerank_score'] = float(scores[i])
+        chunks_with_scores.append(new_chunk)
     
     # 按 rerank 分数降序排序
-    reranked = sorted(chunks, key=lambda x: x['rerank_score'], reverse=True)
+    reranked = sorted(chunks_with_scores, key=lambda x: x['rerank_score'], reverse=True)
     
     # 返回 top-k
     return reranked[:top_k]
