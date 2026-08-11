@@ -19,22 +19,22 @@
     },
     "layer1_retrieval": {
       "enabled": true,
-      "max_score_threshold": 0.4,
-      "top_n": 1,
-      "top_n_avg_threshold": 0.4,
+      "max_score_threshold": 0.7,
+      "top_n": 2,
+      "top_n_avg_threshold": 0.35,
       "description": "基于检索分数的质量拒答（支持Vector和Rerank） - 改用max和topN平均"
     },
     "layer2_citation": {
       "enabled": true,
-      "coverage_threshold": 0.3,
+      "coverage_threshold": 0.5,
       "description": "基于引用覆盖率的幻觉检测 - 验证通过的citations / LLM声称的citations"
     },
     "layer3_judge": {
       "enabled": true,
       "faithfulness_threshold": 0.7,
-      "relevance_threshold": 0.5,
-      "mode": "moderate",
-      "description": "中等模式：Faithfulness < 0.85 OR Relevance < 0.80"
+      "relevance_threshold": 0.6,
+      "mode": "custom",
+      "description": "自定义模式：Faithfulness < 0.7 OR Relevance < 0.6"
     }
   },
   "rejection_message": "抱歉，我在提供的资料中未找到足够充分的信息来准确回答您的问题。建议您查阅完整的产品手册或联系客服获取更详细的解答。",
