@@ -1,0 +1,15 @@
+{
+  "query": "SmartBulb-300 的音乐律动模式怎么开启？",
+  "ground_truth": "在 App 中找到 SmartBulb-300，点击进入设备详情，选择「音乐律动」模式并点击开启。开启后，灯泡颜色会随手机麦克风采集的环境音乐节奏自动变化，适合派对氛围。注意：使用时需要保持 App 前台运行，必须是外放的音乐（不能播放手机本地音乐文件），如果效果不明显可以调高手机音量或靠近音源。",
+  "source": {
+    "doc_id": "doc3",
+    "char_start": 456,
+    "char_end": 495
+  },
+  "trigger_reason": "low_relevance",
+  "rejection_reason": "[Layer 3] Judge low relevance (F=1.00, R=0.60, threshold=0.80)",
+  "status": "pending",
+  "created_at": "2026-08-11T00:00:00.000000",
+  "query_hash": "q8_manual",
+  "notes": "原文档只描述了开启后的效果，缺少具体开启步骤。此答案补充了完整的操作流程和注意事项。"
+}

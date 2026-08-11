@@ -1,0 +1,15 @@
+{
+  "query": "传感器没电了怎么换？",
+  "ground_truth": "传感器更换电池步骤：1) 使用硬币逆时针旋转传感器背面的电池仓盖；2) 取出旧电池；3) 按照电池仓内的正负极标识，装入新的 CR123A 锂电池；4) 顺时针旋转盖上电池仓盖并拧紧。电池续航约 2 年（取决于触发频率）。APP 会在低电量时提前 30 天提醒更换。注意：不同型号传感器电池不同，ST-500/ST-501 用 CR2032 纽扣电池，ST-600 是可充电锂电池。",
+  "source": {
+    "doc_id": "doc18",
+    "char_start": 15,
+    "char_end": 46
+  },
+  "trigger_reason": "low_relevance",
+  "rejection_reason": "[Layer 3] Judge low relevance (F=1.00, R=0.50, threshold=0.80)",
+  "status": "pending",
+  "created_at": "2026-08-11T00:00:00.000000",
+  "query_hash": "q27_manual",
+  "notes": "原文档只说明了电池型号和续航，缺少具体更换步骤。此答案补充了完整的操作流程（开盖、取出、装入、关盖）和注意事项。"
+}
