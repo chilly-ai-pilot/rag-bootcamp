@@ -8,8 +8,10 @@
   },
   "trigger_reason": "low_rerank_quality",
   "rejection_reason": "[Layer 1] Low rerank quality (max=0.661, top2_avg=0.637)",
-  "status": "pending",
+  "status": "approved",
   "created_at": "2026-08-11T01:30:00.000000",
   "query_hash": "q22_manual",
-  "notes": "原文档分散在doc2和doc14中，doc2只描述了隐私模式的效果但没说如何启动，doc14描述了离家模式的自动切换。此答案综合两处信息，提供了手动和自动两种防止偷看的完整方案。Rerank将doc14排在更高位置（Rank 4, score=0.515）说明其内容更符合用户意图。"
+  "notes": "原文档分散在doc2和doc14中，doc2只描述了隐私模式的效果但没说如何启动，doc14描述了离家模式的自动切换。此答案综合两处信息，提供了手动和自动两种防止偷看的完整方案。Rerank将doc14排在更高位置（Rank 4, score=0.515）说明其内容更符合用户意图。",
+  "approved_at": "2026-08-11T01:39:30.020504",
+  "new_doc_id": "doc-22"
 }
