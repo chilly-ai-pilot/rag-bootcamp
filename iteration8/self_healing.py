@@ -33,6 +33,12 @@ def should_trigger_self_healing(
     if not self_healing_config.get('enabled', False):
         return False, None
     
+    # 检查是否是生成失败的错误结果
+    answer = result.get('answer', '')
+    if answer and answer.startswith('[ERROR]'):
+        # 生成失败（如网络错误），不触发自愈
+        return False, None
+    
     triggers = self_healing_config.get('triggers', {})
     
     # 触发条件 1: hit != 1（未命中）
