@@ -1,0 +1,15 @@
+{
+  "query": "怎样防止摄像头被偷看？",
+  "ground_truth": "SmartCam-200 提供隐私保护功能：方法一：手动启动隐私模式，摄像头会自动向下旋转隐藏镜头，并关闭收音，APP 同步显示【设备休眠】状态，适合家庭主人在家时使用。方法二：设置【离家模式】场景，最后一人离家时自动开启摄像头监控；任意人回家时自动切换到隐私模式（镜头向下，停止录像），需配合智能门锁使用。两种方式都能有效防止摄像头被他人偷看或误录家庭隐私画面。",
+  "source": {
+    "doc_id": "doc2",
+    "char_start": 468,
+    "char_end": 496
+  },
+  "trigger_reason": "low_rerank_quality",
+  "rejection_reason": "[Layer 1] Low rerank quality (max=0.661, top2_avg=0.637)",
+  "status": "pending",
+  "created_at": "2026-08-11T01:30:00.000000",
+  "query_hash": "q22_manual",
+  "notes": "原文档分散在doc2和doc14中，doc2只描述了隐私模式的效果但没说如何启动，doc14描述了离家模式的自动切换。此答案综合两处信息，提供了手动和自动两种防止偷看的完整方案。Rerank将doc14排在更高位置（Rank 4, score=0.515）说明其内容更符合用户意图。"
+}
