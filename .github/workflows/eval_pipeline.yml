@@ -60,6 +60,7 @@ on:
           - conservative
           - moderate
           - aggressive
+          - custom
       max_queries:
         description: 'Max queries to evaluate (for testing)'
         required: false
@@ -198,15 +199,24 @@ jobs:
           echo "  Query From: $QUERY_FROM (random or user-specified)"
           echo "  Batch Size: $BATCH_SIZE"
           
-          # 运行评估，输出到 ../data 目录
-          python run_eval.py \
-            --chunking-strategy "$CHUNKING" \
-            --retrieval-mode "$RETRIEVAL" \
-            --rerank-mode "$RERANK" \
-            --judge-mode "$JUDGE" \
-            --rejection-preset "$PRESET" \
+          # 构建评估命令
+          EVAL_CMD="python run_eval.py \
+            --chunking-strategy \"$CHUNKING\" \
+            --retrieval-mode \"$RETRIEVAL\" \
+            --rerank-mode \"$RERANK\" \
+            --judge-mode \"$JUDGE\" \
             --output-dir ../data \
-            --max-queries "$MAX_QUERIES" \
+            --max-queries \"$MAX_QUERIES\" \
+            --query-from \"$QUERY_FROM\" \
+            --batch-size \"$BATCH_SIZE\""
+          
+          # 如果不是custom模式，添加preset参数
+          if [ "$PRESET" != "custom" ]; then
+            EVAL_CMD="$EVAL_CMD --rejection-preset \"$PRESET\""
+          fi
+          
+          # 运行评估
+          eval $EVAL_CMD
             --query-from "$QUERY_FROM" \
             --batch-size "$BATCH_SIZE"
       
