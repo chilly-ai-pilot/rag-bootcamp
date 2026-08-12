@@ -11,9 +11,13 @@ Iteration 0 的验收标准是"流程端到端运行"，而不是"生成质量�
 
 Iteration 6: 添加拒答机制，当检索质量或生成质量不足时拒绝回答。
 """
-import os
 import asyncio
+import functools
+import os
+import sys
 from typing import List, Dict, Optional
+
+log = functools.partial(print, file=sys.stderr)
 
 # 尝试导入 OpenAI SDK（DeepSeek 兼容 OpenAI API 格式）
 try:
@@ -538,7 +542,7 @@ async def generate_answer_async(
             }
         
     except Exception as e:
-        print(f"❌ Step 1 (answer generation) failed: {e}")
+        log(f"❌ Step 1 (answer generation) failed: {e}")
         return {
             "answer": f"[ERROR Step 1] {e}",
             "raw_answer": "",
@@ -678,7 +682,7 @@ async def generate_answer_async(
                         if similarity > 0.50:
                             is_valid = True
                             validation_method = f"embedding_similarity({similarity:.3f})"
-                            print(f"✅ Citation validated by embedding similarity: {similarity:.3f} (source={source})")
+                            log(f"✅ Citation validated by embedding similarity: {similarity:.3f} (source={source})")
                     except Exception as e:
                         # Embedding验证失败不影响结果，继续使用is_valid=False
                         pass  # 静默忽略embedding验证失败
@@ -688,12 +692,12 @@ async def generate_answer_async(
                     valid_citations.append(cit)
                 else:
                     # span不在chunk中，可能是幻觉
-                    print(f"⚠️  Citation validation failed: span not in chunk (source={source})")
-                    print(f"   Span: {span[:100]}...")
-                    print(f"   Chunk: {chunk_text[:100]}...")
+                    log(f"⚠️  Citation validation failed: span not in chunk (source={source})")
+                    log(f"   Span: {span[:100]}...")
+                    log(f"   Chunk: {chunk_text[:100]}...")
             else:
                 # source不存在，肯定是幻觉
-                print(f"⚠️  Citation validation failed: source not found ({source})")
+                log(f"⚠️  Citation validation failed: source not found ({source})")
         
         # 更新citations为验证通过的
         citations = valid_citations
@@ -746,7 +750,7 @@ async def generate_answer_async(
                     # 移除从 content_start 到 tag_end 的内容
                     cleaned_answer = cleaned_answer[:content_start] + cleaned_answer[tag_end:]
                     
-                    print(f"🔧 Removed invalid citation and its content: {source}")
+                    log(f"🔧 Removed invalid citation and its content: {source}")
             
             # 清理可能产生的多余空格、分号等
             cleaned_answer = re.sub(r'\s+', ' ', cleaned_answer)  # 多个空格变单个
@@ -758,8 +762,8 @@ async def generate_answer_async(
             raw_answer_with_tags = cleaned_answer
         
     except Exception as e:
-        print(f"❌ Step 2 (citation extraction) failed: {e}")
-        print(f"Raw response: {raw_response if 'raw_response' in locals() else 'N/A'}")
+        log(f"❌ Step 2 (citation extraction) failed: {e}")
+        log(f"Raw response: {raw_response if 'raw_response' in locals() else 'N/A'}")
         # Step 2 失败不影响答案，只是没有引用标注
         # 移除所有标注，返回纯文本
         clean_answer = re.sub(r'\[文档\d+:片段\d+\]', '', raw_answer_with_tags)
@@ -888,7 +892,7 @@ async def generate_answer_async(
                             citations = []  # 拒答时清空引用
             
             except Exception as e:
-                print(f"⚠️  Judge evaluation in generator failed: {e}")
+                log(f"⚠️  Judge evaluation in generator failed: {e}")
                 # Judge失败不影响生成，继续返回原答案
     
     # ============================================================

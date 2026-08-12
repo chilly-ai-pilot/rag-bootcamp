@@ -11,12 +11,16 @@ Iteration 3: 新增 BM25 关键词检索和 Hybrid Search（向量 + BM25 + RRF 
 - semantic: 按句子边界切分
 - fixed_100_50: 100字符，50字符重叠
 """
+import functools
 import random
+import sys
 from typing import List, Dict
 import chromadb
 from sentence_transformers import SentenceTransformer
 import jieba
 from rank_bm25 import BM25Okapi
+
+log = functools.partial(print, file=sys.stderr)
 
 
 def retrieve_random(query: str, chunks: List[Dict], k: int = 5, seed: int = None) -> List[Dict]:
@@ -56,13 +60,13 @@ def _get_embedding_model():
         model_path = os.path.join(cache_dir, 'hub', 'models--BAAI--bge-base-zh-v1.5')
         
         if os.path.exists(model_path):
-            print("Loading bge-base-zh model from cache...")
+            log("Loading bge-base-zh model from cache...")
         else:
-            print("Downloading bge-base-zh model (first time)...")
+            log("Downloading bge-base-zh model (first time)...")
         
         # 优先使用本地缓存，避免重复下载
         _embedding_model = SentenceTransformer('BAAI/bge-base-zh-v1.5', local_files_only=False)
-        print("✅ Model loaded")
+        log("✅ Model loaded")
     return _embedding_model
 
 
@@ -127,11 +131,11 @@ def retrieve_vector(query: str, chunks: List[Dict], k: int = 5, strategy: str = 
     if current_count == 0:
         # Collection 为空，必须索引
         needs_reindex = True
-        print(f"Collection '{collection.name}' is empty, indexing required.")
+        log(f"Collection '{collection.name}' is empty, indexing required.")
     elif current_count != len(chunks):
         # 数量不匹配，需要重新索引
         needs_reindex = True
-        print(f"Chunk count mismatch: DB has {current_count}, current corpus has {len(chunks)}")
+        log(f"Chunk count mismatch: DB has {current_count}, current corpus has {len(chunks)}")
     else:
         # 数量相同，进一步检查 doc_ids 是否一致
         db_results = collection.get(include=['metadatas'])
@@ -142,14 +146,14 @@ def retrieve_vector(query: str, chunks: List[Dict], k: int = 5, strategy: str = 
             needs_reindex = True
             missing_in_db = current_doc_ids - db_doc_ids
             extra_in_db = db_doc_ids - current_doc_ids
-            print(f"Doc IDs mismatch detected:")
+            log(f"Doc IDs mismatch detected:")
             if missing_in_db:
-                print(f"  Missing in DB: {sorted(missing_in_db, key=lambda x: int(x.replace('doc', '')))}")
+                log(f"  Missing in DB: {sorted(missing_in_db, key=lambda x: int(x.replace('doc', '')))}")
             if extra_in_db:
-                print(f"  Extra in DB: {sorted(extra_in_db, key=lambda x: int(x.replace('doc', '')))}")
+                log(f"  Extra in DB: {sorted(extra_in_db, key=lambda x: int(x.replace('doc', '')))}")
     
     if needs_reindex:
-        print(f"Re-indexing {len(chunks)} chunks (strategy: {strategy}) into ChromaDB...")
+        log(f"Re-indexing {len(chunks)} chunks (strategy: {strategy}) into ChromaDB...")
         
         # 清空 collection（重新索引）
         if current_count > 0:
@@ -181,9 +185,9 @@ def retrieve_vector(query: str, chunks: List[Dict], k: int = 5, strategy: str = 
             documents=texts,
             metadatas=metadatas
         )
-        print(f"✅ Indexed {len(chunks)} chunks from {len(set(c['doc_id'] for c in chunks))} documents.")
+        log(f"✅ Indexed {len(chunks)} chunks from {len(set(c['doc_id'] for c in chunks))} documents.")
     else:
-        print(f"✅ Index is up-to-date: {current_count} chunks from {len(set(c['doc_id'] for c in chunks))} documents.")
+        log(f"✅ Index is up-to-date: {current_count} chunks from {len(set(c['doc_id'] for c in chunks))} documents.")
     
     # 对查询进行向量化
     query_embedding = model.encode([query])[0].tolist()
@@ -453,18 +457,18 @@ def retrieve_hybrid_multi_granularity(
     from chunking import build_corpus_chunks
     
     # 1. 构建两套不同粒度的块
-    print(f"Building chunks: vector={strategy_vector}, bm25={strategy_bm25}")
+    log(f"Building chunks: vector={strategy_vector}, bm25={strategy_bm25}")
     chunks_vector = build_corpus_chunks(corpus_dir, strategy=strategy_vector)
     chunks_bm25 = build_corpus_chunks(corpus_dir, strategy=strategy_bm25)
     
-    print(f"  Vector chunks: {len(chunks_vector)}")
-    print(f"  BM25 chunks: {len(chunks_bm25)}")
+    log(f"  Vector chunks: {len(chunks_vector)}")
+    log(f"  BM25 chunks: {len(chunks_bm25)}")
     
     # 2. 分别检索
-    print(f"Retrieving with vector (top-{k_vector})...")
+    log(f"Retrieving with vector (top-{k_vector})...")
     vector_results = retrieve_vector(query, chunks_vector, k=k_vector, strategy=strategy_vector)
     
-    print(f"Retrieving with BM25 (top-{k_bm25})...")
+    log(f"Retrieving with BM25 (top-{k_bm25})...")
     bm25_results = retrieve_bm25(query, chunks_bm25, k=k_bm25)
     
     # 3. 标准化：转换为统一格式 (doc_id, start, end, text, source)
@@ -544,7 +548,7 @@ def retrieve_hybrid_multi_granularity(
                 
                 # 如果候选块更长（包含更多上下文），替换已选块
                 if candidate['length'] > selected['length']:
-                    print(f"  Replace: {selected['source']} [{selected['start']}-{selected['end']}] RRF={selected['rrf_score']:.4f} "
+                    log(f"  Replace: {selected['source']} [{selected['start']}-{selected['end']}] RRF={selected['rrf_score']:.4f} "
                           f"with {candidate['source']} [{candidate['start']}-{candidate['end']}] RRF={candidate['rrf_score']:.4f} "
                           f"(overlap={overlap_ratio:.2f})")
                     final_results.remove(selected)
@@ -569,9 +573,9 @@ def retrieve_hybrid_multi_granularity(
             'chunk_id': f"{chunk['doc_id']}_{chunk['start']}_{chunk['end']}",  # 生成唯一 ID
         })
     
-    print(f"\nFinal results: {len(result)} chunks")
-    print(f"  From vector: {sum(1 for c in final_results[:k] if c['source'] == 'vector')}")
-    print(f"  From BM25: {sum(1 for c in final_results[:k] if c['source'] == 'bm25')}")
+    log(f"\nFinal results: {len(result)} chunks")
+    log(f"  From vector: {sum(1 for c in final_results[:k] if c['source'] == 'vector')}")
+    log(f"  From BM25: {sum(1 for c in final_results[:k] if c['source'] == 'bm25')}")
     
     return result
 
@@ -596,7 +600,7 @@ def _get_reranker_model():
     """
     global _reranker_model
     if _reranker_model is None:
-        print("Loading bge-reranker-base model...")
+        log("Loading bge-reranker-base model...")
         try:
             from FlagEmbedding import FlagReranker
             
@@ -605,9 +609,9 @@ def _get_reranker_model():
                 use_fp16=True  # 使用半精度加速，节省显存
             )
         except Exception as e:
-            print(f"[ERROR] Failed to load reranker model: {e}")
-            print("This may be due to transformers version incompatibility.")
-            print("Please ensure transformers>=4.35.0,<5.0.0 is installed.")
+            log(f"[ERROR] Failed to load reranker model: {e}")
+            log("This may be due to transformers version incompatibility.")
+            log("Please ensure transformers>=4.35.0,<5.0.0 is installed.")
             raise
     return _reranker_model
 
@@ -705,7 +709,7 @@ def retrieve_rerank(
         
         # 查看 rerank 分数分布（为 Iteration 6 拒答阈值做准备）
         scores = [r['rerank_score'] for r in rerank_results]
-        print(f"Rerank scores: min={min(scores):.4f}, max={max(scores):.4f}")
+        log(f"Rerank scores: min={min(scores):.4f}, max={max(scores):.4f}")
     """
     # Step 1: 使用 hybrid 检索召回候选块
     # 召回更多候选（20 个），给 reranker 更多选择空间
