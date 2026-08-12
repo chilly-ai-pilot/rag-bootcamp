@@ -1,0 +1,88 @@
+{
+  "metadata": {
+    "timestamp": "20260812_175230",
+    "evaluation_date": "2026-08-12T17:52:30.260535",
+    "corpus_stats": {
+      "num_documents": 22,
+      "num_queries": 1,
+      "corpus_dir": "corpus"
+    },
+    "model_config": {
+      "chunking_strategy": "fixed_100_50",
+      "retrieval_mode": "hybrid",
+      "rerank_mode": "bge",
+      "rerank_top_k": 10,
+      "retrieval_top_k": 40,
+      "judge_mode": "none",
+      "rejection_enabled": true,
+      "rejection_preset": "moderate",
+      "query_from": 22,
+      "max_queries": 1,
+      "batch_size": 10
+    }
+  },
+  "config": {
+    "chunking_strategy": "fixed_100_50",
+    "retrieval_mode": "hybrid",
+    "rerank_mode": "bge",
+    "rerank_top_k": 10,
+    "retrieval_top_k": 40
+  },
+  "scores": {
+    "semantic_paraphrase": 1.0,
+    "overall": 1.0
+  },
+  "mrr_scores": {
+    "semantic_paraphrase": 1.0,
+    "overall": 1.0
+  },
+  "results": [
+    {
+      "id": 22,
+      "query": "怎样防止摄像头被偷看？",
+      "category": "semantic_paraphrase",
+      "hit": 1,
+      "answer_rank": 1,
+      "answer": "根据资料，防止摄像头被偷看有两种方法： 方法一：\"手动启动隐私模式，摄像头会自动向下旋转隐藏镜头，并关闭收音，APP 同步显示【设备休眠】状态，适合家庭主人在家时使用\"[文档22:片段1]。 方法二：\"设置【离家模式】场景，最后一人离家时自动开启摄像头监控；任意人回家时自动切换到隐私模式（镜头向下，停止录像），需配合智能门锁使用\"[文档22:片段3]。 两种方式均能有效防止摄像头被他人偷看或误录家庭隐私画面。",
+      "raw_answer": "根据资料，防止摄像头被偷看有两种方法： 方法一：\"手动启动隐私模式，摄像头会自动向下旋转隐藏镜头，并关闭收音，APP 同步显示【设备休眠】状态，适合家庭主人在家时使用\"。 方法二：\"设置【离家模式】场景，最后一人离家时自动开启摄像头监控；任意人回家时自动切换到隐私模式（镜头向下，停止录像），需配合智能门锁使用\"。 两种方式均能有效防止摄像头被他人偷看或误录家庭隐私画面。",
+      "citations": [
+        {
+          "span": "手动启动隐私模式，摄像头会自动向下旋转隐藏镜头，并关闭收音，APP 同步显示【设备休眠】状态，适合家庭主人在家时使用",
+          "source": "文档22:片段1",
+          "chunk_text": "问：怎样防止摄像头被偷看？\n答：SmartCam-200 提供隐私保护功能：方法一：手动启动隐私模式，摄像头会自动向下旋转隐藏镜头，并关闭收音，APP 同步显示【设备休眠】状态，适合家庭主人在家时使用",
+          "chunk_full_id": "doc22:chunk1",
+          "validation_method": "exact_match"
+        },
+        {
+          "span": "设置【离家模式】场景，最后一人离家时自动开启摄像头监控；任意人回家时自动切换到隐私模式（镜头向下，停止录像），需配合智能门锁使用",
+          "source": "文档22:片段3",
+          "chunk_text": "。方法二：设置【离家模式】场景，最后一人离家时自动开启摄像头监控；任意人回家时自动切换到隐私模式（镜头向下，停止录像），需配合智能门锁使用。两种方式都能有效防止摄像头被他人偷看或误录家庭隐私画面。",
+          "chunk_full_id": "doc22:chunk3",
+          "validation_method": "exact_match"
+        }
+      ],
+      "reasoning": null,
+      "rerank_scores": [
+        0.9994751348171905,
+        0.9970219249819643,
+        0.7225189642383746,
+        0.6605530854227466,
+        0.6128081540231757,
+        0.5322815009519328,
+        0.5159747042971278,
+        0.4161811627783285,
+        0.37137540752557097,
+        0.34137836583351217
+      ],
+      "faithfulness_score": null,
+      "relevance_score": null,
+      "rejected": false,
+      "rejection_reason": null
+    }
+  ],
+  "self_healing": {
+    "triggered_count": 0,
+    "created_files": [],
+    "deduplicated_count": 0
+  }
+}
