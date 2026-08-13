@@ -22,7 +22,7 @@ from mcp.server import Server
 from mcp.types import Tool, TextContent
 import mcp.server.stdio
 
-from rag_core import search_knowledge, generate_answer
+from rag_core import search_knowledge, generate_answer_async
 
 
 # 创建 MCP Server 实例
@@ -182,8 +182,8 @@ async def call_tool(name: str, arguments: Any) -> list[TextContent]:
                 text=json.dumps({"error": "query is required"}, ensure_ascii=False)
             )]
         
-        # 调用 rag_core 的生成函数（同步版，避免 MCP 超时）
-        result = generate_answer(
+        # 调用 rag_core 的异步生成接口；这里在 MCP 事件循环中，必须使用 await
+        result = await generate_answer_async(
             query=query,
             top_k=top_k,
             retrieval_mode=RAG_CONFIG["retrieval_mode"],

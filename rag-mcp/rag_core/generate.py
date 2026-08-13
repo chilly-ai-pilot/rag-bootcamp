@@ -169,6 +169,29 @@ async def generate_answer_with_retrieval(
     }
 
 
+async def generate_answer_async(
+    query: str,
+    top_k: int = 5,
+    retrieval_mode: str = "hybrid",
+    rerank: bool = True,
+    corpus_dir: str = None,
+    chunking_strategy: str = "fixed_100_50",
+    rejection_config: Optional[Dict] = None
+) -> Dict:
+    """
+    异步接口 - 用于 MCP / HTTP / FastAPI 等事件循环环境
+    """
+    return await generate_answer_with_retrieval(
+        query=query,
+        top_k=top_k,
+        retrieval_mode=retrieval_mode,
+        rerank=rerank,
+        corpus_dir=corpus_dir,
+        chunking_strategy=chunking_strategy,
+        rejection_config=rejection_config
+    )
+
+
 def generate_answer(
     query: str,
     top_k: int = 5,
@@ -179,7 +202,7 @@ def generate_answer(
     rejection_config: Optional[Dict] = None
 ) -> Dict:
     """
-    同步包装器 - 用于非异步环境
+    同步包装器 - 仅用于非异步环境（脚本/测试/CLI）
     """
     return asyncio.run(
         generate_answer_with_retrieval(

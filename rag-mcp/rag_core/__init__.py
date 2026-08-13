@@ -5,10 +5,11 @@ RAG Core Module
 """
 
 from .search import search_knowledge
-from .generate import generate_answer, generate_answer_with_retrieval
+from .generate import generate_answer, generate_answer_async, generate_answer_with_retrieval
 
 __all__ = [
     'search_knowledge',
     'generate_answer',
+    'generate_answer_async',
     'generate_answer_with_retrieval'
 ]

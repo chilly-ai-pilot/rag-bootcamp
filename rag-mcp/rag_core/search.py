@@ -128,10 +128,18 @@ def search_knowledge(
     # 构建返回结果
     results = []
     for i, chunk in enumerate(retrieved):
+        score = chunk.get('score')
+        if score is None:
+            score = chunk.get('similarity')
+        if score is None:
+            score = chunk.get('rerank_score')
+        if score is None:
+            score = 0.0
+
         result_item = {
             "chunk_id": f"{chunk['doc_id']}_chunk_{i}",
             "text": chunk['text'],
-            "score": chunk.get('score', 0.0),  # 原始检索分数
+            "score": score,  # 原始检索分数 / 相似度 / rerank 分数
             "doc_id": chunk['doc_id'],
             "metadata": {
                 "start": chunk.get('start', 0),
