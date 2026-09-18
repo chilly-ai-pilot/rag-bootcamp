@@ -486,12 +486,12 @@
         <header>
             <h1>🚀 RAG System Evaluation Report</h1>
             <p>Continuous Evaluation Dashboard - Iteration 8 (Self-Healing)</p>
-            <p style="font-size: 0.95em; margin-top: 10px;">Latest: 2026-09-18 10:50 | Total Runs: 29 | Pending Reviews: 6</p>
+            <p style="font-size: 0.95em; margin-top: 10px;">Latest: 2026-09-18 11:05 | Total Runs: 30 | Pending Reviews: 8</p>
         </header>
         
         <div class="tabs">
             <button class="tab active" onclick="switchTab('metrics')">📊 Metrics</button>
-            <button class="tab" onclick="switchTab('review')">🔍 Review (6)</button>
+            <button class="tab" onclick="switchTab('review')">🔍 Review (8)</button>
         </div>
         
         <div id="metrics-tab" class="tab-content active">
@@ -499,33 +499,33 @@
         <div class="summary-cards">
             <div class="card">
                 <h3>Hit Rate</h3>
-                <div class="value">100.0%</div>
-<div class="diff positive">+0.0% vs previous</div>
+                <div class="value">93.3%</div>
+<div class="diff negative">-6.7% vs previous</div>
             </div>
             
             <div class="card">
                 <h3>Faithfulness</h3>
-<div class="value">0.000</div><div class="diff negative">-1.000 vs previous</div>
+<div class="value">0.983</div><div class="diff positive">+0.983 vs previous</div>
             </div>
             
             <div class="card">
                 <h3>Relevance</h3>
-<div class="value">0.000</div><div class="diff negative">-0.948 vs previous</div>
+<div class="value">0.935</div><div class="diff positive">+0.935 vs previous</div>
             </div>
             
             <div class="card">
                 <h3>Rejection Rate</h3>
-<div class="value">0.0%</div><div class="diff negative">+0.0% vs previous</div>
+<div class="value">13.3%</div><div class="diff negative">+13.3% vs previous</div>
             </div>
             
             <div class="card">
                 <h3>MRR Score</h3>
-<div class="value">1.000</div><div class="diff positive">+0.197 vs previous</div>
+<div class="value">0.806</div><div class="diff negative">-0.194 vs previous</div>
             </div>
             
             <div class="card">
                 <h3>Precision@K</h3>
-<div class="value">0.600</div><div class="diff positive">+0.600 vs previous</div>
+<div class="value">0.340</div><div class="diff negative">-0.260 vs previous</div>
             </div>
         </div>
 
@@ -538,11 +538,11 @@
                 </div>
                 <div class="metadata-item">
                     <div class="label">Queries</div>
-                    <div class="value">1</div>
+                    <div class="value">30</div>
                 </div>
                 <div class="metadata-item">
                     <div class="label">Chunking Strategy</div>
-                    <div class="value">fixed_100_50</div>
+                    <div class="value">semantic</div>
                 </div>
                 <div class="metadata-item">
                     <div class="label">Retrieval Mode</div>
@@ -554,7 +554,7 @@
                 </div>
                 <div class="metadata-item">
                     <div class="label">Judge Mode</div>
-                    <div class="value">none</div>
+                    <div class="value">deepseek</div>
                 </div>
                 <div class="metadata-item">
                     <div class="label">Rejection Enabled</div>
@@ -566,7 +566,7 @@
                 </div>
                 <div class="metadata-item">
                     <div class="label">Query From</div>
-                    <div class="value">#22</div>
+                    <div class="value">#1</div>
                 </div>
                 <div class="metadata-item">
                     <div class="label">Batch Size</div>
@@ -925,6 +925,17 @@
                         <td>0.600</td>
                     </tr>
 
+                    <tr>
+                        <td>2026-09-18 11:05</td>
+                        <td><code>semantic+hybrid+bge</code></td>
+                        <td><span class="badge success">93.3%</span></td>
+                        <td>0.983</td>
+                        <td>0.935</td>
+                        <td>13.3%</td>
+                        <td>0.806</td>
+                        <td>0.340</td>
+                    </tr>
+
                 </tbody>
             </table>
         </div>
@@ -955,6 +966,56 @@
                 </div>
 
                 <div class="review-list">
+
+                    <div class="review-item" data-filename="review_q9_retrieval-miss_1789729501.json">
+                        <div class="review-item-content">
+                            <div class="review-query">
+                                <strong>Question:</strong>
+                                <div contenteditable="true" class="editable" data-field="query" style="margin-top: 5px;">SmartCam-200 的声音报警音量怎么调节？</div>
+                                <div class="edit-hint">Click to edit query</div>
+                            </div>
+                            <div class="review-meta">
+                                <span>📅 2026-09-18 11:05</span>
+                                <span>📄 doc2</span>
+                                <span class="review-reason reason-retrieval-miss">retrieval_miss</span>
+                            </div>
+
+                                <div style="font-size: 0.9em; color: #6c757d; margin-top: 5px;">
+                                    Rejection: [Layer 0] Retrieval miss (hit=0, ground truth not in top-k)
+                                </div>
+
+                                <div class="review-answer">
+                                    <div class="review-answer-label">Ground Truth Answer:</div>
+                                    <div contenteditable="true" class="review-answer-text editable" data-field="ground_truth">可设置触发移动侦测时摄像头发出警笛声，音量可调（70dB/80dB/90dB）。</div>
+                                    <div class="edit-hint">Click to edit answer</div>
+                                </div>
+                        </div>
+                    </div>
+
+                    <div class="review-item" data-filename="review_q3_retrieval-miss_1789729501.json">
+                        <div class="review-item-content">
+                            <div class="review-query">
+                                <strong>Question:</strong>
+                                <div contenteditable="true" class="editable" data-field="query" style="margin-top: 5px;">SmartBulb-300 断电后记忆功能怎么关闭？</div>
+                                <div class="edit-hint">Click to edit query</div>
+                            </div>
+                            <div class="review-meta">
+                                <span>📅 2026-09-18 11:05</span>
+                                <span>📄 doc3</span>
+                                <span class="review-reason reason-retrieval-miss">retrieval_miss</span>
+                            </div>
+
+                                <div style="font-size: 0.9em; color: #6c757d; margin-top: 5px;">
+                                    Rejection: [Layer 0] Retrieval miss (hit=0, ground truth not in top-k)
+                                </div>
+
+                                <div class="review-answer">
+                                    <div class="review-answer-label">Ground Truth Answer:</div>
+                                    <div contenteditable="true" class="review-answer-text editable" data-field="ground_truth">断电后重新上电，灯泡会恢复断电前的亮度和色温状态，无需重新设置。</div>
+                                    <div class="edit-hint">Click to edit answer</div>
+                                </div>
+                        </div>
+                    </div>
 
                     <div class="review-item" data-filename="review_q31_retrieval-miss_1786420177.json">
                         <div class="review-item-content">
@@ -1114,7 +1175,7 @@
 
         <footer>
             <p>Generated by RAG Bootcamp Iteration 8 - Self-Healing RAG System</p>
-            <p>Last updated: 2026-09-18 10:50:39</p>
+            <p>Last updated: 2026-09-18 11:05:04</p>
         </footer>
     </div>
     
@@ -1165,11 +1226,11 @@
         const metricsChart = new Chart(metricsCtx, {
             type: 'line',
             data: {
-                labels: ["2026-08-10 20:35", "2026-08-10 21:44", "2026-08-10 21:57", "2026-08-10 22:05", "2026-08-10 22:18", "2026-08-10 22:46", "2026-08-10 23:03", "2026-08-10 23:10", "2026-08-10 23:13", "2026-08-10 23:30", "2026-08-10 23:56", "2026-08-11 00:08", "2026-08-11 00:38", "2026-08-11 00:42", "2026-08-11 01:03", "2026-08-11 01:22", "2026-08-11 01:29", "2026-08-11 01:48", "2026-08-11 02:03", "2026-08-11 02:07", "2026-08-11 02:12", "2026-08-11 02:21", "2026-08-11 02:41", "2026-08-11 02:44", "2026-08-11 03:13", "2026-08-11 03:27", "2026-08-12 17:52", "2026-09-18 10:05", "2026-09-18 10:50"],
+                labels: ["2026-08-10 20:35", "2026-08-10 21:44", "2026-08-10 21:57", "2026-08-10 22:05", "2026-08-10 22:18", "2026-08-10 22:46", "2026-08-10 23:03", "2026-08-10 23:10", "2026-08-10 23:13", "2026-08-10 23:30", "2026-08-10 23:56", "2026-08-11 00:08", "2026-08-11 00:38", "2026-08-11 00:42", "2026-08-11 01:03", "2026-08-11 01:22", "2026-08-11 01:29", "2026-08-11 01:48", "2026-08-11 02:03", "2026-08-11 02:07", "2026-08-11 02:12", "2026-08-11 02:21", "2026-08-11 02:41", "2026-08-11 02:44", "2026-08-11 03:13", "2026-08-11 03:27", "2026-08-12 17:52", "2026-09-18 10:05", "2026-09-18 10:50", "2026-09-18 11:05"],
                 datasets: [
                     {
                         label: 'Faithfulness',
-                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0.9814285714285713, 0, 0.9971428571428571, 1.0, 1.0, 0.9921875, 0, 0.9779411764705882, 0.9871428571428571, 0, 1.0, 0, 0, 0, 1.0, 0, 0, 0, 1.0, 0],
+                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0.9814285714285713, 0, 0.9971428571428571, 1.0, 1.0, 0.9921875, 0, 0.9779411764705882, 0.9871428571428571, 0, 1.0, 0, 0, 0, 1.0, 0, 0, 0, 1.0, 0, 0.9833333333333334],
                         borderColor: 'rgb(102, 126, 234)',
                         backgroundColor: 'rgba(102, 126, 234, 0.1)',
                         tension: 0.3,
@@ -1177,7 +1238,7 @@
                     },
                     {
                         label: 'Relevance',
-                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0.9485714285714284, 0, 0.9471428571428571, 0.5, 0.8, 0.9609374999999999, 0, 0.9441176470588234, 0.9600000000000001, 0, 0.9, 0, 0, 0, 1.0, 0, 0, 0, 0.9483333333333331, 0],
+                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0.9485714285714284, 0, 0.9471428571428571, 0.5, 0.8, 0.9609374999999999, 0, 0.9441176470588234, 0.9600000000000001, 0, 0.9, 0, 0, 0, 1.0, 0, 0, 0, 0.9483333333333331, 0, 0.935185185185185],
                         borderColor: 'rgb(118, 75, 162)',
                         backgroundColor: 'rgba(118, 75, 162, 0.1)',
                         tension: 0.3,
@@ -1185,7 +1246,7 @@
                     },
                     {
                         label: 'MRR',
-                        data: [0.6484374999999999, 0.3333333333333333, 0.25, 0.665922619047619, 0.6564625850340134, 1.0, 0.7421768707482993, 0.16666666666666666, 1.0, 0.7421768707482993, 0.7421768707482993, 0.7421768707482993, 0.3333333333333333, 1.0, 0.7469387755102039, 1.0, 0.7469387755102039, 0.7707482993197278, 0.0, 1.0, 0.3333333333333333, 1.0, 0.25, 0.5, 0.7945684523809523, 0.7702721088435373, 1.0, 0.8030952380952381, 1.0],
+                        data: [0.6484374999999999, 0.3333333333333333, 0.25, 0.665922619047619, 0.6564625850340134, 1.0, 0.7421768707482993, 0.16666666666666666, 1.0, 0.7421768707482993, 0.7421768707482993, 0.7421768707482993, 0.3333333333333333, 1.0, 0.7469387755102039, 1.0, 0.7469387755102039, 0.7707482993197278, 0.0, 1.0, 0.3333333333333333, 1.0, 0.25, 0.5, 0.7945684523809523, 0.7702721088435373, 1.0, 0.8030952380952381, 1.0, 0.8055555555555556],
                         borderColor: 'rgb(255, 159, 64)',
                         backgroundColor: 'rgba(255, 159, 64, 0.1)',
                         tension: 0.3,
@@ -1193,7 +1254,7 @@
                     },
                     {
                         label: 'Precision@K',
-                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.6],
+                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.6, 0.3400000000000001],
                         borderColor: 'rgb(255, 99, 132)',
                         backgroundColor: 'rgba(255, 99, 132, 0.1)',
                         tension: 0.3,
@@ -1233,11 +1294,11 @@
         const ratesChart = new Chart(ratesCtx, {
             type: 'line',
             data: {
-                labels: ["2026-08-10 20:35", "2026-08-10 21:44", "2026-08-10 21:57", "2026-08-10 22:05", "2026-08-10 22:18", "2026-08-10 22:46", "2026-08-10 23:03", "2026-08-10 23:10", "2026-08-10 23:13", "2026-08-10 23:30", "2026-08-10 23:56", "2026-08-11 00:08", "2026-08-11 00:38", "2026-08-11 00:42", "2026-08-11 01:03", "2026-08-11 01:22", "2026-08-11 01:29", "2026-08-11 01:48", "2026-08-11 02:03", "2026-08-11 02:07", "2026-08-11 02:12", "2026-08-11 02:21", "2026-08-11 02:41", "2026-08-11 02:44", "2026-08-11 03:13", "2026-08-11 03:27", "2026-08-12 17:52", "2026-09-18 10:05", "2026-09-18 10:50"],
+                labels: ["2026-08-10 20:35", "2026-08-10 21:44", "2026-08-10 21:57", "2026-08-10 22:05", "2026-08-10 22:18", "2026-08-10 22:46", "2026-08-10 23:03", "2026-08-10 23:10", "2026-08-10 23:13", "2026-08-10 23:30", "2026-08-10 23:56", "2026-08-11 00:08", "2026-08-11 00:38", "2026-08-11 00:42", "2026-08-11 01:03", "2026-08-11 01:22", "2026-08-11 01:29", "2026-08-11 01:48", "2026-08-11 02:03", "2026-08-11 02:07", "2026-08-11 02:12", "2026-08-11 02:21", "2026-08-11 02:41", "2026-08-11 02:44", "2026-08-11 03:13", "2026-08-11 03:27", "2026-08-12 17:52", "2026-09-18 10:05", "2026-09-18 10:50", "2026-09-18 11:05"],
                 datasets: [
                     {
                         label: 'Hit Rate',
-                        data: [0.8125, 1.0, 1.0, 0.90625, 0.9142857142857143, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+                        data: [0.8125, 1.0, 1.0, 0.90625, 0.9142857142857143, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.9333333333333333],
                         borderColor: 'rgb(75, 192, 192)',
                         backgroundColor: 'rgba(75, 192, 192, 0.1)',
                         tension: 0.3,
@@ -1245,7 +1306,7 @@
                     },
                     {
                         label: 'Rejection Rate',
-                        data: [0.1875, 0.0, 0.0, 0.15625, 0.14285714285714285, 0.0, 0.05714285714285714, 0.0, 0.0, 0.11428571428571428, 0.0, 0.05714285714285714, 0.0, 0.0, 0.11428571428571428, 0.0, 0.02857142857142857, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.05714285714285714, 0.0, 0.0, 0.0],
+                        data: [0.1875, 0.0, 0.0, 0.15625, 0.14285714285714285, 0.0, 0.05714285714285714, 0.0, 0.0, 0.11428571428571428, 0.0, 0.05714285714285714, 0.0, 0.0, 0.11428571428571428, 0.0, 0.02857142857142857, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.05714285714285714, 0.0, 0.0, 0.0, 0.13333333333333333],
                         borderColor: 'rgb(255, 99, 132)',
                         backgroundColor: 'rgba(255, 99, 132, 0.1)',
                         tension: 0.3,
