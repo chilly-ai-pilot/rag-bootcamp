@@ -124,6 +124,69 @@ def aggregate_by_category(results: List[Dict]) -> Dict[str, float]:
 
 
 
+def calculate_precision_at_k(results: List[Dict], k: int) -> Dict[str, float]:
+    """计算 Precision@K - 前K个检索结果中相关文档的比例
+    
+    Precision@K 衡量检索结果的精确度：
+    - 前K个结果中有多少个包含答案
+    - Precision@K = (前K个结果中命中答案的数量) / K
+    
+    例如：如果前5个结果中有2个包含答案，Precision@5 = 2/5 = 0.4
+    
+    参数:
+        results: 结果列表，每项包含 {
+            'category': str,
+            'retrieved': List[Dict] (检索到的chunks列表),
+            以及ground truth信息用于判断命中
+        }
+        k: 计算精确度时考虑的前K个结果
+    
+    返回:
+        每个类别的 Precision@K 字典，包括 overall（总体精确度）
+    """
+    # 按类别分桶收集精确度值
+    buckets = defaultdict(list)
+    
+    for r in results:
+        # 获取前K个检索结果
+        retrieved = r.get('retrieved', [])[:k]
+        
+        if not retrieved:
+            # 如果没有检索结果，精确度为0
+            buckets[r["category"]].append(0.0)
+            continue
+        
+        # 统计前K个结果中有多少个与答案重叠
+        relevant_count = 0
+        gt_doc_id = r.get('doc_id')
+        gt_start = r.get('char_start')
+        gt_end = r.get('char_end')
+        
+        if gt_doc_id is None or gt_start is None or gt_end is None:
+            # 如果缺少ground truth信息，跳过
+            continue
+        
+        for chunk in retrieved:
+            # 检查该chunk是否与答案重叠
+            if (chunk.get("doc_id") == gt_doc_id and 
+                chunk.get("start") < gt_end and 
+                chunk.get("end") > gt_start):
+                relevant_count += 1
+        
+        # 计算精确度
+        precision = relevant_count / len(retrieved)
+        buckets[r["category"]].append(precision)
+    
+    # 计算每个类别的平均精确度
+    precision_scores = {cat: sum(v) / len(v) if v else 0.0 for cat, v in buckets.items()}
+    
+    # 计算总体精确度
+    all_precisions = [p for precisions in buckets.values() for p in precisions]
+    precision_scores["overall"] = sum(all_precisions) / len(all_precisions) if all_precisions else 0.0
+    
+    return precision_scores
+
+
 def analyze_rerank_score_distribution(results: List[Dict]) -> Dict:
     """分析 rerank 分数分布（为 Iteration 6 拒答阈值设计做准备）
     

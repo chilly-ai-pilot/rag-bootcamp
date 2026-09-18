@@ -35,6 +35,11 @@ on:
           - vector
           - bm25
           - random
+      retrieval_top_k:
+        description: 'Retrieval top-k (number of candidates for rerank)'
+        required: false
+        default: '40'
+        type: string
       rerank_mode:
         description: 'Rerank mode'
         required: false
@@ -43,6 +48,16 @@ on:
         options:
           - bge
           - none
+      rerank_top_k:
+        description: 'Rerank top-k (number of results to send to generator)'
+        required: false
+        default: '5'
+        type: string
+      precision_top_k:
+        description: 'Precision@K top-k (number of results to calculate precision)'
+        required: false
+        default: '5'
+        type: string
       judge_mode:
         description: 'Judge mode'
         required: false
@@ -182,7 +197,10 @@ jobs:
           # 从手动输入或使用默认值
           CHUNKING="${{ github.event.inputs.chunking_strategy || 'fixed_100_50' }}"
           RETRIEVAL="${{ github.event.inputs.retrieval_mode || 'hybrid' }}"
+          RETRIEVAL_TOP_K="${{ github.event.inputs.retrieval_top_k || '40' }}"
           RERANK="${{ github.event.inputs.rerank_mode || 'bge' }}"
+          RERANK_TOP_K="${{ github.event.inputs.rerank_top_k || '5' }}"
+          PRECISION_TOP_K="${{ github.event.inputs.precision_top_k || '5' }}"
           JUDGE="${{ github.event.inputs.judge_mode || 'none' }}"
           PRESET="${{ github.event.inputs.rejection_preset || 'moderate' }}"
           MAX_QUERIES="${{ github.event.inputs.max_queries || '1' }}"
@@ -192,7 +210,10 @@ jobs:
           echo "🔧 Configuration:"
           echo "  Chunking: $CHUNKING"
           echo "  Retrieval: $RETRIEVAL"
+          echo "  Retrieval Top-K: $RETRIEVAL_TOP_K"
           echo "  Rerank: $RERANK"
+          echo "  Rerank Top-K: $RERANK_TOP_K"
+          echo "  Precision Top-K: $PRECISION_TOP_K"
           echo "  Judge: $JUDGE"
           echo "  Rejection Preset: $PRESET"
           echo "  Max Queries: $MAX_QUERIES"
@@ -205,7 +226,10 @@ jobs:
             python run_eval.py \
               --chunking-strategy "$CHUNKING" \
               --retrieval-mode "$RETRIEVAL" \
+              --retrieval-top-k "$RETRIEVAL_TOP_K" \
               --rerank-mode "$RERANK" \
+              --rerank-top-k "$RERANK_TOP_K" \
+              --precision-top-k "$PRECISION_TOP_K" \
               --judge-mode "$JUDGE" \
               --output-dir ../data \
               --max-queries "$MAX_QUERIES" \
@@ -216,7 +240,10 @@ jobs:
             python run_eval.py \
               --chunking-strategy "$CHUNKING" \
               --retrieval-mode "$RETRIEVAL" \
+              --retrieval-top-k "$RETRIEVAL_TOP_K" \
               --rerank-mode "$RERANK" \
+              --rerank-top-k "$RERANK_TOP_K" \
+              --precision-top-k "$PRECISION_TOP_K" \
               --judge-mode "$JUDGE" \
               --rejection-preset "$PRESET" \
               --output-dir ../data \
