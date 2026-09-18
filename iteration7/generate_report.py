@@ -92,6 +92,7 @@ def extract_metrics(results: List[Dict]) -> Dict:
         'relevance_scores': [],
         'rejection_rates': [],
         'mrr_scores': [],
+        'precision_scores': [],
         'configs': []
     }
     
@@ -175,6 +176,16 @@ def extract_metrics(results: List[Dict]) -> Dict:
             mrr = 0
         metrics['mrr_scores'].append(mrr)
         
+        # Precision Score（总体）
+        precision_scores_data = result.get('precision_scores', {})
+        if isinstance(precision_scores_data, dict):
+            precision = precision_scores_data.get('overall', 0)
+        elif isinstance(precision_scores_data, (int, float)):
+            precision = precision_scores_data
+        else:
+            precision = 0
+        metrics['precision_scores'].append(precision)
+        
         # 配置信息
         config = metadata.get('model_config', result.get('config', {}))
         config_str = f"{config.get('chunking_strategy', 'N/A')}+{config.get('retrieval_mode', 'N/A')}+{config.get('rerank_mode', 'N/A')}"
@@ -207,7 +218,8 @@ def generate_html_report(results: List[Dict], output_path: str):
             'faithfulness_diff': metrics['faithfulness_scores'][-1] - metrics['faithfulness_scores'][-2],
             'relevance_diff': metrics['relevance_scores'][-1] - metrics['relevance_scores'][-2],
             'rejection_rate_diff': metrics['rejection_rates'][-1] - metrics['rejection_rates'][-2],
-            'mrr_diff': metrics['mrr_scores'][-1] - metrics['mrr_scores'][-2]
+            'mrr_diff': metrics['mrr_scores'][-1] - metrics['mrr_scores'][-2],
+            'precision_diff': metrics['precision_scores'][-1] - metrics['precision_scores'][-2]
         }
     
     # 生成 HTML
@@ -519,6 +531,17 @@ def generate_html_report(results: List[Dict], output_path: str):
         html_content += f"""<div class="diff {diff_class}">{diff_symbol}{comparison['mrr_diff']:.3f} vs previous</div>"""
     html_content += """
             </div>
+            
+            <div class="card">
+                <h3>Precision@K</h3>
+"""
+    html_content += f"""<div class="value">{metrics['precision_scores'][-1]:.3f}</div>"""
+    if comparison:
+        diff_class = 'positive' if comparison['precision_diff'] >= 0 else 'negative'
+        diff_symbol = '+' if comparison['precision_diff'] >= 0 else ''
+        html_content += f"""<div class="diff {diff_class}">{diff_symbol}{comparison['precision_diff']:.3f} vs previous</div>"""
+    html_content += """
+            </div>
         </div>
 """
 
@@ -596,6 +619,7 @@ def generate_html_report(results: List[Dict], output_path: str):
                         <th>Relevance</th>
                         <th>Rejection Rate</th>
                         <th>MRR</th>
+                        <th>Precision@K</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -608,6 +632,7 @@ def generate_html_report(results: List[Dict], output_path: str):
         rel = metrics['relevance_scores'][i]
         rej_rate = metrics['rejection_rates'][i]
         mrr = metrics['mrr_scores'][i]
+        precision = metrics['precision_scores'][i]
         
         # Badge for hit rate
         if hit_rate >= 0.8:
@@ -626,6 +651,7 @@ def generate_html_report(results: List[Dict], output_path: str):
                         <td>{rel:.3f}</td>
                         <td>{rej_rate:.1%}</td>
                         <td>{mrr:.3f}</td>
+                        <td>{precision:.3f}</td>
                     </tr>
 """
     
@@ -672,6 +698,14 @@ def generate_html_report(results: List[Dict], output_path: str):
                         data: {json.dumps(metrics['mrr_scores'])},
                         borderColor: 'rgb(255, 159, 64)',
                         backgroundColor: 'rgba(255, 159, 64, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    }},
+                    {{
+                        label: 'Precision@K',
+                        data: {json.dumps(metrics['precision_scores'])},
+                        borderColor: 'rgb(255, 99, 132)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.1)',
                         tension: 0.3,
                         fill: true
                     }}

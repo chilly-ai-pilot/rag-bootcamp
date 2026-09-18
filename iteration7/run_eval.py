@@ -37,7 +37,7 @@ from typing import List, Dict
 from chunking import build_corpus_chunks
 from retrieval import retrieve_random, retrieve_vector, retrieve_bm25, retrieve_hybrid, rerank_chunks
 from generation import generate_answer_async, generate_rejection_answer
-from scoring import hit, find_answer_rank, aggregate_by_category, calculate_mrr, analyze_rerank_score_distribution
+from scoring import hit, find_answer_rank, aggregate_by_category, calculate_mrr, calculate_precision_at_k, analyze_rerank_score_distribution
 from evaluation import (
     llm_faithfulness_check, 
     llm_faithfulness_check_async,
@@ -216,6 +216,9 @@ async def batch_generate(queries: List[Dict], chunks, args, chunking_strategy: s
                     "id": q["id"],
                     "query": q["query"],
                     "category": q["category"],
+                    "doc_id": q["doc_id"],
+                    "char_start": q["char_start"],
+                    "char_end": q["char_end"],
                     "hit": h,
                     "answer_rank": answer_rank,
                     "answer": gen_result["answer"],
@@ -820,9 +823,16 @@ def run_single_strategy(args, chunking_strategy, retrieval_mode=None):
     scores = aggregate_by_category(results)
     mrr_scores = calculate_mrr(results)
     
+    # 计算 Precision@K
+    precision_scores = calculate_precision_at_k(results, args.precision_top_k)
+    
     print(f"\n=== Recall@{args.retrieval_top_k} (chunking: {chunking_strategy}, retrieval: {retrieval_mode}) ===")
     for cat, score in scores.items():
         print(f"  {cat:24s} {score:.2f}")
+    
+    print(f"\n=== Precision@{args.precision_top_k} ===")
+    for cat, score in precision_scores.items():
+        print(f"  {cat:24s} {score:.4f}")
     
     print(f"\n=== MRR (Mean Reciprocal Rank) ===")
     for cat, score in mrr_scores.items():
@@ -951,7 +961,7 @@ def run_single_strategy(args, chunking_strategy, retrieval_mode=None):
                 print(f"    Aggressive (avoid errors): {thresh['aggressive']:.4f}")
                 print(f"    ({thresh['explanation']})")
 
-    return scores, mrr_scores, results, rerank_analysis, faithfulness_analysis, relevance_analysis
+    return scores, mrr_scores, precision_scores, results, rerank_analysis, faithfulness_analysis, relevance_analysis
 
 
 def main():
@@ -963,6 +973,7 @@ def main():
     ap.add_argument("--query-file", default="corpus/queries.json", help="查询集 JSON 文件路径")
     ap.add_argument("--retrieval-top-k", type=int, default=40, help="召回的候选数量（送入 Rerank 的数量）")
     ap.add_argument("--rerank-top-k", type=int, default=5, help="Rerank 后返回的数量（送给 Generator 的数量）")
+    ap.add_argument("--precision-top-k", type=int, default=5, help="计算 Precision@K 时考虑的前K个结果（默认5）")
     ap.add_argument("--chunking-strategy", default="fixed_100_50", 
                     choices=["fixed_200_40", "fixed_300_30", "semantic", "fixed_100_50"],
                     help="Chunking 策略（默认 fixed_100_50，Iteration 2 最优）")
@@ -997,7 +1008,7 @@ def main():
     args.rejection_enabled = not args.no_rejection
 
     # 运行单个策略和检索模式
-    scores, mrr_scores, results, rerank_analysis, faithfulness_analysis, relevance_analysis = run_single_strategy(args, args.chunking_strategy, args.retrieval_mode)
+    scores, mrr_scores, precision_scores, results, rerank_analysis, faithfulness_analysis, relevance_analysis = run_single_strategy(args, args.chunking_strategy, args.retrieval_mode)
     
     # Iteration 7: 生成带时间戳的输出文件名
     from datetime import datetime
@@ -1036,6 +1047,7 @@ def main():
                 "rerank_mode": args.rerank_mode,
                 "rerank_top_k": args.rerank_top_k if args.rerank_mode != "none" else None,
                 "retrieval_top_k": args.retrieval_top_k,
+                "precision_top_k": args.precision_top_k,
                 "judge_mode": args.judge_mode,
                 "rejection_enabled": args.rejection_enabled,
                 "rejection_preset": args.rejection_preset if args.rejection_preset else "custom"
@@ -1046,10 +1058,12 @@ def main():
             "retrieval_mode": args.retrieval_mode,
             "rerank_mode": args.rerank_mode,
             "rerank_top_k": args.rerank_top_k if args.rerank_mode != "none" else None,
-            "retrieval_top_k": args.retrieval_top_k
+            "retrieval_top_k": args.retrieval_top_k,
+            "precision_top_k": args.precision_top_k
         },
         "scores": scores,
         "mrr_scores": mrr_scores,
+        "precision_scores": precision_scores,
         "results": results
     }
     
